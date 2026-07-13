@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KYARIN | Composer & Arranger</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;500;700&family=Manrope:wght@400;500;700&family=Playfair+Display:ital,wght@0,600;1,600&family=Space+Grotesk:wght@500;700&family=Syncopate:wght@700&family=Syne:wght@600;800&display=swap" rel="stylesheet">
+
+<style>
+  :root {
+    /* STRICT TWO-COLOR SCHEME */
+    --main-blue: rgb(0, 8, 255);
+    --accent-white: #ffffff;
+    
+    --white-10: rgba(255, 255, 255, 0.1);
+    --white-20: rgba(255, 255, 255, 0.2);
+    --white-50: rgba(255, 255, 255, 0.5);
+    
+    --font-body: 'Manrope', sans-serif;
+    --font-hero: 'Space Grotesk', sans-serif;
+    --font-music: 'Bebas Neue', sans-serif;
+    --font-scores: 'Playfair Display', serif;
+    --font-gallery: 'Syne', sans-serif;
+    --font-ensemble: 'JetBrains Mono', monospace;
+    --font-connect: 'Syncopate', sans-serif;
+    
+    --scroll: 0; 
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  
+  html { scroll-behavior: smooth; background: var(--main-blue); color: var(--accent-white); }
+  body { font-family: var(--font-body); line-height: 1.6; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+  /* ============================================================
+     BACKGROUND & GLOBAL
+     ============================================================ */
+  #ascii-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: -1; display: flex; align-items: center; justify-content: center; overflow: hidden; pointer-events: none; }
+  #ascii-bg { font-family: var(--font-ensemble); font-size: 20px; line-height: 22px; color: var(--white-20); white-space: pre; transition: transform 0.1s ease-out; }
+
+  @keyframes waveChar { 0%, 100% { transform: translateY(0); text-shadow: 0 0 0 transparent; } 50% { transform: translateY(-12px); text-shadow: 0 10px 20px var(--white-50); } }
+  .wave-char { display: inline-block; animation: waveChar 4s ease-in-out infinite; }
+
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 40px; position: relative; z-index: 2; }
+  section { padding: 150px 0; position: relative; overflow: hidden; }
+  
+  .btn { font-family: var(--font-hero); font-size: 1.5rem; font-weight: 700; padding: 15px 30px; border: 2px solid var(--accent-white); display: inline-block; cursor: pointer; transition: 0.3s; background: transparent; color: var(--accent-white); text-decoration: none; text-transform: uppercase; letter-spacing: 2px;}
+  .btn:hover { background: var(--accent-white); color: var(--main-blue); box-shadow: 5px 5px 0px rgba(255,255,255,0.3); transform: translate(-2px, -2px);}
+
+  /* ============================================================
+     HEADER / NAV
+     ============================================================ */
+  header { position: fixed; top: 30px; left: 50%; transform: translateX(-50%); z-index: 100; width: 95%; max-width: 1200px; }
+  nav { display: flex; align-items: center; justify-content: space-between; padding: 15px 30px; background: rgba(0, 8, 255, 0.85); backdrop-filter: blur(10px); border: 2px solid var(--accent-white); }
+  .logo { font-weight: 700; font-family: var(--font-hero); font-size: 2rem; }
+  .nav-links { display: flex; gap: 30px; list-style: none; font-family: var(--font-ensemble); font-size: 1.2rem; }
+  .nav-links a { color: var(--accent-white); text-decoration: none; position: relative; padding: 5px; transition: 0.3s; }
+  .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px; background: var(--accent-white); transition: 0.3s ease; }
+  .nav-links a:hover { transform: translateY(-3px); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* ============================================================
+     HERO
+     ============================================================ */
+  .hero { min-height: 100vh; display: flex; align-items: center; border-bottom: 2px dashed var(--white-50); }
+  .hero-meta-block { display: flex; align-items: center; gap: 40px; margin-bottom: 30px; transform: translateY(calc(var(--scroll) * -0.2px)); }
+  .profile-frame { width: 200px; height: 200px; flex-shrink: 0; border: 4px solid var(--accent-white); padding: 5px; background: var(--white-10); }
+  .profile-img { width: 100%; height: 100%; object-fit: cover; filter: contrast(1.2) grayscale(0.2); }
+  .hero h1 { font-family: var(--font-hero); font-size: clamp(3rem, 8vw, 6rem); line-height: 1.1; margin-bottom: 30px; }
+  .hero-bio-title { font-size: 1.5rem; color: var(--accent-white); margin-bottom: 20px; font-weight: bold; }
+  .hero-bio { font-size: 1.2rem; color: var(--white-75); max-width: 1111px; margin-bottom: 50px; }
+
+  /* ============================================================
+     WORKS
+     ============================================================ */
+  #music { background: var(--accent-white); color: var(--main-blue); }
+  #music .section-title { font-family: var(--font-music); font-size: clamp(4rem, 10vw, 8rem); line-height: 0.9; margin-bottom: 20px; }
+  
+  .works-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 30px; padding-top: 60px; margin-bottom: 100px; }
+  
+  .work-card { display: flex; flex-direction: column; position: relative; border: 2px solid var(--main-blue); padding: 15px; background: rgba(0,8,255,0.02); transition: 0.4s; }
+  .work-card:hover { transform: translateY(-10px); box-shadow: 10px 10px 0px rgba(0,8,255,0.1); }
+  
+  .work-card:nth-child(1) { grid-column: 1 / 8; margin-top: 40px; }
+  .work-card:nth-child(2) { grid-column: 8 / 13; margin-top: -20px; }
+  .work-card:nth-child(3) { grid-column: 2 / 7; margin-top: 80px; }
+  .work-card:nth-child(4) { grid-column: 7 / 12; margin-top: 20px; }
+  
+  .video-container { position: relative; width: 100%; padding-bottom: 56.25%; height: 0; overflow: hidden; border: 2px solid var(--main-blue); margin-bottom: 15px; }
+  .video-container iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+  .work-title { font-family: var(--font-hero); font-size: 1.4rem; color: var(--main-blue); font-weight: bold; line-height: 1.2;}
+
+  /* ============================================================
+     AUDIO PLAYER & SPECTROGRAM
+     ============================================================ */
+  .album-section { border: 4px solid var(--main-blue); padding: 40px; background: rgba(0, 8, 255, 0.03); position: relative;}
+  .album-header { font-family: var(--font-ensemble); font-size: 1.5rem; font-weight: bold; margin-bottom: 20px; border-bottom: 2px dashed var(--main-blue); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+  
+  .ascii-wave { 
+    font-family: var(--font-ensemble); 
+    font-size: 1.2rem; 
+    line-height: 1.1; 
+    letter-spacing: 3px; 
+    color: var(--main-blue); 
+    white-space: pre; 
+    height: 250px; 
+    width: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    justify-content: flex-end; 
+    background: #f8f9fa; 
+    border: 2px solid var(--main-blue);
+    padding: 15px; 
+    margin-bottom: 30px;
+    overflow: hidden;
+  }
+  
+  .controls-deck { display: flex; gap: 20px; align-items: center; font-family: var(--font-ensemble); flex-wrap: nowrap; }
+  .play-btn { width: 60px; height: 60px; border: 2px solid var(--main-blue); background: transparent; color: var(--main-blue); font-size: 1.5rem; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .play-btn:hover { background: var(--main-blue); color: var(--accent-white); }
+  
+  .progress-wrapper { position: relative; flex-grow: 1; height: 40px; display: flex; align-items: center; font-size: 1.4rem; min-width: 150px; }
+  .volume-wrapper { position: relative; flex-shrink: 0; width: 220px; height: 40px; display: flex; align-items: center; font-size: 1.4rem; }
+  
+  .ascii-bar-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; pointer-events: none; }
+  .time-display { font-size: 1.2rem; flex-shrink: 0; width: 120px; text-align: right; }
+
+  input[type="range"] { -webkit-appearance: none; appearance: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; cursor: pointer; z-index: 10; opacity: 0; }
+  input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 0; height: 0; }
+  input[type="range"]::-moz-range-thumb { width: 0; height: 0; border: none; }
+
+  /* Scrollable Tracklist */
+  .tracklist { 
+    display: flex; flex-direction: column; 
+    border-top: 2px solid var(--main-blue); 
+    margin-top: 20px; 
+    max-height: 210px; /* Fits exactly 3.5 items to indicate scroll */
+    overflow-y: auto; 
+    padding-right: 10px;
+  }
+  
+  /* Brutalist Scrollbar */
+  .tracklist::-webkit-scrollbar { width: 8px; }
+  .tracklist::-webkit-scrollbar-track { background: rgba(0,8,255,0.1); }
+  .tracklist::-webkit-scrollbar-thumb { background: var(--main-blue); }
+
+  .track { display: flex; justify-content: space-between; padding: 15px 10px; cursor: pointer; font-family: var(--font-ensemble); font-size: 1.1rem; border-bottom: 1px dashed rgba(0,8,255,0.3); transition: 0.2s; }
+  .track:hover { background: rgba(0, 8, 255, 0.1); padding-left: 20px; }
+  .track.active { font-weight: bold; background: var(--main-blue); color: var(--accent-white); }
+
+  /* ============================================================
+     SCORES
+     ============================================================ */
+  #scores { padding: 120px 0; perspective: 1000px;}
+  #scores .section-title { font-family: var(--font-scores); font-size: clamp(3rem, 6vw, 5rem); font-style: italic; text-align: center; margin-bottom: 80px; }
+  
+  .score-gallery { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; padding: 40px 0; }
+  
+  .score-card { 
+  width: 23%; /* Approximately 1/4th of the row minus gaps */
+  min-width: 200px;
+  border: 2px solid var(--white-50); 
+  background: rgba(255,255,255,0.05); 
+  padding: 15px;
+  backdrop-filter: blur(5px); 
+  transform: scale(0.85);
+  transition: transform 0.5s cubic-bezier(0.19, 1, 0.22, 1), border-color 0.4s; 
+  position: relative; 
+}
+  .score-card:hover { border-color: var(--accent-white); z-index: 10; box-shadow: 0 20px 40px rgba(0,0,0,0.5); }
+  
+  .score-card:nth-child(2n) { margin-top: 60px; }
+  .score-card:nth-child(3n) { margin-top: -30px; }
+
+  .score-link { display: block; text-decoration: none; }
+  .score-preview { 
+  width: 100%; 
+  aspect-ratio: 1/1.4; 
+  margin-bottom: 20px; 
+  border: 1px solid var(--white-20); 
+  overflow: hidden; 
+  background: var(--white-10); 
+}
+  .score-preview img { 
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+  filter: none; /* Changed from invert(1) to none */
+  transition: 0.5s; 
+}
+  /* On hover, just zoom, no color change */
+.score-card:hover .score-preview img { 
+  filter: none; 
+  transform: scale(1.05); 
+}
+  .score-card h3 { font-family: var(--font-scores); font-size: 1.5rem; margin-bottom: 5px; color: var(--accent-white); }
+  .score-card p { font-family: var(--font-ensemble); font-size: 0.8rem; color: var(--white-50); }
+
+  .hidden-score { display: none; }
+
+  /* ============================================================
+     GOK ENSEMBLE SECTION
+     ============================================================ */
+  #circle .section-title { font-size: clamp(2.5rem, 5vw, 4rem); text-align: center; margin-bottom: 20px; font-family: var(--font-ensemble); }
+  .circle-desc { text-align: center; max-width: 1000px; margin: 0 auto 60px auto; font-family: var(--font-body); font-size: 1.2rem; color: var(--white-100); line-height: 1.8; }
+  
+  .tree-map { display: flex; flex-direction: column; align-items: center; padding: 40px 0; position: relative; width: 100%; font-family: var(--font-ensemble); }
+  .tree-map::before { content: ''; position: absolute; top: 0; bottom: 0; left: 50%; width: 2px; background: dashed var(--white-20); transform: translateX(-50%); border-left: 2px dashed var(--white-50); }
+  
+  .tree-node { width: 100%; display: flex; position: relative; padding: 15px 0; perspective: 1000px;}
+  .tree-node::before { content: ''; position: absolute; top: 40px; width: 10%; height: 2px; background: dashed var(--white-50); z-index: 1; }
+  
+  .tree-node:nth-child(odd) { justify-content: flex-end; padding-left: 52%; text-align: left; }
+  .tree-node:nth-child(odd)::before { left: 45%; }
+  .tree-node:nth-child(even) { justify-content: flex-start; padding-right: 52%; text-align: right; }
+  .tree-node:nth-child(even)::before { right: 45%; }
+
+  /* ============================================================
+     UPDATED: GOK ENSEMBLE SECTION CSS
+     ============================================================ */
+  .node-content { 
+    position: relative; z-index: 2; border: 2px solid var(--accent-white); 
+    background: var(--main-blue); width: 100%; max-width: 450px; 
+    padding: 15px;
+    max-height: 75px; /* Base compact size */
+    overflow: hidden; 
+    opacity: 0.7;
+    cursor: crosshair;
+    transition: max-height 0.6s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.3s, transform 0.3s; 
+  }
+  
+  .node-content:hover { max-height: 800px; opacity: 1; transform: scale(1.02); box-shadow: 10px 10px 0 rgba(255,255,255,0.1); }
+  
+  .node-header { display: flex; flex-direction: column; justify-content: center; min-height: 40px; margin-bottom: 10px;}
+  .node-date { display: inline-block; color: var(--white-50); font-weight: bold; font-size: 0.9rem; margin-bottom: 5px; }
+  
+  /* FIXED: Text wrapping for long titles */
+  .node-title { 
+    font-size: 1.2rem; 
+    font-weight: 700; 
+    line-height: 1.3;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+  
+  .node-img-wrapper { 
+    width: 100%; 
+    aspect-ratio: 3/4; 
+    border: 1px dashed var(--white-50); 
+    background: var(--white-10); position: relative; 
+    margin-top: 15px;
+    display: flex; /* Added to help center image */
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* FIXED: Image sizing to ensure it fits the box */
+  .node-img-wrapper img { 
+    width: 100%; 
+    height: 100%; 
+    object-fit: contain; /* Changed from cover to contain */
+    filter: grayscale(100%); 
+    transition: 0.5s; 
+  }
+  .node-content:hover .node-img-wrapper img { filter: grayscale(0%); }
+
+  .hidden-event { display: none !important; }
+
+  /* ============================================================
+     GALLERY SECTION
+     ============================================================ */
+  #gallery { background: var(--main-blue); }
+  #gallery .section-title { font-family: var(--font-gallery); font-size: clamp(3rem, 7vw, 6rem); font-weight: 800; text-transform: uppercase; margin-bottom: 80px; text-align: right; }
+  .brutal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; transform: skewY(-2deg); transform-origin: center; padding: 40px 0; }
+  .brutal-item { border: 2px solid var(--accent-white); aspect-ratio: 4/3; background: var(--white-10); transition: 0.4s; overflow: hidden; position: relative; cursor: pointer; }
+  .brutal-item:hover { transform: scale(1.05) skewY(2deg); z-index: 10; box-shadow: 10px 10px 0 var(--white-20); }
+  .brutal-item.large { grid-column: span 2; aspect-ratio: 16/7; }
+  .brutal-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(50%); transition: 0.4s;}
+  .brutal-item:hover img { transform: scale(1.1); filter: grayscale(0%); }  
+  
+  /* Captions locked to visible at bottom */
+  .caption { position: absolute; bottom: 0; left: 0; width: 100%; background: rgba(0, 8, 255, 0.9); color: var(--accent-white); padding: 15px; font-family: var(--font-ensemble); font-size: 0.9rem; font-weight: bold; border-top: 1px solid var(--accent-white); }
+  .hidden-item { display: none; }
+
+  #lightbox { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 8, 255, 0.95); display: none; justify-content: center; align-items: center; z-index: 1000; cursor: pointer; }
+  #lightbox img { max-width: 90%; max-height: 90%; border: 4px solid var(--accent-white); box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+
+  /* CONNECT */
+  #connect { padding: 200px 0; text-align: center; overflow: hidden; }
+  .marquee-container { white-space: nowrap; margin-bottom: 60px; transform: translateX(calc(var(--scroll) * -0.5px + 100px)); }
+  .marquee-text { font-family: var(--font-connect); font-size: clamp(4rem, 10vw, 8rem); -webkit-text-stroke: 2px var(--accent-white); color: transparent; padding-right: 50px; }
+  .socials { display: flex; justify-content: center; color: var(--accent-white); gap: 100px; font-family: var(--font-hero); font-size: 3rem; flex-wrap: wrap; }
+  .socials a { color: var(--accent-white); text-decoration: none; border-bottom: 2px solid transparent; transition: 0.9s; }
+  .socials a:hover { border-bottom-color: var(--accent-white); letter-spacing: 5px; }
+
+  footer { text-align: center; padding: 40px; font-family: var(--font-ensemble); font-size: 0.9rem; border-top: 1px solid var(--white-20); }
+
+  @media(max-width: 800px) {
+    .works-grid { display: flex; flex-direction: column; }
+    .work-card { margin: 0 !important; transform: none !important; }
+    .tree-map::before { left: 20px; }
+    .tree-node { padding-left: 50px !important; padding-right: 0 !important; justify-content: flex-start !important; text-align: left !important; }
+    .tree-node::before { left: 20px !important; width: 30px !important; right: auto !important; }
+    .node-content { max-width: 100%; }
+    .controls-deck { flex-wrap: wrap; }
+    .volume-wrapper { width: 100%; }
+  }
+
+</style>
+</head>
+<body>
+
+<div id="ascii-container">
+  <div id="ascii-bg"></div>
+</div>
+
+<header>
+  <nav>
+    <div class="logo">KYARIN・きゃりー</div>
+    <ul class="nav-links">
+      <li><a href="#music">楽曲</a></li>
+      <li><a href="#scores">楽譜</a></li>
+      <li><a href="#gallery">写真</a></li>
+      <li><a href="#circle">活動</a></li>
+      <li><a href="#connect">連絡</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="hero-meta-block">
+      <div class="profile-frame">
+        <img src="assets/kyarin.jpg" alt="Profile Picture" class="profile-img">
+      </div>
+      <div>
+        <span class="eyebrow">作曲・編曲・演奏</span>
+         <h2 class="eyebrow"><i>ROMAN MINEAR・ミネアロマン</i></h2>
+        <h1 class="wave-text">KYARIN・きゃりー</h1>
+      </div>
+    </div>
+    <p class="hero-bio-title">洗足学園音楽大学、音楽・音響デザインコースの作編曲</p>
+    <p class="hero-bio">アメリカのハワイ州出身、中学校の途中に神奈川県の藤沢市へ移住しました。日本の中学校に入学した当時から打楽器や
+      <br>サックソフォンなどの演奏者として音楽の勉強始めました。同時期に趣味で作曲や編曲を始め、学内演奏会で自身で制作した
+      <br>楽譜・楽曲を友人と演奏することもしていました。その後、音楽や作曲への情熱は一生続くという想いから、
+      <br>現在は洗足学園音楽大学でその勉強をやり続けています。</p>
+    <a href="#music" class="btn">EXPLORE</a>
+  </div>
+</section>
+
+<section id="music">
+  <div class="wrap">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 2px solid var(--main-blue); margin-bottom: 40px; padding-bottom: 20px;">
+        <h2 class="section-title wave-text" style="margin: 0;">MEDIA</h2>
+        <a href="https://www.youtube.com/@kyarinnko" target="_blank" class="btn" style="border-color: var(--main-blue); color: var(--main-blue); margin-bottom: 15px;">YOUTUBE CHANNEL</a>
+    </div>
+    
+    <div class="works-grid">
+        <div class="work-card">
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/B6FvJaW8cBQ" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <h3 class="work-title">The Queen's Final Stance OST - Thinking Music<br>(O2A2 2024 - Visual Novel Jam)<i>   ゲームの制作コンペ</i></h3>
+        </div>
+        <div class="work-card">
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/2QYCTZonzB8&start=2786" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <h3 class="work-title">CHAMBER BRASS THEME</h3>
+        </div>
+        <div class="work-card">
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/B6FvJaW8cBQ" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <h3 class="work-title">Another Composition Entry</h3>
+        </div>
+        <div class="work-card">
+            <div class="video-container">
+                <iframe src="https://www.youtube.com/embed/B6FvJaW8cBQ" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <h3 class="work-title">Visual Novel Soundtrack</h3>
+        </div>
+    </div>
+
+    <div class="album-section">
+      <div class="album-header">
+        <span>KYARIN_DEMO_MUSIC_ALBUM</span>
+      </div>
+      
+      <div class="player-display">
+        <div class="ascii-wave" id="visualizer">SYSTEM STANDBY...</div>
+        
+        <div class="controls-deck">
+          <button class="play-btn" id="play-pause-btn" onclick="togglePlay()">[►]</button>
+          
+          <div class="progress-wrapper">
+             <div class="ascii-bar-text" id="progress-text">[====================]</div>
+             <input type="range" id="seek-bar" value="0" min="0" max="100" oninput="seekAudio()">
+          </div>
+          
+          <div class="time-display" id="time-text">0:00 / 0:00</div>
+
+          <div class="volume-wrapper">
+             <div class="ascii-bar-text" id="vol-text">VOL |||||</div>
+             <input type="range" id="vol-bar" value="50" min="0" max="100" oninput="changeVolume()">
+          </div>
+        </div>
+      </div>
+
+      <div class="tracklist" id="tracklist-container"></div>
+    </div>
+    <audio id="master-audio" crossorigin="anonymous"></audio>
+
+  </div>
+</section>
+
+<section id="scores">
+  <div class="wrap">
+    <h1 class="section-title wave-text">Music Score</h1>
+    
+    <div class="score-gallery" id="parallax-container">
+      <div class="score-card parallax-item" data-speed="0.02">
+        <a href="#" target="_blank" class="score-link">
+          <div class="score-preview"><img src="assets/scores/SKYandSEA.png" alt="Score Preview"></div>
+        </a>
+        <h3>Score 01</h3><p>Instrumentation Details</p>
+      </div>
+      <div class="score-card parallax-item" data-speed="-0.03">
+        <a href="#" target="_blank" class="score-link">
+          <div class="score-preview"><img src="" alt="Score Preview"></div>
+        </a>
+        <h3>Score 02</h3><p>Instrumentation Details</p>
+      </div>
+      <div class="score-card parallax-item" data-speed="0.04">
+        <a href="#" target="_blank" class="score-link">
+          <div class="score-preview"><img src="" alt="Score Preview"></div>
+        </a>
+        <h3>Score 03</h3><p>Instrumentation Details</p>
+      </div>
+      <div class="score-card parallax-item" data-speed="-0.02">
+        <a href="#" target="_blank" class="score-link">
+          <div class="score-preview"><img src="" alt="Score Preview"></div>
+        </a>
+        <h3>Score 04</h3><p>Instrumentation Details</p>
+      </div>
+      
+      <div class="score-card hidden-score parallax-item" data-speed="0.03">
+        <a href="#" target="_blank" class="score-link">
+          <div class="score-preview"><img src="" alt="Score Preview"></div>
+        </a>
+        <h3>Score 05</h3><p>Instrumentation Details</p>
+      </div>
+      <div class="score-card hidden-score parallax-item" data-speed="-0.04">
+        <a href="#" target="_blank" class="score-link">
+          <div class="score-preview"><img src="" alt="Score Preview"></div>
+        </a>
+        <h3>Score 06</h3><p>Instrumentation Details</p>
+      </div>
+      <div class="score-card hidden-score parallax-item" data-speed="0.02">
+        <a href="#" target="_blank" class="score-link">
+          <div class="score-preview"><img src="" alt="Score Preview"></div>
+        </a>
+        <h3>Score 07</h3><p>Instrumentation Details</p>
+      </div>
+    </div>
+    
+    <div style="text-align: center; margin-top: 40px;">
+        <button id="toggle-scores" class="btn" onclick="toggleScores()">SHOW MORE ARCHIVES</button>
+    </div>
+  </div>
+</section>
+
+<section id="gallery">
+  <div class="wrap">
+    <h2 class="section-title wave-text">Gallery</h2>
+    <div class="brutal-grid">
+      <div class="brutal-item large">
+        <img src="assets/album/2026 3getu teiki GOK.png" alt="Gallery Image">
+        <div class="caption">2026年3月、洗足ゲーム音楽研究会の定期演奏会</div>
+      </div>
+      <div class="brutal-item">
+        <img src="assets/album/2025teiki_1.jpg" alt="Gallery Image">
+        <div class="caption">2025年3月、洗足ゲーム音楽研究会の定期演奏会</div>
+      </div>
+      <div class="brutal-item">
+        <img src="assets/album/zemi.png" alt="Gallery Image">
+        <div class="caption">ゼミの演奏会後の集合写真</div>
+      </div>
+      <div class="brutal-item large">
+        <img src="assets/album/shiki.png" alt="Gallery Image">
+        <div class="caption">定期演奏会に自分の編曲を指揮する</div>
+      </div>
+      
+      <div class="brutal-item hidden-item">
+        <img src="assets/album/2024teiki.png" alt="Gallery Image">
+        <div class="caption">大学の友人たちと外部演奏会の集合写真</div>
+      </div>
+      <div class="brutal-item hidden-item">
+        <img src="assets/album/sax2026.png" alt="Gallery Image">
+        <div class="caption">2025年定期演奏会のサックスパート集合写真</div>
+      </div>
+      <div class="brutal-item hidden-item">
+        <img src="assets/album/duet.png" alt="Gallery Image">
+        <div class="caption">外部のピアノ教室、友人とオリジナル楽曲を制作</div>
+      </div>
+    </div>
+    <div style="text-align: center; margin-top: 60px;">
+        <button id="toggle-gallery" class="btn" onclick="toggleGallery()">SHOW MORE ARCHIVES</button>
+    </div>
+  </div>
+</section>
+
+<section id="circle">
+  <div class="wrap">
+    <h2 class="section-title wave-text">大学活動・ゲーム音楽研究会 (GOK)</h2>
+    <p class="circle-desc">
+     洗足学園音楽大学のサークル、洗足ゲーム音楽研究会の副部長と編曲監督として勤めました。演奏会に向けての演奏する楽曲を編曲し、編曲者の楽譜を添削し制作サポートしたり、参加者や演奏者の募集したり、企画を制作することの担当でした。
+     <br><b><i>以下は編曲と演奏で参加した演奏会イベントです。</i></b>
+    </p>
+    
+    <div class="tree-controls">
+      <button id="sort-date-btn" class="btn" onclick="toggleTreeSort()">SORT: 最近</button>
+    </div>
+
+    <div class="tree-map" id="event-tree">
+      <div class="tree-node" data-date="2026-03-16">
+        <div class="node-content">
+          <div class="node-header">
+             <span class="node-date">2026-03-16</span>
+             <h3 class="node-title">第6回ゲーミングオーケストラ定期演奏会</h3>
+          </div>
+          <div class="node-img-wrapper"><img src="assets/poster/2026-03-16_dai6kai-geoke.png" alt="Poster"></div>
+        </div>
+      </div>
+      <div class="tree-node" data-date="2025-10-12">
+        <div class="node-content">
+          <div class="node-header">
+             <span class="node-date">2025-10-12</span>
+             <h3 class="node-title">山本大雅と愉快な仲間たち in GOK<br>2025年度学園祭2日目</h3>
+          </div>
+          <div class="node-img-wrapper"><img src="assets/poster/2025-10-12_baritube.png" alt="Poster"></div>
+        </div>
+      </div>
+      <div class="tree-node" data-date="2025-10-11">
+        <div class="node-content">
+          <div class="node-header">
+             <span class="node-date">2025-10-11</span>
+             <h3 class="node-title">Pokemon Concert in GOK<br>2025年度学園祭1日目</h3>
+          </div>
+          <div class="node-img-wrapper"><img src="assets/poster/2025-10-11_pokemon-concert.png" alt="Poster"></div>
+        </div>
+      </div>
+      <div class="tree-node" data-date="2025-10-11">
+        <div class="node-content">
+          <div class="node-header">
+             <span class="node-date">2025-10-11</span>
+             <h3 class="node-title">第５回ゲーミングオーケストラ定期演奏会<br>2025年度学園祭1日目</h3>
+          </div>
+          <div class="node-img-wrapper"><img src="assets/poster/2025-10-11_dai5kai-geoke.png" alt="Poster"></div>
+        </div>
+      </div>
+      <div class="tree-node" data-date="2025-09-18">
+        <div class="node-content">
+          <div class="node-header">
+             <span class="node-date">2025-09-18</span>
+             <h3 class="node-title">GOK Concert</h3>
+          </div>
+          <div class="node-img-wrapper"><img src="assets/poster/2025-09-18_gok-concert.jpg" alt="Poster"></div>
+        </div>
+      </div>
+      <div class="tree-node" data-date="2025-07-15">
+        <div class="node-content">
+          <div class="node-header">
+             <span class="node-date">2025-07-15</span>
+             <h3 class="node-title">第4回ゲーミングオーケストラ定期演奏会</h3>
+          </div>
+          <div class="node-img-wrapper"><img src="assets/poster/2025-07-15_dai4kai-geoke.jpg" alt="Poster"></div>
+        </div>
+      </div>
+       <div class="tree-node" data-date="2025-02-27">
+        <div class="node-content">
+          <div class="node-header">
+             <span class="node-date">2025-02-27</span>
+             <h3 class="node-title">第3回ゲーミングオーケストラ定期演奏会</h3>
+          </div>
+          <div class="node-img-wrapper"><img src="assets/poster/2025-02-27_dai3kai-teiki-ensokai.png" alt="Poster"></div>
+        </div>
+      </div>
+       <div class="tree-node" data-date="2024-11-10">
+        <div class="node-content">
+          <div class="node-header">
+             <span class="node-date">2024-11-10</span>
+             <h3 class="node-title">Nintendo Music Concert by GOK<br>2024年度学園祭2日目</h3>
+          </div>
+          <div class="node-img-wrapper"><img src="assets/poster/2024-11-10_nintendo-music-concert.jpg" alt="Poster"></div>
+        </div>
+      </div>
+       <div class="tree-node" data-date="2024-11-09">
+        <div class="node-content">
+          <div class="node-header">
+             <span class="node-date">2024-11-09</span>
+             <h3 class="node-title">第2回ゲーミングオーケストラ定期演奏会<br>2024年度学園祭1日目</h3>
+          </div>
+          <div class="node-img-wrapper"><img src="assets/poster/2024-11-09_dai2kai-geoke.jpg" alt="Poster"></div>
+        </div>
+      </div>
+       <div class="tree-node" data-date="2024-10-03">
+        <div class="node-content">
+          <div class="node-header">
+             <span class="node-date">2024-10-03</span>
+             <h3 class="node-title">ゲーム音楽研究会  ~田園の調べ~  演奏会</h3>
+          </div>
+          <div class="node-img-wrapper"><img src="assets/poster/2024-10-03_dennen-no-shirabe.jpg" alt="Poster"></div>
+        </div>
+      </div>
+       <div class="tree-node" data-date="2024-09-26">
+        <div class="node-content">
+          <div class="node-header">
+             <span class="node-date">2024-09-26</span>
+             <h3 class="node-title">第一回GOK演奏会  ~冒険の調べ~</h3>
+          </div>
+          <div class="node-img-wrapper"><img src="assets/poster/2024-09-26_bouken-no-shirabe.jpg" alt="Poster"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="connect">
+  <div class="marquee-container">
+    <span class="marquee-text">CONNECT/CONNECT/CONNECT/CONNECT/CONNECT/CONNECT/CONNECT/</span>
+  </div>
+  <div class="wrap">
+    <div class="socials">
+      <a href="https://www.youtube.com/@kyarinnko" target="_blank">YOUTUBE</a>
+      <a href="https://x.com/iamkyarin" target="_blank">TWITTER</a>
+      <a href="mailto:cattoe4work@gmail.com">EMAIL</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  &copy; <span id="year"></span> KYARIN・きゃりー
+  <h3 class="section-title wave-text">all made in HTML by me</h3>
+</footer>
+
+<script>
+  // ==========================================
+  // 1. DYNAMIC ASCII AUDIO PLAYER (CLEAR, SMOOTH EQ)
+  // ==========================================
+  const audioTracks = [
+    { title: "川崎市職員採用PR動画の楽曲「光導」", src: "assets/music/kawasaki.mp3" },
+    { title: "MUSIC DESIGN SYMPHONIC ORCHESTRA 2025、The Sky and Sea", src: "assets/music/skyandsea.mp3" },
+    { title: "03. Song Name Three", src: "assets/audio/song3.mp3" },
+    { title: "04. Visual Novel Draft Mix", src: "assets/audio/song4.mp3" },
+    { title: "05. RPG Battle Theme 1", src: "assets/audio/song5.mp3" },
+    { title: "06. String Quartet arrangement", src: "assets/audio/song6.mp3" },
+    { title: "07. Piano Solo Concept", src: "assets/audio/song7.mp3" },
+    { title: "08. GOK Live Session Audio", src: "assets/audio/song8.mp3" }
+  ];
+
+  let currentTrackIdx = 0;
+  const audioEl = document.getElementById("master-audio");
+  const playBtn = document.getElementById("play-pause-btn");
+  const visualizer = document.getElementById("visualizer");
+  const seekBar = document.getElementById("seek-bar");
+  const volBar = document.getElementById("vol-bar");
+  const timeText = document.getElementById("time-text");
+  const progressText = document.getElementById("progress-text");
+  const volText = document.getElementById("vol-text");
+  const tracklistEl = document.getElementById("tracklist-container");
+  
+  let isPlaying = false;
+  // Clearer EQ Blocks
+  const eqChars = [' ', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
+  let audioCtx, analyser, source;
+  const dataArray = new Uint8Array(32); 
+
+  audioEl.volume = 0.5;
+
+  function initAudioContext() {
+    if (!audioCtx) {
+      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 64; 
+      source = audioCtx.createMediaElementSource(audioEl);
+      source.connect(analyser);
+      analyser.connect(audioCtx.destination);
+    }
+    if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+  }
+
+  function loadTracklist() {
+    tracklistEl.innerHTML = "";
+    audioTracks.forEach((track, index) => {
+      const el = document.createElement("div");
+      el.className = `track ${index === currentTrackIdx ? 'active' : ''}`;
+      el.innerHTML = `<span>${index+1}. ${track.title}</span>`;
+      el.onclick = () => playTrack(index);
+      tracklistEl.appendChild(el);
+    });
+  }
+
+  function playTrack(index) {
+    initAudioContext();
+    currentTrackIdx = index;
+    audioEl.src = audioTracks[index].src;
+    audioEl.play().catch(()=>console.log("Audio file missing."));
+    isPlaying = true; playBtn.innerText = "[||]";
+    loadTracklist();
+  }
+
+  function togglePlay() {
+    initAudioContext();
+    if(!audioEl.src) { playTrack(0); return; }
+    if(isPlaying) { audioEl.pause(); playBtn.innerText = "[►]"; isPlaying = false; }
+    else { audioEl.play(); playBtn.innerText = "[||]"; isPlaying = true; }
+  }
+ 
+  // Less sensitive responsiveness
+  const ATTACK = 0.15; 
+  const DECAY = 0.05;  
+  const BINS = 50;
+  const MAX_LINES = 14; 
+  let smoothedData = new Float32Array(BINS); 
+  let specHistory = Array(MAX_LINES).fill(" ".repeat(BINS));
+
+  function animateVisualizer() {
+    if (isPlaying && analyser) {
+      analyser.getByteFrequencyData(dataArray);
+      let currentLine = "";
+      const center = BINS / 2;
+
+      for (let i = 0; i < BINS; i++) {
+        let mirroredIdx = Math.abs(center - i);
+        let binIdx = Math.floor((mirroredIdx / center) * 7) + 1;
+        
+        // Curved scaling to make low noise less jumpy
+        let rawVal = (dataArray[binIdx] || 0) / 255;
+        let targetVal = Math.pow(rawVal, 1.5);
+        
+        if (targetVal > smoothedData[i]) smoothedData[i] += (targetVal - smoothedData[i]) * ATTACK;
+        else smoothedData[i] -= (smoothedData[i] - targetVal) * DECAY;
+        
+        let charIdx = Math.floor(smoothedData[i] * (eqChars.length - 1));
+        currentLine += eqChars[charIdx] || ' ';
+      }
+      specHistory.shift();
+      specHistory.push(currentLine);
+      visualizer.textContent = specHistory.join('\n'); 
+    } else if (!isPlaying && visualizer.textContent !== "SYSTEM STANDBY...") {
+      specHistory.shift();
+      specHistory.push(" ".repeat(BINS));
+      visualizer.textContent = specHistory.join('\n');
+    }
+    requestAnimationFrame(animateVisualizer);
+  }
+  animateVisualizer();
+
+  audioEl.addEventListener("timeupdate", () => {
+    const percent = (audioEl.currentTime / audioEl.duration) * 100 || 0;
+    seekBar.value = percent;
+    updateAsciiBar(progressText, percent, 20);
+    timeText.innerText = `${formatTime(audioEl.currentTime)} / ${formatTime(audioEl.duration || 0)}`;
+  });
+  function seekAudio() { audioEl.currentTime = audioEl.duration * (seekBar.value / 100); }
+  function changeVolume() { audioEl.volume = volBar.value / 100; updateAsciiBar(volText, volBar.value, 10, "VOL "); }
+  function updateAsciiBar(el, pct, len, pre = "") { const f = Math.round((pct/100)*len); el.innerText = `${pre}[${'='.repeat(f)}${'-'.repeat(len-f)}]`; }
+  function formatTime(s) { let m = Math.floor(s/60); let sc = Math.floor(s%60); return `${m}:${sc<10?'0':''}${sc}`; }
+  
+  loadTracklist(); updateAsciiBar(progressText, 0, 20); updateAsciiBar(volText, 50, 10, "VOL ");
+
+  // ==========================================
+  // 2. TOGGLES (Gallery & Scores)
+  // ==========================================
+  function toggleGallery() {
+    const hidden = document.querySelectorAll('#gallery .hidden-item');
+    const btn = document.getElementById('toggle-gallery');
+    let expand = btn.innerText.includes("SHOW MORE");
+    hidden.forEach(i => i.style.display = expand ? 'block' : 'none');
+    btn.innerText = expand ? "HIDE ARCHIVES" : "SHOW MORE ARCHIVES";
+  }
+  
+  function toggleScores() {
+    const hidden = document.querySelectorAll('.hidden-score');
+    const btn = document.getElementById('toggle-scores');
+    let expand = btn.innerText.includes("SHOW MORE");
+    
+    hidden.forEach(i => {
+      i.style.display = expand ? 'block' : 'none';
+      if(expand) {
+        setTimeout(() => { i.style.transform = 'scale(1)'; }, 50); // animate in
+      }
+    });
+    btn.innerText = expand ? "COLLAPSE ARCHIVE" : "SHOW MORE ARCHIVES";
+  }
+
+  // ==========================================
+  // 3. GOK TREE LOGIC
+  // ==========================================
+  let treeLatest = true;
+  let treeExpanded = false;
+
+  function toggleTreeSort() {
+    treeLatest = !treeLatest;
+    const tree = document.getElementById('event-tree');
+    const nodes = Array.from(tree.querySelectorAll('.tree-node'));
+    nodes.sort((a, b) => {
+      const dA = new Date(a.getAttribute('data-date')); const dB = new Date(b.getAttribute('data-date'));
+      return treeLatest ? dB - dA : dA - dB;
+    });
+    tree.innerHTML = ''; nodes.forEach(n => tree.appendChild(n));
+    document.getElementById('sort-date-btn').innerText = treeLatest ? "SORT: 最近" : "SORT: 過去";
+  }
+
+  function toggleTreeEvents() {
+    treeExpanded = !treeExpanded;
+    document.querySelectorAll('#event-tree .tree-node').forEach((n, i) => {
+      if (i < 2 || treeExpanded) n.classList.remove('hidden-event');
+      else n.classList.add('hidden-event');
+    });
+    document.getElementById('toggle-events-btn').innerText = treeExpanded ? "COLLAPSE" : "EXPAND ALL";
+  }
+
+  // ==========================================
+  // 4. PARALLAX SCORES & GLOBAL FX
+  // ==========================================
+  const scoresSection = document.getElementById('scores');
+  let isHoveringScores = false;
+  
+  scoresSection.addEventListener('mouseenter', () => {
+    isHoveringScores = true;
+  });
+  
+  scoresSection.addEventListener('mouseleave', () => {
+    isHoveringScores = false;
+    document.querySelectorAll(".parallax-item").forEach(item => {
+      item.style.transform = `scale(0.85)`; // Shrink away smoothly when mouse leaves section
+    });
+  });
+
+  scoresSection.addEventListener("mousemove", (e) => {
+    if(!isHoveringScores) return;
+    const rect = scoresSection.getBoundingClientRect();
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    
+    document.querySelectorAll(".parallax-item").forEach(item => {
+      const speed = item.getAttribute("data-speed");
+      // Calculate offset based on mouse distance from center of section
+      const x = (rect.width / 2 - mouseX) * speed;
+      const y = (rect.height / 2 - mouseY) * speed;
+      item.style.transform = `scale(1) translateX(${x}px) translateY(${y}px)`; // Full size and offset
+    });
+  });
+
+  function openLightbox(src) { if(!src) return; document.getElementById('lightbox-img').src = src; document.getElementById('lightbox').style.display = 'flex'; }
+  function closeLightbox() { document.getElementById('lightbox').style.display = 'none'; }
+  document.querySelectorAll('.brutal-item img').forEach(img => { img.addEventListener('click', (e) => openLightbox(e.target.src)); });
+
+  window.addEventListener('scroll', () => { document.documentElement.style.setProperty('--scroll', window.scrollY); });
+  
+  document.querySelectorAll('.wave-text').forEach(el => {
+    el.innerHTML = el.innerText.split('').map((char, i) => char === ' ' ? ' ' : `<span class="wave-char" style="animation-delay: ${i * 0.1}s">${char}</span>`).join('');
+  });
+
+  // RESTORED FLUID WAVY ASCII BACKGROUND
+  const asciiBg = document.getElementById('ascii-bg');
+  const asciiChars = ' ..::++--==__ '; 
+  let time = 0, mouseX = window.innerWidth/2, mouseY = window.innerHeight/2;
+  let targetX = mouseX, targetY = mouseY;
+  
+  window.addEventListener('mousemove', (e) => { targetX = e.clientX; targetY = e.clientY; });
+
+  function drawAsciiBg() {
+    mouseX += (targetX - mouseX) * 0.05;
+    mouseY += (targetY - mouseY) * 0.05;
+    let content = '';
+    
+    for (let y = 0; y < 45; y++) {
+      for (let x = 0; x < 120; x++) {
+        const sx = (x/120)*window.innerWidth, sy = (y/45)*window.innerHeight;
+        const dx = sx - mouseX, dy = sy - mouseY;
+        const mouseDist = Math.max(0, 300 - Math.sqrt(dx*dx + dy*dy)) / 300; 
+        const centerDist = Math.sqrt(Math.pow(sx - window.innerWidth/2, 2) + Math.pow(sy - window.innerHeight/2, 2));
+        
+        const ambientRipple = Math.sin(centerDist * 0.005 - time * 1.5) * 0.5;
+        const planarWave = Math.cos(x * 0.1 + time) * Math.sin(y * 0.1 - time);
+        
+        let val = Math.max(0, Math.min(0.99, 0.5 + (ambientRipple * 0.5) + (planarWave * 0.3) + mouseDist * 0.5));
+        content += asciiChars[Math.floor(val * asciiChars.length)];
+      }
+      content += '\n';
+    }
+    
+    asciiBg.textContent = content; time += 0.015; 
+    setTimeout(() => requestAnimationFrame(drawAsciiBg), 75); 
+  }
+  drawAsciiBg();
+
+  document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+<div id="lightbox" onclick="closeLightbox()"><img id="lightbox-img" src="" alt="Full size"></div>
+</body>
+</html>
