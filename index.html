@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>KYARIN | Composer & Arranger</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,7 +57,25 @@
     --font-ensemble: 'JetBrains Mono', monospace;
     --font-connect: 'Syncopate', sans-serif;
     
-    --scroll: 0; 
+    --scroll: 0;
+
+    /* ==========================================================
+       [DREAMSCAPE TITLE FONT SIZE SETTING]
+       Adjust these two values anytime to change "THE DREAMSCAPE" size:
+       - --dreamscape-title-size: Desktop / Tablet size (+20% bigger)
+       - --dreamscape-title-size-mobile: iPhone / Small display size (+20% bigger with safe side gaps)
+       ========================================================== */
+    --dreamscape-title-size: clamp(1.8rem, 5.52vw, 5.76rem);
+    --dreamscape-title-size-mobile: clamp(1.38rem, 6.35vw, 2.34rem);
+
+    /* Dynamic Left-Gap Jump Bar Scaling Variables (updated via JS based on screen-to-content gap, maxing out 40% larger) */
+    --jump-font-size: clamp(0.58rem, 0.85vw, 1.01rem);
+    --jump-bar-pad-y: 6px;
+    --jump-bar-pad-x: 4px;
+    --jump-link-pad-y: 6px;
+    --jump-link-pad-x: 3px;
+    --jump-list-gap: 4px;
+    --jump-left-offset: clamp(6px, 1.2vw, 18px);
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -100,19 +118,19 @@
   .nav-links a:hover { transform: translateY(-3px); }
   .nav-links a:hover::after { width: 100%; }
 
-  /* Compact Top-Left Vertical Jump Bar (40% more compact, top-down vertical text, no dots) */
+  /* Top-Left Vertical Jump Bar (Moved down from top corner, static highlight with zero float, scales with left content gap up to +40% max) */
   .side-jump-bar {
     position: fixed;
-    top: clamp(8px, 1.2vh, 16px);
-    left: clamp(6px, 1vw, 14px);
-    transform: translateX(-150%);
+    top: max(68px, calc(env(safe-area-inset-top, 0px) + 54px));
+    left: var(--jump-left-offset, clamp(6px, 1.2vw, 18px));
+    transform: translateX(-160%);
     opacity: 0;
     pointer-events: none;
     z-index: 150;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 5px 3px;
+    padding: var(--jump-bar-pad-y, 6px) var(--jump-bar-pad-x, 4px);
     border: 1.5px solid var(--accent-white);
     background: rgba(0, 8, 255, 0.92);
     backdrop-filter: blur(8px);
@@ -129,9 +147,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 3px;
+    gap: var(--jump-list-gap, 4px);
     font-family: var(--font-ensemble);
-    font-size: clamp(0.58rem, 0.68vw, 0.72rem);
+    font-size: var(--jump-font-size, clamp(0.58rem, 0.85vw, 1.01rem));
   }
   .side-jump-list li {
     display: flex;
@@ -144,18 +162,21 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 5px 2px;
+    width: 100%;
+    padding: var(--jump-link-pad-y, 6px) var(--jump-link-pad-x, 3px);
     text-decoration: none;
     color: inherit;
     border: 1px solid transparent;
-    transition: 0.2s ease;
+    transition: background-color 0.18s ease, color 0.18s ease, border-color 0.18s ease;
     white-space: nowrap;
     letter-spacing: -0.03em;
     line-height: 1;
-    font-weight: 600;
+    font-weight: 700;
+    transform: none;
   }
-  .side-jump-list a:hover {
-    transform: translateX(2px);
+  .side-jump-list a:hover,
+  .side-jump-list a:focus-visible {
+    transform: none;
   }
   /* Theme: Blue (Default: Hero, Gallery, Circle, Connect) */
   .side-jump-bar.theme-blue {
@@ -241,24 +262,43 @@
   .album-section { border: 4px solid var(--main-blue); padding: clamp(16px, 3vw, 40px); background: rgba(0, 8, 255, 0.03); position: relative; width: 100%; }
   .album-header { font-family: var(--font-ensemble); font-size: clamp(1rem, 1.4vw, 1.5rem); font-weight: bold; margin-bottom: 20px; border-bottom: 2px dashed var(--main-blue); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; overflow-wrap: anywhere; }
   
-  .ascii-wave { 
-    font-family: var(--font-ensemble); 
-    font-size: clamp(0.75rem, 1.1vw, 1.2rem); 
-    line-height: 1.1; 
-    letter-spacing: clamp(0px, 0.2vw, 3px); 
-    color: var(--main-blue); 
-    white-space: pre; 
-    height: clamp(160px, 18vw, 250px); 
-    width: 100%; 
-    display: flex; 
-    flex-direction: column; 
-    justify-content: flex-end; 
-    align-items: center;
-    background: #f8f9fa; 
+  .spectrograph-box {
+    position: relative;
+    height: clamp(210px, 24vw, 310px);
+    width: 100%;
+    background: #f8f9ff;
     border: 2px solid var(--main-blue);
-    padding: 12px; 
     margin-bottom: 24px;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .spectrograph-hud {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 12px;
+    border-bottom: 1px dashed rgba(0, 8, 255, 0.3);
+    background: rgba(0, 8, 255, 0.05);
+    font-family: var(--font-ensemble);
+    font-size: clamp(0.68rem, 0.85vw, 0.85rem);
+    color: var(--main-blue);
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    z-index: 2;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .spectrograph-hud-meta {
+    display: flex;
+    gap: 14px;
+    align-items: center;
+  }
+  .spectrograph-canvas {
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    display: block;
   }
   
   .controls-deck { 
@@ -352,14 +392,21 @@
     margin: 0 auto;
     pointer-events: none;
   }
+  /* ==========================================================
+     [HOW TO ADJUST "THE DREAMSCAPE" TITLE FONT SIZE]
+     Edit --dreamscape-title-size in :root (or font-size below).
+     Currently scaled +20% larger while keeping horizontal screen padding on mobile.
+     ========================================================== */
   #dreamscape .section-title {
     font-family: var(--font-dreamscape-title);
-    font-size: clamp(1.5rem, 4.6vw, 4.8rem);
-    letter-spacing: clamp(0.02em, 0.06em, 0.08em);
+    font-size: var(--dreamscape-title-size, clamp(1.8rem, 5.52vw, 5.76rem));
+    letter-spacing: clamp(0.015em, 0.05em, 0.07em);
     text-align: center;
     color: var(--accent-white);
     line-height: 1.15;
     margin-bottom: clamp(36px, 3vw, 40px);
+    padding-inline: clamp(8px, 2vw, 24px);
+    max-width: 100%;
     white-space: nowrap;
   }
   /* Main game overview description box right under the title */
@@ -538,6 +585,59 @@
     transform: scale(1.04);
   }
 
+  /* Centered Focal-Point YouTube Trailer Showcase at the end of THE DREAMSCAPE */
+  .dreamscape-trailer-showcase {
+    max-width: 960px;
+    width: 100%;
+    margin: clamp(64px, 7.5vw, 115px) auto 0 auto;
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+  .dreamscape-trailer-frame {
+    border: 2px solid var(--accent-white);
+    background: rgba(12, 12, 12, 0.94);
+    padding: clamp(14px, 1.8vw, 24px);
+    box-shadow: 12px 12px 0px rgba(255, 255, 255, 0.12);
+    transition: transform 0.35s cubic-bezier(0.19, 1, 0.22, 1), box-shadow 0.35s ease;
+  }
+  .dreamscape-trailer-frame:hover {
+    transform: translateY(-4px);
+    box-shadow: 16px 16px 0px rgba(255, 255, 255, 0.2);
+  }
+  .dreamscape-trailer-video {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: #050505;
+  }
+  .dreamscape-trailer-video iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  .dreamscape-trailer-desc-box {
+    margin-top: clamp(18px, 2vw, 26px);
+    padding: clamp(16px, 2vw, 24px) clamp(20px, 2.8vw, 36px);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(8, 8, 8, 0.92);
+    box-shadow: 8px 8px 0px rgba(255, 255, 255, 0.08);
+    text-align: center;
+  }
+  .dreamscape-trailer-title {
+    font-family: var(--font-dreamscape-desc);
+    font-size: clamp(1.35rem, 1.85vw, 1.85rem); /* Noticeably larger than standard 0.95rem-1.15rem descriptions */
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    color: var(--accent-white);
+    line-height: 1.5;
+  }
+
   /* Retro Pixel Dither Fade from Black (#000000) into Gallery Blue (rgb(0, 8, 255)) */
   .dreamscape-dither-fade {
     position: absolute;
@@ -576,11 +676,49 @@
   .tree-node:nth-child(even) { justify-content: flex-end; padding-right: 53%; text-align: right; }
   .tree-node:nth-child(even)::before { right: 50%; width: 3%; }
 
-  /* Text header never gets clipped now; only the poster wrapper expands/collapses */
+  /* Viewport wrapper that clips to 3.5 events when collapsed and fades out with pixel dithering */
+  .tree-map-viewport {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    transition: max-height 0.55s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .tree-map-viewport:not(.is-collapsed) {
+    max-height: none !important;
+  }
+  .circle-dither-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: clamp(78px, 8.5vw, 120px);
+    z-index: 5;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .tree-map-viewport:not(.is-collapsed) .circle-dither-fade {
+    opacity: 0;
+    display: none;
+  }
+  .circle-dither-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+  .circle-more-box {
+    text-align: center;
+    margin-top: clamp(28px, 3.5vw, 48px);
+    position: relative;
+    z-index: 6;
+  }
+
+  /* Text header never gets clipped; poster wrapper scales to the full width of the event box and display */
   .node-content { 
     position: relative; z-index: 2; border: 2px solid var(--accent-white); 
-    background: var(--main-blue); width: 100%; max-width: 480px; 
-    padding: 16px 20px; opacity: 0.85; cursor: pointer;
+    background: var(--main-blue); width: 100%; max-width: clamp(320px, 42vw, 540px); 
+    padding: clamp(14px, 1.5vw, 22px); opacity: 0.9; cursor: pointer;
     transition: opacity 0.3s, transform 0.3s, box-shadow 0.3s; 
   }
   
@@ -591,21 +729,32 @@
   .node-title { font-size: clamp(1rem, 1.15vw, 1.2rem); font-weight: 700; line-height: 1.4; overflow-wrap: anywhere; }
   
   .node-img-wrapper { 
-    width: 100%; aspect-ratio: 3/4; border: 0px dashed var(--white-50); 
+    width: 100%; max-width: 100%; border: 0px dashed var(--white-50); 
     background: var(--white-10); position: relative; margin-top: 0; 
     max-height: 0; opacity: 0; overflow: hidden;
     display: flex; align-items: center; justify-content: center;
-    transition: max-height 0.5s cubic-bezier(0.19, 1, 0.22, 1), margin-top 0.3s, opacity 0.3s, border-width 0.2s;
+    transition: max-height 0.5s cubic-bezier(0.19, 1, 0.22, 1), margin-top 0.3s, opacity 0.3s, border-width 0.2s, padding 0.3s;
   }
   .node-content:hover .node-img-wrapper,
   .node-content:focus-visible .node-img-wrapper,
   .node-content.is-open .node-img-wrapper {
-    max-height: 600px;
+    max-height: min(75vh, 680px);
+    width: 100%;
+    max-width: 100%;
     margin-top: 15px;
+    padding: 6px;
     opacity: 1;
     border-width: 1px;
   }
-  .node-img-wrapper img { width: 100%; height: 100%; object-fit: contain; filter: grayscale(100%); transition: 0.5s; }
+  .node-img-wrapper img {
+    width: 100%;
+    height: auto;
+    max-height: min(72vh, 660px);
+    object-fit: contain;
+    display: block;
+    filter: grayscale(100%);
+    transition: 0.5s;
+  }
   .node-content:hover .node-img-wrapper img,
   .node-content:focus-visible .node-img-wrapper img,
   .node-content.is-open .node-img-wrapper img { filter: grayscale(0%); }
@@ -694,13 +843,13 @@
       width: 100%;
     }
 
-    /* Switch timeline to compact single-column layout with smaller cards & poster previews */
-    .tree-map { max-width: 420px; margin: 0 auto; }
+    /* Switch timeline to single-column layout where cards and posters scale with the box & display */
+    .tree-map { max-width: min(92vw, 500px); margin: 0 auto; }
     .tree-map::before { left: 12px; transform: none; }
-    .tree-node { padding: 8px 0; }
+    .tree-node { padding: 10px 0; }
     .tree-node:nth-child(odd),
     .tree-node:nth-child(even) {
-      padding-left: 32px;
+      padding-left: 34px;
       padding-right: 0;
       justify-content: flex-start;
       text-align: left;
@@ -709,33 +858,60 @@
     .tree-node:nth-child(even)::before {
       left: 12px;
       right: auto;
-      width: 20px;
-      top: 28px;
+      width: 22px;
+      top: 30px;
     }
-    .node-content { max-width: 310px; padding: 10px 12px; }
-    .node-title { font-size: 0.88rem; }
-    .node-date { font-size: 0.75rem; }
+    .node-content { max-width: 100%; width: 100%; padding: 12px 15px; }
+    .node-title { font-size: clamp(0.9rem, 2.2vw, 1.05rem); }
+    .node-date { font-size: 0.8rem; }
     .node-content:hover .node-img-wrapper,
     .node-content:focus-visible .node-img-wrapper,
     .node-content.is-open .node-img-wrapper {
-      max-height: 190px;
-      max-width: 135px;
-      margin-top: 8px;
+      max-height: min(68vh, 520px);
+      width: 100%;
+      max-width: 100%;
+      margin-top: 12px;
+    }
+    .node-img-wrapper img {
+      width: 100%;
+      height: auto;
+      max-height: min(65vh, 500px);
     }
   }
 
   @media (max-width: 640px) {
     .wrap { padding: 0 22px; }
-    header { width: 100%; top: 0; }
-    nav { padding: 10px 12px; border: none; border-bottom: 2px solid var(--accent-white); flex-direction: column; gap: 6px; }
+    /* iPhone 13 Pro / 16 camera notch clearance (~47px notch + 15-20px extra space) */
+    header {
+      width: 100%;
+      top: max(62px, calc(env(safe-area-inset-top, 47px) + 16px));
+    }
+    nav {
+      padding: 10px 12px;
+      border: none;
+      border-top: 1px solid rgba(255, 255, 255, 0.35);
+      border-bottom: 2px solid var(--accent-white);
+      flex-direction: column;
+      gap: 6px;
+    }
     .nav-links { justify-content: center; gap: 12px; font-size: 0.8rem; }
 
-    .hero { padding-top: 105px; min-height: auto; }
+    /* Push hero content down to match the notch-cleared top header */
+    .hero {
+      padding-top: max(168px, calc(env(safe-area-inset-top, 47px) + 122px));
+      min-height: auto;
+    }
     .hero-meta-block { flex-direction: column; text-align: center; gap: 12px; }
     .profile-frame { margin: 0 auto; width: 96px; height: 96px; }
     .hero h1 { font-size: clamp(1.35rem, 6.2vw, 2rem); white-space: nowrap; }
     #music .section-title { font-size: clamp(1.8rem, 8vw, 2.6rem); white-space: nowrap; }
-    #dreamscape .section-title { font-size: clamp(1.2rem, 5.6vw, 1.95rem); white-space: nowrap; letter-spacing: 0.03em; }
+    /* +20% larger on mobile while keeping a clean horizontal gap from iPhone screen walls */
+    #dreamscape .section-title {
+      font-size: var(--dreamscape-title-size-mobile, clamp(1.38rem, 6.35vw, 2.34rem));
+      white-space: nowrap;
+      letter-spacing: 0.025em;
+      padding-inline: 10px;
+    }
     #gallery .section-title { font-size: clamp(1.5rem, 7vw, 2.3rem); white-space: nowrap; text-align: center; margin-bottom: 24px; }
     #circle .section-title { font-size: clamp(0.88rem, 4.1vw, 1.3rem); white-space: nowrap; }
     .contact-email { font-size: clamp(0.75rem, 3.5vw, 1rem); white-space: nowrap; }
@@ -799,6 +975,15 @@
       padding: 12px 14px;
       font-size: 0.85rem;
     }
+    .dreamscape-trailer-showcase {
+      margin-top: 44px;
+    }
+    .dreamscape-trailer-frame {
+      padding: 10px;
+    }
+    .dreamscape-trailer-title {
+      font-size: clamp(1.15rem, 4.8vw, 1.45rem);
+    }
 
     /* Gallery items heavily smaller on mobile (compact 2-col thumbnail grid) */
     .brutal-grid {
@@ -820,31 +1005,29 @@
       line-height: 1.2;
     }
 
-    /* GOK Circle timeline heavily smaller on mobile */
-    .tree-map { max-width: 280px; }
-    .node-content { max-width: 235px; padding: 8px 10px; border-width: 1.5px; }
-    .node-title { font-size: 0.78rem; }
-    .node-date { font-size: 0.68rem; }
+    /* GOK Circle timeline on mobile: poster image scales to the full size of the event box and display */
+    .tree-map { max-width: min(88vw, 350px); }
+    .node-content { max-width: 100%; width: 100%; padding: 10px 12px; border-width: 1.5px; }
+    .node-title { font-size: 0.84rem; }
+    .node-date { font-size: 0.72rem; }
     .node-content:hover .node-img-wrapper,
     .node-content:focus-visible .node-img-wrapper,
     .node-content.is-open .node-img-wrapper {
-      max-height: 145px;
-      max-width: 105px;
-      margin-top: 6px;
+      max-height: min(62vh, 440px);
+      width: 100%;
+      max-width: 100%;
+      margin-top: 10px;
+    }
+    .node-img-wrapper img {
+      width: 100%;
+      height: auto;
+      max-height: min(60vh, 420px);
     }
 
-    /* Compact Top-Left Vertical Jump Bar on mobile */
+    /* Top-Left Vertical Jump Bar moved down below notch on mobile */
     .side-jump-bar {
-      top: 6px;
-      left: 4px;
-      padding: 4px 2px;
-    }
-    .side-jump-list {
-      font-size: 0.52rem;
-      gap: 2px;
-    }
-    .side-jump-list a {
-      padding: 4px 1.5px;
+      top: max(68px, calc(env(safe-area-inset-top, 47px) + 20px));
+      left: var(--jump-left-offset, 4px);
     }
   }
 </style>
@@ -947,7 +1130,16 @@
         </div>
         
         <div class="player-display">
-          <div class="ascii-wave" id="visualizer" aria-hidden="true">SYSTEM STANDBY...</div>
+          <div class="spectrograph-box" id="visualizer" aria-label="Audio Waveform and Logarithmic Frequency Spectrograph (50Hz to 16000Hz)">
+            <div class="spectrograph-hud" aria-hidden="true">
+              <span>SPECTROGRAPH // LOGARITHMIC 50Hz — 16,000Hz</span>
+              <div class="spectrograph-hud-meta">
+                <span id="spectro-peak-label">PEAK: -- Hz</span>
+                <span id="spectro-state-label">STANDBY</span>
+              </div>
+            </div>
+            <canvas id="spectro-canvas" class="spectrograph-canvas" aria-hidden="true"></canvas>
+          </div>
           
           <div class="controls-deck">
             <button class="play-btn" id="play-pause-btn" onclick="togglePlay()" aria-label="Toggle Playback">[►]</button>
@@ -1048,6 +1240,20 @@
           </div>
         </article>
       </div>
+
+      <!-- Focal-Point YouTube Trailer Template at the end of THE DREAMSCAPE -->
+      <div class="dreamscape-trailer-showcase">
+        <div class="dreamscape-trailer-frame work-card-yt" data-yt-url="https://www.youtube.com/watch?v=B6FvJaW8cBQ">
+          <div class="dreamscape-trailer-video">
+            <!-- Replace the YouTube video ID (B6FvJaW8cBQ) below with your Dreamscape Trailer 1 link -->
+            <iframe src="https://www.youtube.com/embed/B6FvJaW8cBQ" title="Dreamscape Trailer 1 YouTube Video" frameborder="0" allowfullscreen></iframe>
+            <a href="https://www.youtube.com/watch?v=B6FvJaW8cBQ" target="_blank" rel="noopener noreferrer" class="yt-mobile-tap" aria-label="Open Dreamscape Trailer 1 in YouTube"></a>
+          </div>
+        </div>
+        <div class="dreamscape-trailer-desc-box">
+          <p class="dreamscape-trailer-title">Dreamscape Trailer 1</p>
+        </div>
+      </div>
     </div>
 
     <div class="dreamscape-dither-fade" aria-hidden="true">
@@ -1107,6 +1313,7 @@
         <button id="sort-date-btn" class="btn" onclick="toggleTreeSort()" aria-label="Sort timeline events">SORT: 最近</button>
       </div>
 
+      <div class="tree-map-viewport is-collapsed" id="event-tree-viewport">
       <div class="tree-map" id="event-tree">
         <div class="tree-node" data-date="2026-03-16">
           <div class="node-content" tabindex="0">
@@ -1208,6 +1415,14 @@
           </div>
         </div>
       </div>
+      <div class="circle-dither-fade" id="circle-dither-fade" aria-hidden="true">
+        <canvas id="circle-dither-canvas" class="circle-dither-canvas"></canvas>
+      </div>
+      </div>
+
+      <div class="circle-more-box">
+        <button id="toggle-events-btn" class="btn" aria-expanded="false" onclick="toggleCircleEvents()">SHOW MORE EVENTS</button>
+      </div>
     </div>
   </section>
 
@@ -1238,7 +1453,7 @@
 
 <script>
   // ==========================================
-  // 1. DYNAMIC ASCII AUDIO PLAYER & RESIZE OBSERVER
+  // 1. HIGH-RESOLUTION 50Hz–16,000Hz LOGARITHMIC AUDIO SPECTROGRAPH & WAVEFORM PLAYER
   // ==========================================
   const audioTracks = [
     { title: "川崎市職員採用PR動画の楽曲「光導」", src: "assets/music/kawasaki.mp3" },
@@ -1255,6 +1470,10 @@
   const audioEl = document.getElementById("master-audio");
   const playBtn = document.getElementById("play-pause-btn");
   const visualizer = document.getElementById("visualizer");
+  const spectroCanvas = document.getElementById("spectro-canvas");
+  const spectroCtx = spectroCanvas ? spectroCanvas.getContext("2d") : null;
+  const spectroPeakLabel = document.getElementById("spectro-peak-label");
+  const spectroStateLabel = document.getElementById("spectro-state-label");
   const seekBar = document.getElementById("seek-bar");
   const volBar = document.getElementById("vol-bar");
   const timeText = document.getElementById("time-text");
@@ -1263,21 +1482,26 @@
   const progressWrapper = document.getElementById("progress-wrapper");
   const volumeWrapper = document.getElementById("volume-wrapper");
   const tracklistEl = document.getElementById("tracklist-container");
-  
-  let isPlaying = false;
-  const eqChars = [' ', '▂', '▃', '▄', '▅', '▆', '▇', '█'];
-  let audioCtx, analyser, source;
-  const dataArray = new Uint8Array(32); 
 
-  // Dynamic character capacities so ASCII bars never overflow their boxes
+  let isPlaying = false;
+  let audioCtx, analyser, source;
+  // High-resolution FFT (4096 samples -> 2048 frequency bins, ~10.7Hz resolution per bin)
+  const FFT_SIZE = 4096;
+  const MIN_FREQ = 50;
+  const MAX_FREQ = 16000;
+  const FREQ_TICKS = [50, 100, 200, 500, 1000, 2000, 5000, 10000, 16000];
+  let freqData = new Uint8Array(FFT_SIZE / 2);
+  let timeData = new Uint8Array(FFT_SIZE);
+
+  // Dynamic character capacities for seek & volume bars
   let progressCharLen = 20;
   let volCharLen = 10;
-  let BINS = 50;
-  const MAX_LINES = 14;
-  const ATTACK = 0.15; 
-  const DECAY = 0.05;  
-  let smoothedData = new Float32Array(BINS); 
-  let specHistory = Array(MAX_LINES).fill(" ".repeat(BINS));
+
+  // Logarithmic band smoothing and peak-hold arrays
+  const NUM_LOG_BANDS = 112;
+  const smoothedBands = new Float32Array(NUM_LOG_BANDS);
+  const peakHoldBands = new Float32Array(NUM_LOG_BANDS);
+  let standbyPhase = 0;
 
   audioEl.volume = 0.5;
 
@@ -1295,12 +1519,15 @@
     const volCharW = measureCharWidth(volumeWrapper);
     volCharLen = Math.max(4, Math.floor(volumeWrapper.clientWidth / volCharW) - 7);
 
-    const visCharW = measureCharWidth(visualizer);
-    const newBins = Math.max(16, Math.min(64, Math.floor((visualizer.clientWidth - 30) / visCharW)));
-    if (newBins !== BINS) {
-      BINS = newBins;
-      smoothedData = new Float32Array(BINS);
-      specHistory = Array(MAX_LINES).fill(" ".repeat(BINS));
+    if (spectroCanvas) {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const rect = spectroCanvas.getBoundingClientRect();
+      const targetW = Math.max(200, Math.floor(rect.width * dpr));
+      const targetH = Math.max(120, Math.floor(rect.height * dpr));
+      if (spectroCanvas.width !== targetW || spectroCanvas.height !== targetH) {
+        spectroCanvas.width = targetW;
+        spectroCanvas.height = targetH;
+      }
     }
 
     const percent = (audioEl.currentTime / audioEl.duration) * 100 || 0;
@@ -1317,7 +1544,12 @@
     if (!audioCtx) {
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 64; 
+      analyser.fftSize = FFT_SIZE;
+      analyser.smoothingTimeConstant = 0.78;
+      analyser.minDecibels = -92;
+      analyser.maxDecibels = -10;
+      freqData = new Uint8Array(analyser.frequencyBinCount);
+      timeData = new Uint8Array(analyser.fftSize);
       source = audioCtx.createMediaElementSource(audioEl);
       source.connect(analyser);
       analyser.connect(audioCtx.destination);
@@ -1353,44 +1585,274 @@
     audioEl.play().catch(() => console.log("Audio file missing."));
     isPlaying = true; 
     playBtn.innerText = "[||]";
+    if (spectroStateLabel) spectroStateLabel.textContent = "ACTIVE // LIVE FFT";
     loadTracklist();
   }
 
   function togglePlay() {
     initAudioContext();
     if (!audioEl.src) { playTrack(0); return; }
-    if (isPlaying) { audioEl.pause(); playBtn.innerText = "[►]"; isPlaying = false; }
-    else { audioEl.play(); playBtn.innerText = "[||]"; isPlaying = true; }
+    if (isPlaying) {
+      audioEl.pause();
+      playBtn.innerText = "[►]";
+      isPlaying = false;
+      if (spectroStateLabel) spectroStateLabel.textContent = "PAUSED";
+    } else {
+      audioEl.play().catch(() => console.log("Audio file missing."));
+      playBtn.innerText = "[||]";
+      isPlaying = true;
+      if (spectroStateLabel) spectroStateLabel.textContent = "ACTIVE // LIVE FFT";
+    }
+  }
+
+  // Convert a frequency (Hz) in [50, 16000] to normalized logarithmic X position [0..1]
+  function freqToLogNorm(hz) {
+    return Math.log(hz / MIN_FREQ) / Math.log(MAX_FREQ / MIN_FREQ);
+  }
+
+  // Interpolate FFT magnitude at an exact frequency (Hz) so low frequencies (50Hz-250Hz) are smooth
+  function sampleFrequencyMagnitude(hz, sampleRate) {
+    const nyquist = sampleRate / 2;
+    const exactBin = (hz / nyquist) * freqData.length;
+    const bin0 = Math.max(0, Math.min(freqData.length - 1, Math.floor(exactBin)));
+    const bin1 = Math.max(0, Math.min(freqData.length - 1, bin0 + 1));
+    const frac = exactBin - bin0;
+    return ((freqData[bin0] * (1 - frac)) + (freqData[bin1] * frac)) / 255;
+  }
+
+  function formatHzLabel(hz) {
+    return hz >= 1000 ? `${hz / 1000}kHz` : `${hz}Hz`;
   }
 
   function animateVisualizer() {
-    if (isPlaying && analyser) {
-      analyser.getByteFrequencyData(dataArray);
-      let currentLine = "";
-      const center = BINS / 2;
+    if (spectroCtx && spectroCanvas) {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const W = spectroCanvas.width;
+      const H = spectroCanvas.height;
+      const padLeft = Math.round(38 * dpr);
+      const padRight = Math.round(16 * dpr);
+      const padTop = Math.round(14 * dpr);
+      const padBottom = Math.round(26 * dpr);
+      const plotW = Math.max(60, W - padLeft - padRight);
+      const plotH = Math.max(40, H - padTop - padBottom);
 
-      for (let i = 0; i < BINS; i++) {
-        let mirroredIdx = Math.abs(center - i);
-        let binIdx = Math.floor((mirroredIdx / center) * 7) + 1;
-        let rawVal = (dataArray[binIdx] || 0) / 255;
-        let targetVal = Math.pow(rawVal, 1.5);
-        
-        if (targetVal > smoothedData[i]) smoothedData[i] += (targetVal - smoothedData[i]) * ATTACK;
-        else smoothedData[i] -= (smoothedData[i] - targetVal) * DECAY;
-        
-        let charIdx = Math.floor(smoothedData[i] * (eqChars.length - 1));
-        currentLine += eqChars[charIdx] || ' ';
+      spectroCtx.clearRect(0, 0, W, H);
+
+      // 1. Background & Technical Grid (50Hz to 16,000Hz Logarithmic X-Axis + dB Y-Axis)
+      spectroCtx.fillStyle = "#f8f9ff";
+      spectroCtx.fillRect(0, 0, W, H);
+
+      spectroCtx.font = `600 ${Math.round(9.5 * dpr)}px "JetBrains Mono", monospace`;
+      spectroCtx.textBaseline = "middle";
+
+      // Horizontal dB reference lines (-20dB, -40dB, -60dB, -80dB)
+      const dbSteps = [
+        { label: " 0dB", norm: 0.0 },
+        { label: "-24dB", norm: 0.33 },
+        { label: "-48dB", norm: 0.66 },
+        { label: "-72dB", norm: 1.0 }
+      ];
+      dbSteps.forEach(step => {
+        const y = Math.round(padTop + step.norm * plotH) + 0.5;
+        spectroCtx.strokeStyle = "rgba(0, 8, 255, 0.12)";
+        spectroCtx.lineWidth = 1;
+        spectroCtx.setLineDash([3 * dpr, 3 * dpr]);
+        spectroCtx.beginPath();
+        spectroCtx.moveTo(padLeft, y);
+        spectroCtx.lineTo(padLeft + plotW, y);
+        spectroCtx.stroke();
+
+        spectroCtx.fillStyle = "rgba(0, 8, 255, 0.55)";
+        spectroCtx.textAlign = "right";
+        spectroCtx.fillText(step.label, padLeft - Math.round(6 * dpr), y);
+      });
+
+      // Vertical logarithmic frequency grid lines (50Hz .. 16kHz)
+      FREQ_TICKS.forEach((hz, idx) => {
+        const normX = freqToLogNorm(hz);
+        const x = Math.round(padLeft + normX * plotW) + 0.5;
+        spectroCtx.strokeStyle = (hz === 1000 || hz === 50 || hz === 16000)
+          ? "rgba(0, 8, 255, 0.24)"
+          : "rgba(0, 8, 255, 0.11)";
+        spectroCtx.beginPath();
+        spectroCtx.moveTo(x, padTop);
+        spectroCtx.lineTo(x, padTop + plotH);
+        spectroCtx.stroke();
+
+        // Hide crowded labels on very narrow mobile screens
+        if (W < 420 * dpr && (hz === 200 || hz === 2000 || hz === 10000)) return;
+        spectroCtx.fillStyle = "rgb(0, 8, 255)";
+        if (idx === 0) spectroCtx.textAlign = "left";
+        else if (idx === FREQ_TICKS.length - 1) spectroCtx.textAlign = "right";
+        else spectroCtx.textAlign = "center";
+        spectroCtx.fillText(formatHzLabel(hz), x, padTop + plotH + Math.round(13 * dpr));
+      });
+      spectroCtx.setLineDash([]);
+
+      // 2. Sample Live Audio Spectrum (50Hz - 16,000Hz) & Time-Domain Waveform
+      const sampleRate = (audioCtx && audioCtx.sampleRate) ? audioCtx.sampleRate : 44100;
+      let hasSignal = false;
+      let peakMag = 0;
+      let peakFreq = 0;
+
+      if (isPlaying && analyser) {
+        analyser.getByteFrequencyData(freqData);
+        analyser.getByteTimeDomainData(timeData);
+        for (let i = 0; i < freqData.length; i++) {
+          if (freqData[i] > 2) { hasSignal = true; break; }
+        }
       }
-      specHistory.shift();
-      specHistory.push(currentLine);
-      visualizer.textContent = specHistory.join('\n'); 
-    } else if (!isPlaying && visualizer.textContent !== "SYSTEM STANDBY...") {
-      specHistory.shift();
-      specHistory.push(" ".repeat(BINS));
-      visualizer.textContent = specHistory.join('\n');
+
+      standbyPhase += 0.035;
+
+      for (let b = 0; b < NUM_LOG_BANDS; b++) {
+        const norm0 = b / NUM_LOG_BANDS;
+        const norm1 = (b + 1) / NUM_LOG_BANDS;
+        const normMid = (norm0 + norm1) * 0.5;
+        const freqHz = MIN_FREQ * Math.pow(MAX_FREQ / MIN_FREQ, normMid);
+
+        let targetVal = 0;
+        if (isPlaying && hasSignal) {
+          // Sample 3 sub-points across the logarithmic band for clean antialiasing
+          const fA = MIN_FREQ * Math.pow(MAX_FREQ / MIN_FREQ, norm0);
+          const fB = freqHz;
+          const fC = MIN_FREQ * Math.pow(MAX_FREQ / MIN_FREQ, norm1);
+          const raw = (
+            sampleFrequencyMagnitude(fA, sampleRate) +
+            sampleFrequencyMagnitude(fB, sampleRate) * 1.4 +
+            sampleFrequencyMagnitude(fC, sampleRate)
+          ) / 3.4;
+          // Slight perceptual tilt (+3dB/octave compensation so high frequencies up to 16kHz read clearly)
+          const tilt = 0.85 + 0.32 * normMid;
+          targetVal = Math.min(1, Math.pow(raw * tilt, 1.15));
+        } else if (isPlaying && !hasSignal) {
+          // Graceful animated synthesis if previewing without local MP3 files
+          const synth =
+            Math.exp(-Math.pow((normMid - 0.22) / 0.14, 2)) * (0.55 + 0.35 * Math.sin(standbyPhase * 2.1 + b * 0.15)) +
+            Math.exp(-Math.pow((normMid - 0.55) / 0.18, 2)) * (0.42 + 0.3 * Math.cos(standbyPhase * 3.4 - b * 0.22)) +
+            Math.exp(-Math.pow((normMid - 0.82) / 0.12, 2)) * (0.28 + 0.22 * Math.sin(standbyPhase * 5.0 + b * 0.3));
+          targetVal = Math.max(0.02, Math.min(0.95, synth));
+        } else {
+          // Clean subtle idle baseline
+          targetVal = 0.025 + 0.018 * Math.sin(standbyPhase + normMid * Math.PI * 3);
+        }
+
+        // Smooth attack & release
+        if (targetVal > smoothedBands[b]) {
+          smoothedBands[b] += (targetVal - smoothedBands[b]) * 0.32;
+        } else {
+          smoothedBands[b] += (targetVal - smoothedBands[b]) * 0.12;
+        }
+
+        // Peak hold decay
+        if (smoothedBands[b] >= peakHoldBands[b]) {
+          peakHoldBands[b] = smoothedBands[b];
+        } else {
+          peakHoldBands[b] = Math.max(0, peakHoldBands[b] - 0.0045);
+        }
+
+        if (smoothedBands[b] > peakMag) {
+          peakMag = smoothedBands[b];
+          peakFreq = freqHz;
+        }
+      }
+
+      if (spectroPeakLabel) {
+        if (isPlaying && peakMag > 0.06) {
+          spectroPeakLabel.textContent = `PEAK: ${ peakFreq >= 1000 ? (peakFreq / 1000).toFixed(2) + ' kHz' : Math.round(peakFreq) + ' Hz' }`;
+        } else {
+          spectroPeakLabel.textContent = "PEAK: -- Hz";
+        }
+      }
+
+      // 3. Draw Filled Logarithmic Spectral Envelope + High-Detail Vertical Bars
+      const barStep = plotW / NUM_LOG_BANDS;
+      const barWidth = Math.max(1.5 * dpr, barStep * 0.66);
+
+      // Filled spectral area under curve
+      spectroCtx.beginPath();
+      spectroCtx.moveTo(padLeft, padTop + plotH);
+      for (let b = 0; b < NUM_LOG_BANDS; b++) {
+        const x = padLeft + (b + 0.5) * barStep;
+        const y = padTop + plotH - (smoothedBands[b] * plotH * 0.92);
+        if (b === 0) {
+          spectroCtx.lineTo(x, y);
+        } else {
+          const prevX = padLeft + (b - 0.5) * barStep;
+          const prevY = padTop + plotH - (smoothedBands[b - 1] * plotH * 0.92);
+          const cx = (prevX + x) * 0.5;
+          const cy = (prevY + y) * 0.5;
+          spectroCtx.quadraticCurveTo(prevX, prevY, cx, cy);
+        }
+      }
+      spectroCtx.lineTo(padLeft + plotW, padTop + plotH);
+      spectroCtx.closePath();
+      spectroCtx.fillStyle = "rgba(0, 8, 255, 0.12)";
+      spectroCtx.fill();
+
+      // Discrete high-resolution logarithmic bars + peak-hold ticks
+      for (let b = 0; b < NUM_LOG_BANDS; b++) {
+        const x = padLeft + b * barStep + (barStep - barWidth) * 0.5;
+        const barH = Math.max(2 * dpr, smoothedBands[b] * plotH * 0.92);
+        const y = padTop + plotH - barH;
+
+        spectroCtx.fillStyle = "rgba(0, 8, 255, 0.82)";
+        spectroCtx.fillRect(x, y, barWidth, barH);
+
+        // Peak-hold tick
+        const peakY = padTop + plotH - (peakHoldBands[b] * plotH * 0.92);
+        spectroCtx.fillStyle = "rgb(0, 8, 255)";
+        spectroCtx.fillRect(x, Math.max(padTop, peakY - 2 * dpr), barWidth, Math.max(1.5 * dpr, 2 * dpr));
+      }
+
+      // Crisp upper spectral contour line
+      spectroCtx.beginPath();
+      for (let b = 0; b < NUM_LOG_BANDS; b++) {
+        const x = padLeft + (b + 0.5) * barStep;
+        const y = padTop + plotH - (smoothedBands[b] * plotH * 0.92);
+        if (b === 0) spectroCtx.moveTo(x, y);
+        else spectroCtx.lineTo(x, y);
+      }
+      spectroCtx.strokeStyle = "rgb(0, 8, 255)";
+      spectroCtx.lineWidth = 1.6 * dpr;
+      spectroCtx.stroke();
+
+      // 4. Clean Time-Domain Audio Waveform Overlay across Upper Midline
+      const waveCenterY = padTop + plotH * 0.34;
+      const waveAmp = plotH * 0.24;
+      spectroCtx.beginPath();
+      const waveSamples = 240;
+      for (let i = 0; i <= waveSamples; i++) {
+        const normX = i / waveSamples;
+        const x = padLeft + normX * plotW;
+        let sample = 0;
+        if (isPlaying && hasSignal) {
+          const idx = Math.min(timeData.length - 1, Math.floor(normX * (timeData.length - 1)));
+          sample = (timeData[idx] - 128) / 128;
+        } else if (isPlaying && !hasSignal) {
+          sample =
+            Math.sin(normX * Math.PI * 10 - standbyPhase * 4) * 0.35 *
+            Math.sin(normX * Math.PI) *
+            (0.6 + 0.4 * Math.cos(normX * 24 + standbyPhase * 2));
+        } else {
+          sample = Math.sin(normX * Math.PI * 4 + standbyPhase) * 0.03 * Math.sin(normX * Math.PI);
+        }
+        const y = waveCenterY + sample * waveAmp;
+        if (i === 0) spectroCtx.moveTo(x, y);
+        else spectroCtx.lineTo(x, y);
+      }
+      spectroCtx.strokeStyle = "rgba(0, 8, 255, 0.95)";
+      spectroCtx.lineWidth = 2 * dpr;
+      spectroCtx.stroke();
+
+      // Outer plot frame border
+      spectroCtx.strokeStyle = "rgb(0, 8, 255)";
+      spectroCtx.lineWidth = 1.5 * dpr;
+      spectroCtx.strokeRect(padLeft, padTop, plotW, plotH);
     }
     requestAnimationFrame(animateVisualizer);
   }
+  recalcPlayerDimensions();
   animateVisualizer();
 
   audioEl.addEventListener("timeupdate", () => {
@@ -1423,10 +1885,9 @@
   }
   
   loadTracklist();
-  recalcPlayerDimensions();
 
   // ==========================================
-  // 2. TOGGLES (Gallery & Scores)
+  // 2. TOGGLES (Gallery & GOK 3.5 Events Clip)
   // ==========================================
   function toggleGallery() {
     const hidden = document.querySelectorAll('#gallery .hidden-item');
@@ -1436,8 +1897,43 @@
     btn.innerText = expand ? "HIDE ARCHIVES" : "SHOW MORE ARCHIVES";
     btn.setAttribute("aria-expanded", expand);
   }
-  
 
+  // Calculate exact height for 3.5 events (first 3 events + half of the 4th event)
+  const eventTreeViewport = document.getElementById('event-tree-viewport');
+  const eventTree = document.getElementById('event-tree');
+  const toggleEventsBtn = document.getElementById('toggle-events-btn');
+
+  function updateCircleTreeClip() {
+    if (!eventTreeViewport || !eventTree) return;
+    if (!eventTreeViewport.classList.contains('is-collapsed')) {
+      eventTreeViewport.style.maxHeight = 'none';
+      return;
+    }
+    const nodes = eventTree.querySelectorAll('.tree-node');
+    if (nodes.length >= 4) {
+      const fourthNode = nodes[3];
+      const halfFourthHeight = fourthNode.offsetTop + (fourthNode.offsetHeight * 0.52);
+      eventTreeViewport.style.maxHeight = `${Math.ceil(halfFourthHeight)}px`;
+    }
+  }
+
+  function toggleCircleEvents() {
+    if (!eventTreeViewport || !toggleEventsBtn) return;
+    const isCollapsed = eventTreeViewport.classList.toggle('is-collapsed');
+    toggleEventsBtn.innerText = isCollapsed ? "SHOW MORE EVENTS" : "HIDE EVENTS";
+    toggleEventsBtn.setAttribute("aria-expanded", String(!isCollapsed));
+    updateCircleTreeClip();
+  }
+
+  // Keep 3.5-event clip accurate whenever cards expand/collapse on hover or window resizes
+  if (eventTree) {
+    const treeObserver = new ResizeObserver(() => updateCircleTreeClip());
+    treeObserver.observe(eventTree);
+    eventTree.querySelectorAll('.node-content').forEach(card => treeObserver.observe(card));
+  }
+  window.addEventListener('resize', updateCircleTreeClip);
+  window.addEventListener('load', updateCircleTreeClip);
+  updateCircleTreeClip();
 
   // ==========================================
   // 3. GOK TREE LOGIC (Tap Support for Mobile)
@@ -1456,6 +1952,7 @@
     tree.innerHTML = '';
     nodes.forEach(n => tree.appendChild(n));
     document.getElementById('sort-date-btn').innerText = treeLatest ? "SORT: 最近" : "SORT: 過去";
+    updateCircleTreeClip();
   }
 
   document.querySelectorAll('.node-content').forEach(card => {
@@ -1467,11 +1964,12 @@
         return;
       }
       card.classList.toggle('is-open');
+      setTimeout(updateCircleTreeClip, 50);
     });
   });
 
-  // On small/mobile displays, tapping anywhere on a work-card opens YouTube directly
-  document.querySelectorAll('.work-card').forEach(card => {
+  // On small/mobile displays, tapping anywhere on a work-card or trailer opens YouTube directly
+  document.querySelectorAll('.work-card, .work-card-yt').forEach(card => {
     card.addEventListener('click', (e) => {
       if (window.innerWidth <= 640 && !e.target.closest('.yt-mobile-tap')) {
         const ytUrl = card.getAttribute('data-yt-url');
@@ -1623,8 +2121,15 @@
   drawAsciiBg();
 
   // ==========================================
-  // 5. BAYER PIXEL DITHER FADE (#dreamscape -> #gallery)
+  // 5. BAYER PIXEL DITHER FADES (#dreamscape -> #gallery AND #circle 3.5 events fade)
   // ==========================================
+  const bayer4 = [
+    [ 0,  8,  2, 10],
+    [12,  4, 14,  6],
+    [ 3, 11,  1,  9],
+    [15,  7, 13,  5]
+  ];
+
   function renderDreamscapeDither() {
     const canvas = document.getElementById('dreamscape-dither-canvas');
     if (!canvas) return;
@@ -1635,16 +2140,7 @@
     canvas.height = height;
     const ctx = canvas.getContext('2d');
 
-    // Classic 4x4 ordered Bayer threshold matrix (0..15)
-    const bayer4 = [
-      [ 0,  8,  2, 10],
-      [12,  4, 14,  6],
-      [ 3, 11,  1,  9],
-      [15,  7, 13,  5]
-    ];
-
     for (let y = 0; y < height; y++) {
-      // Normalized progress from 0.0 (top: pure black) to 1.0 (bottom: pure gallery blue)
       const t = y / (height - 1);
       for (let x = 0; x < width; x++) {
         const threshold = (bayer4[y % 4][x % 4] + 0.5) / 16;
@@ -1653,11 +2149,41 @@
       }
     }
   }
+
+  function renderCircleDither() {
+    const canvas = document.getElementById('circle-dither-canvas');
+    if (!canvas) return;
+    const pixelSize = 5;
+    const rect = canvas.getBoundingClientRect();
+    const width = Math.max(48, Math.ceil((rect.width || window.innerWidth) / pixelSize));
+    const height = 22;
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, width, height);
+
+    for (let y = 0; y < height; y++) {
+      // Dither from transparent (0.0) at top to solid main blue (1.0) at bottom
+      const t = y / (height - 1);
+      for (let x = 0; x < width; x++) {
+        const threshold = (bayer4[y % 4][x % 4] + 0.5) / 16;
+        if (t >= threshold) {
+          ctx.fillStyle = 'rgb(0, 8, 255)';
+          ctx.fillRect(x, y, 1, 1);
+        }
+      }
+    }
+  }
+
   renderDreamscapeDither();
-  window.addEventListener('resize', renderDreamscapeDither);
+  renderCircleDither();
+  window.addEventListener('resize', () => {
+    renderDreamscapeDither();
+    renderCircleDither();
+  });
 
   // ==========================================
-  // 6. VERTICAL RIGHT-SIDE JUMP BAR & SECTION COLOR MIRRORING
+  // 6. TOP-LEFT JUMP BAR: LEFT-GAP SCALING (UP TO +40% MAX) & SECTION COLOR MIRRORING
   // ==========================================
   const sideJumpBar = document.getElementById('side-jump-bar');
   const sideJumpLinks = document.querySelectorAll('.side-jump-list a');
@@ -1671,6 +2197,38 @@
   ];
 
   const heroSectionEl = document.querySelector('.hero');
+
+  function updateJumpBarScaleFromGap(activeSectionEl) {
+    if (!sideJumpBar) return;
+    // Measure the horizontal gap between the left edge of the screen (0) and the closest content inside .wrap
+    const wrapEl = (activeSectionEl && activeSectionEl.querySelector('.wrap')) || document.querySelector('.wrap');
+    let leftGapPx = 28;
+    if (wrapEl) {
+      const wrapRect = wrapEl.getBoundingClientRect();
+      const wrapStyle = window.getComputedStyle(wrapEl);
+      const padLeft = parseFloat(wrapStyle.paddingLeft) || 0;
+      leftGapPx = Math.max(16, wrapRect.left + padLeft);
+    }
+
+    // Normalize leftGapPx from compact mobile gap (22px) to wide screen gap (160px+)
+    // Scales up to 40% larger than the previous max (0.72rem * 1.4 = 1.008rem)
+    const t = Math.max(0, Math.min(1, (leftGapPx - 22) / 138));
+    const fontRem = (0.52 + t * (1.008 - 0.52)).toFixed(3);
+    const barPadY = (4 + t * (7 - 4)).toFixed(1);
+    const barPadX = (2 + t * (4.5 - 2)).toFixed(1);
+    const linkPadY = (4 + t * (7 - 4)).toFixed(1);
+    const linkPadX = (1.5 + t * (3.2 - 1.5)).toFixed(1);
+    const listGap = (2 + t * (4.2 - 2)).toFixed(1);
+    const leftOffset = Math.max(4, Math.min(22, Math.round(leftGapPx * 0.14)));
+
+    sideJumpBar.style.setProperty('--jump-font-size', `${fontRem}rem`);
+    sideJumpBar.style.setProperty('--jump-bar-pad-y', `${barPadY}px`);
+    sideJumpBar.style.setProperty('--jump-bar-pad-x', `${barPadX}px`);
+    sideJumpBar.style.setProperty('--jump-link-pad-y', `${linkPadY}px`);
+    sideJumpBar.style.setProperty('--jump-link-pad-x', `${linkPadX}px`);
+    sideJumpBar.style.setProperty('--jump-list-gap', `${listGap}px`);
+    sideJumpBar.style.setProperty('--jump-left-offset', `${leftOffset}px`);
+  }
 
   function updateSideJumpBar() {
     if (!sideJumpBar) return;
@@ -1693,6 +2251,8 @@
         break;
       }
     }
+
+    updateJumpBarScaleFromGap(activeSection.el);
 
     sideJumpBar.classList.remove('theme-blue', 'theme-white', 'theme-black');
     sideJumpBar.classList.add(activeSection.theme);
