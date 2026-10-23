@@ -87,7 +87,7 @@
   /* Accessibility Focus Ring */
   :focus-visible { outline: 3px solid var(--accent-white); outline-offset: 4px; border-radius: 2px; }
   .progress-wrapper:has(input[type="range"]:focus-visible),
-  .volume-wrapper:has(input[type="range"]:focus-visible) { outline: 3px solid var(--main-blue); outline-offset: 2px; }
+  .volume-knob:focus-visible { outline: 3px solid var(--main-blue); outline-offset: 2px; }
 
   /* ============================================================
      BACKGROUND & GLOBAL (Scaled Down 10% & Centered)
@@ -112,11 +112,56 @@
   header { position: absolute; top: clamp(10px, 2vh, 26px); left: 50%; transform: translateX(-50%); z-index: 90; width: calc(100% - clamp(24px, 6vw, 120px)); max-width: 1380px; }
   nav { display: flex; align-items: center; justify-content: space-between; padding: clamp(8px, 0.9vw, 13px) clamp(14px, 1.8vw, 26px); background: rgba(0, 8, 255, 0.9); backdrop-filter: blur(10px); border: 2px solid var(--accent-white); gap: 12px; }
   .logo { font-weight: 700; font-family: var(--font-hero); font-size: clamp(1.05rem, 1.45vw, 1.75rem); white-space: nowrap; }
-  .nav-links { display: flex; gap: clamp(10px, 1.8vw, 26px); list-style: none; font-family: var(--font-ensemble); font-size: clamp(0.85rem, 1vw, 1.08rem); flex-wrap: wrap; justify-content: flex-end; }
+  .nav-right { display: flex; align-items: center; gap: clamp(12px, 2vw, 28px); flex-wrap: wrap; justify-content: flex-end; }
+  .nav-links { display: flex; gap: clamp(10px, 1.8vw, 26px); list-style: none; font-family: var(--font-ensemble); font-size: clamp(0.85rem, 1vw, 1.08rem); flex-wrap: wrap; justify-content: flex-end; align-items: center; }
   .nav-links a { color: var(--accent-white); text-decoration: none; position: relative; padding: 4px; transition: 0.3s; white-space: nowrap; }
   .nav-links a::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 2px; background: var(--accent-white); transition: 0.3s ease; }
   .nav-links a:hover { transform: translateY(-3px); }
   .nav-links a:hover::after { width: 100%; }
+
+  /* Standout Language Hot-Swap Button (Disappears on scroll down) */
+  .lang-switch-btn {
+    font-family: var(--font-ensemble);
+    font-size: clamp(0.8rem, 0.95vw, 1rem);
+    font-weight: 700;
+    letter-spacing: 1px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0;
+    padding: 3px;
+    background: var(--accent-white);
+    color: var(--main-blue);
+    border: 2px solid var(--accent-white);
+    box-shadow: 4px 4px 0px rgba(255, 255, 255, 0.38);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.28s ease, visibility 0.28s ease;
+  }
+  .lang-switch-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px rgba(255, 255, 255, 0.55);
+  }
+  .lang-switch-btn.is-hidden-scroll {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(-10px);
+  }
+  .lang-opt {
+    padding: 3px 8px;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    line-height: 1.1;
+  }
+  .lang-opt.active {
+    background: var(--main-blue);
+    color: var(--accent-white);
+  }
+  .lang-divider {
+    padding: 0 2px;
+    color: var(--main-blue);
+    font-weight: 700;
+    opacity: 0.65;
+  }
 
   /* Top-Left Vertical Jump Bar (Moved down from top corner, static highlight with zero float, scales with left content gap up to +40% max) */
   .side-jump-bar {
@@ -304,7 +349,7 @@
   .controls-deck { 
     display: grid; 
     grid-template-columns: auto 1fr auto auto; 
-    gap: clamp(10px, 1.5vw, 20px); 
+    gap: clamp(12px, 1.8vw, 24px); 
     align-items: center; 
     font-family: var(--font-ensemble); 
     width: 100%;
@@ -313,10 +358,143 @@
   .play-btn:hover { background: var(--main-blue); color: var(--accent-white); }
   
   .progress-wrapper { position: relative; width: 100%; min-width: 0; height: 40px; display: flex; align-items: center; font-size: clamp(0.9rem, 1.2vw, 1.4rem); overflow: hidden; }
-  .volume-wrapper { position: relative; width: clamp(130px, 14vw, 220px); height: 40px; display: flex; align-items: center; font-size: clamp(0.9rem, 1.2vw, 1.4rem); overflow: hidden; }
   
   .ascii-bar-text { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; align-items: center; pointer-events: none; white-space: pre; overflow: hidden; }
   .time-display { font-size: clamp(0.85rem, 1.05vw, 1.2rem); white-space: nowrap; text-align: right; padding: 0 4px; }
+
+  /* Rotary Volume Knob, Editable 0-100 Input & Floating Popup Badge */
+  .volume-knob-unit {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 2px 6px;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .vol-popup-badge {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px) scale(0.92);
+    background: var(--main-blue);
+    color: var(--accent-white);
+    font-family: var(--font-ensemble);
+    font-size: 0.85rem;
+    font-weight: 700;
+    padding: 4px 9px;
+    border: 2px solid var(--accent-white);
+    box-shadow: 4px 4px 0px rgba(0, 8, 255, 0.35);
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.16s ease, transform 0.16s cubic-bezier(0.19, 1, 0.22, 1);
+    z-index: 30;
+  }
+  .vol-popup-badge::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px 5px 0 5px;
+    border-style: solid;
+    border-color: var(--main-blue) transparent transparent transparent;
+  }
+  .vol-popup-badge.is-active {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0) scale(1);
+  }
+  .volume-knob {
+    width: clamp(44px, 3.8vw, 54px);
+    height: clamp(44px, 3.8vw, 54px);
+    border-radius: 50%;
+    border: 2.5px solid var(--main-blue);
+    background: radial-gradient(circle at 32% 32%, #ffffff 0%, #e9ecff 72%, #d4daff 100%);
+    box-shadow: 3px 3px 0px rgba(0, 8, 255, 0.22), inset 0 0 0 2px rgba(0, 8, 255, 0.08);
+    position: relative;
+    cursor: ew-resize;
+    touch-action: none;
+    -webkit-user-drag: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: box-shadow 0.2s ease, background-color 0.2s ease;
+  }
+  .volume-knob:hover,
+  .volume-knob.is-dragging {
+    box-shadow: 4px 4px 0px rgba(0, 8, 255, 0.38), inset 0 0 0 2px rgba(0, 8, 255, 0.18);
+  }
+  .volume-knob-dial {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    transform: rotate(var(--knob-angle, -54deg));
+    pointer-events: none;
+  }
+  .volume-knob-indicator {
+    position: absolute;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 34%;
+    background: var(--main-blue);
+    border-radius: 2px;
+  }
+  .volume-knob-cap {
+    position: absolute;
+    width: 30%;
+    height: 30%;
+    border-radius: 50%;
+    background: rgba(0, 8, 255, 0.12);
+    border: 1.5px solid var(--main-blue);
+    pointer-events: none;
+  }
+  .volume-value-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    font-family: var(--font-ensemble);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--main-blue);
+  }
+  .volume-value-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.5px;
+    opacity: 0.8;
+  }
+  .vol-number-input {
+    width: 3.1ch;
+    padding: 1px 2px;
+    font-family: var(--font-ensemble);
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--main-blue);
+    background: rgba(0, 8, 255, 0.06);
+    border: 1px solid var(--main-blue);
+    text-align: center;
+    border-radius: 2px;
+    -moz-appearance: textfield;
+    appearance: textfield;
+    cursor: text;
+  }
+  .vol-number-input::-webkit-outer-spin-button,
+  .vol-number-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  .vol-number-input:focus {
+    background: var(--main-blue);
+    color: var(--accent-white);
+    outline: 2px solid var(--main-blue);
+    outline-offset: 1px;
+  }
 
   input[type="range"] { -webkit-appearance: none; appearance: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: transparent; cursor: pointer; z-index: 10; opacity: 0; }
   input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 0; height: 0; }
@@ -437,17 +615,18 @@
   }
   .dreamscape-entry {
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: clamp(20px, 2.5vw, 36px);
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(14px, 2.5vw, 36px);
     align-items: center;
     position: relative;
   }
   /* Standalone Image Frame Box */
   .dreamscape-image-box {
     position: relative;
+    min-width: 0;
     border: 1px solid rgba(255, 255, 255, 0.35);
     background: rgba(12, 12, 12, 0.88);
-    padding: clamp(12px, 1.4vw, 20px);
+    padding: clamp(10px, 1.4vw, 20px);
     backdrop-filter: blur(4px);
     transition: transform 0.45s cubic-bezier(0.19, 1, 0.22, 1), border-color 0.35s, box-shadow 0.35s;
   }
@@ -459,15 +638,17 @@
   /* Standalone Description Text Box Area set alongside the image */
   .dreamscape-text-box {
     position: relative;
+    min-width: 0;
     border: 1px solid rgba(255, 255, 255, 0.28);
     background: rgba(8, 8, 8, 0.9);
-    padding: clamp(18px, 2.2vw, 30px);
+    padding: clamp(14px, 2.2vw, 30px);
     backdrop-filter: blur(6px);
     box-shadow: 6px 6px 0px rgba(255, 255, 255, 0.07);
     font-family: var(--font-dreamscape-desc);
-    font-size: clamp(0.95rem, 1.05vw, 1.15rem);
+    font-size: clamp(0.88rem, 1.05vw, 1.15rem);
     line-height: 1.85;
     color: rgba(255, 255, 255, 0.88);
+    overflow-wrap: anywhere;
     transition: border-color 0.35s, transform 0.45s cubic-bezier(0.19, 1, 0.22, 1);
   }
   .dreamscape-text-box:hover {
@@ -631,7 +812,7 @@
   }
   .dreamscape-trailer-title {
     font-family: var(--font-dreamscape-desc);
-    font-size: clamp(1.35rem, 1.85vw, 1.85rem); /* Noticeably larger than standard 0.95rem-1.15rem descriptions */
+    font-size: clamp(1.35rem, 1.85vw, 1.85rem);
     font-weight: 700;
     letter-spacing: 0.06em;
     color: var(--accent-white);
@@ -763,8 +944,51 @@
      GALLERY SECTION
      ============================================================ */
   #gallery { background: var(--main-blue); }
-  #gallery .section-title { font-family: var(--font-gallery); font-size: clamp(1.85rem, 4.8vw, 5.2rem); font-weight: 800; text-transform: uppercase; margin-bottom: clamp(32px, 4.5vw, 68px); text-align: right; white-space: nowrap; }
-  .brutal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2vw, 24px); transform: skewY(-1.5deg); transform-origin: center; padding: 20px 0; }
+  #gallery .section-title { font-family: var(--font-gallery); font-size: clamp(1.85rem, 4.8vw, 5.2rem); font-weight: 800; text-transform: uppercase; margin-bottom: clamp(14px, 2vw, 24px); text-align: right; white-space: nowrap; }
+  .gallery-subtitle-box {
+    max-width: 920px;
+    margin: 0 0 clamp(32px, 4.2vw, 58px) auto;
+    padding-top: 14px;
+    border-top: 1px dashed var(--white-50);
+    text-align: right;
+    font-size: clamp(1.12rem, 1.32vw, 1.42rem); /* >25% larger than the previous 0.88rem-1.08rem text */
+    color: var(--accent-white);
+    line-height: 1.85;
+  }
+  .gallery-subtitle-box p {
+    text-align: inherit;
+  }
+  .gallery-grid-viewport {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    transition: max-height 0.55s cubic-bezier(0.19, 1, 0.22, 1);
+  }
+  .gallery-grid-viewport:not(.is-collapsed) {
+    max-height: none !important;
+  }
+  .gallery-dither-fade {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: clamp(78px, 8.5vw, 120px);
+    z-index: 12;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .gallery-grid-viewport:not(.is-collapsed) .gallery-dither-fade {
+    opacity: 0;
+    display: none;
+  }
+  .gallery-dither-canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+    image-rendering: pixelated;
+    image-rendering: crisp-edges;
+  }
+  .brutal-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: clamp(16px, 2vw, 24px); transform: skewY(-1.5deg); transform-origin: center; padding: 20px 0 36px 0; }
   .brutal-item { border: 2px solid var(--accent-white); aspect-ratio: 4/3; background: var(--white-10); transition: 0.35s; overflow: hidden; position: relative; cursor: pointer; }
   .brutal-item:hover, .brutal-item:focus-visible { transform: scale(1.03) skewY(1.5deg); z-index: 10; box-shadow: 10px 10px 0 var(--white-20); outline-offset: 4px; }
   .brutal-item.large { grid-column: span 2; aspect-ratio: 16/9; }
@@ -802,22 +1026,32 @@
     .works-grid { grid-template-columns: repeat(2, 1fr); }
     .work-card:nth-child(n) { grid-column: span 1; margin-top: 0; }
     
+    /* Keep each Dreamscape entry's exact left/right pairing locked on zoom & medium viewports */
     .dreamscape-entry.entry-1 .dreamscape-image-box,
     .dreamscape-entry.entry-2 .dreamscape-image-box,
-    .dreamscape-entry.entry-3 .dreamscape-image-box,
     .dreamscape-entry.entry-4 .dreamscape-image-box,
-    .dreamscape-entry.entry-5 .dreamscape-image-box,
-    .dreamscape-entry.entry-6 .dreamscape-image-box {
+    .dreamscape-entry.entry-5 .dreamscape-image-box {
       grid-column: 1 / 7;
       margin-top: 0;
       transform: none !important;
     }
     .dreamscape-entry.entry-1 .dreamscape-text-box,
     .dreamscape-entry.entry-2 .dreamscape-text-box,
-    .dreamscape-entry.entry-3 .dreamscape-text-box,
     .dreamscape-entry.entry-4 .dreamscape-text-box,
-    .dreamscape-entry.entry-5 .dreamscape-text-box,
+    .dreamscape-entry.entry-5 .dreamscape-text-box {
+      grid-column: 7 / 13;
+      margin-top: 0;
+      transform: none !important;
+    }
+    /* Entries 3 and 6 have Text on the Left and Image on the Right — preserve this exact order */
+    .dreamscape-entry.entry-3 .dreamscape-text-box,
     .dreamscape-entry.entry-6 .dreamscape-text-box {
+      grid-column: 1 / 7;
+      margin-top: 0;
+      transform: none !important;
+    }
+    .dreamscape-entry.entry-3 .dreamscape-image-box,
+    .dreamscape-entry.entry-6 .dreamscape-image-box {
       grid-column: 7 / 13;
       margin-top: 0;
       transform: none !important;
@@ -834,13 +1068,10 @@
   }
 
   @media (max-width: 820px) {
-    /* Controls deck wraps cleanly into 2 rows without overlapping */
+    /* Controls deck keeps play, progress, time, and rotary volume knob neatly aligned */
     .controls-deck {
-      grid-template-columns: auto 1fr auto;
-    }
-    .volume-wrapper {
-      grid-column: 1 / -1;
-      width: 100%;
+      grid-template-columns: auto 1fr auto auto;
+      gap: 10px;
     }
 
     /* Switch timeline to single-column layout where cards and posters scale with the box & display */
@@ -894,7 +1125,9 @@
       flex-direction: column;
       gap: 6px;
     }
+    .nav-right { justify-content: center; gap: 10px; width: 100%; }
     .nav-links { justify-content: center; gap: 12px; font-size: 0.8rem; }
+    .lang-switch-btn { font-size: 0.75rem; box-shadow: 3px 3px 0px rgba(255, 255, 255, 0.35); }
 
     /* Push hero content down to match the notch-cleared top header */
     .hero {
@@ -912,7 +1145,12 @@
       letter-spacing: 0.025em;
       padding-inline: 10px;
     }
-    #gallery .section-title { font-size: clamp(1.5rem, 7vw, 2.3rem); white-space: nowrap; text-align: center; margin-bottom: 24px; }
+    #gallery .section-title { font-size: clamp(1.5rem, 7vw, 2.3rem); white-space: nowrap; text-align: center; margin-bottom: 14px; }
+    .gallery-subtitle-box {
+      text-align: center;
+      margin: 0 auto 24px auto;
+      font-size: clamp(1.06rem, 4.2vw, 1.25rem);
+    }
     #circle .section-title { font-size: clamp(0.88rem, 4.1vw, 1.3rem); white-space: nowrap; }
     .contact-email { font-size: clamp(0.75rem, 3.5vw, 1rem); white-space: nowrap; }
 
@@ -951,29 +1189,39 @@
       line-height: 1.25;
     }
 
-    /* Dreamscape entries: compact image boxes on mobile */
+    /* Dreamscape entries: keep side-by-side left/right alignment fixed on mobile & high zoom */
     .dreamscape-canvas { gap: 32px; }
-    .dreamscape-entry { grid-template-columns: 1fr; gap: 12px; }
+    .dreamscape-entry {
+      grid-template-columns: repeat(12, minmax(0, 1fr));
+      gap: 10px;
+    }
     .dreamscape-entry.entry-1 .dreamscape-image-box,
     .dreamscape-entry.entry-2 .dreamscape-image-box,
-    .dreamscape-entry.entry-3 .dreamscape-image-box,
     .dreamscape-entry.entry-4 .dreamscape-image-box,
-    .dreamscape-entry.entry-5 .dreamscape-image-box,
-    .dreamscape-entry.entry-6 .dreamscape-image-box {
-      grid-column: 1 / -1;
-      max-width: 68%;
-      margin: 0 auto;
-      padding: 8px;
+    .dreamscape-entry.entry-5 .dreamscape-image-box {
+      grid-column: 1 / 6;
+      padding: 6px;
     }
     .dreamscape-entry.entry-1 .dreamscape-text-box,
     .dreamscape-entry.entry-2 .dreamscape-text-box,
-    .dreamscape-entry.entry-3 .dreamscape-text-box,
     .dreamscape-entry.entry-4 .dreamscape-text-box,
-    .dreamscape-entry.entry-5 .dreamscape-text-box,
+    .dreamscape-entry.entry-5 .dreamscape-text-box {
+      grid-column: 6 / 13;
+      padding: 10px 12px;
+      font-size: 0.78rem;
+      line-height: 1.65;
+    }
+    .dreamscape-entry.entry-3 .dreamscape-text-box,
     .dreamscape-entry.entry-6 .dreamscape-text-box {
-      grid-column: 1 / -1;
-      padding: 12px 14px;
-      font-size: 0.85rem;
+      grid-column: 1 / 8;
+      padding: 10px 12px;
+      font-size: 0.78rem;
+      line-height: 1.65;
+    }
+    .dreamscape-entry.entry-3 .dreamscape-image-box,
+    .dreamscape-entry.entry-6 .dreamscape-image-box {
+      grid-column: 8 / 13;
+      padding: 6px;
     }
     .dreamscape-trailer-showcase {
       margin-top: 44px;
@@ -991,7 +1239,7 @@
       gap: 8px;
       max-width: 88%;
       margin: 0 auto;
-      padding: 8px 0;
+      padding: 8px 0 24px 0;
     }
     .brutal-item,
     .brutal-item.large {
@@ -1041,24 +1289,31 @@
 <header id="top">
   <nav aria-label="Top Navigation">
     <div class="logo" aria-label="KYARIN">KYARIN・きゃりー</div>
-    <ul class="nav-links">
-      <li><a href="#music">楽曲</a></li>
-      <li><a href="#dreamscape">DREAMSCAPE</a></li>
-      <li><a href="#gallery">写真</a></li>
-      <li><a href="#circle">活動</a></li>
-      <li><a href="#connect">連絡</a></li>
-    </ul>
+    <div class="nav-right">
+      <ul class="nav-links">
+        <li><a href="#music" data-ja="楽曲" data-en="MUSIC">楽曲</a></li>
+        <li><a href="#dreamscape">DREAMSCAPE</a></li>
+        <li><a href="#gallery" data-ja="写真" data-en="GALLERY">写真</a></li>
+        <li><a href="#circle" data-ja="活動" data-en="CLUB">活動</a></li>
+        <li><a href="#connect" data-ja="連絡" data-en="CONNECT">連絡</a></li>
+      </ul>
+      <button type="button" id="lang-switch-btn" class="lang-switch-btn" onclick="toggleLanguage()" aria-label="Switch Language between Japanese and English">
+        <span class="lang-opt active" id="lang-opt-ja">日本</span>
+        <span class="lang-divider">/</span>
+        <span class="lang-opt" id="lang-opt-en">EN</span>
+      </button>
+    </div>
   </nav>
 </header>
 
 <aside id="side-jump-bar" class="side-jump-bar theme-blue" aria-label="Section Jump Navigation">
   <ul class="side-jump-list">
     <li><a href="#top" data-target="top">TOP</a></li>
-    <li><a href="#music" data-target="music">楽曲</a></li>
+    <li><a href="#music" data-target="music" data-ja="楽曲" data-en="MUSIC">楽曲</a></li>
     <li><a href="#dreamscape" data-target="dreamscape">DREAMSCAPE</a></li>
-    <li><a href="#gallery" data-target="gallery">写真</a></li>
-    <li><a href="#circle" data-target="circle">活動</a></li>
-    <li><a href="#connect" data-target="connect">連絡</a></li>
+    <li><a href="#gallery" data-target="gallery" data-ja="写真" data-en="PHOTO">写真</a></li>
+    <li><a href="#circle" data-target="circle" data-ja="活動" data-en="CLUB">活動</a></li>
+    <li><a href="#connect" data-target="connect" data-ja="連絡" data-en="LINKS">連絡</a></li>
   </ul>
 </aside>
 
@@ -1070,17 +1325,18 @@
           <img src="assets/kyarin.png" alt="Profile Picture of Roman Minear" class="profile-img">
         </div>
         <div>
-          <span class="eyebrow">作曲・編曲・演奏</span>
+          <span class="eyebrow" data-ja="作曲・編曲・演奏" data-en="Composition · Arrangement · Performance">作曲・編曲・演奏</span>
           <h2 class="eyebrow"><i>ROMAN MINEAR・ミネアロマン</i></h2>
           <h1 id="hero-heading" class="wave-text">KYARIN・きゃりー</h1>
         </div>
       </div>
-      <p class="hero-bio-title">洗足学園音楽大学、音楽・音響デザインコースの作編曲</p>
-      <p class="hero-bio">アメリカのハワイ州出身、中学校の途中に神奈川県の藤沢市へ移住しました。日本の中学校に入学した当時から打楽器やサックソフォンなどの演奏者として音楽の勉強始めました。
+      <p class="hero-bio-title" data-ja="洗足学園音楽大学、音楽・音響デザインコースの作編曲4年生" data-en="4th-Year Composition &amp; Arrangement Student — Music &amp; Sound Design Course, Senzoku Gakuen College of Music">洗足学園音楽大学、音楽・音響デザインコースの作編曲4年生</p>
+      <p class="hero-bio" data-ja="アメリカのハワイ州出身、中学校の途中に神奈川県の藤沢市へ移住しました。日本の中学校に入学した当時から打楽器やサックソフォンなどの演奏者として音楽の勉強始めました。
+        同時期に趣味で作曲や編曲を始め、学内演奏会で自身で制作した楽譜・楽曲を友人と演奏することもしていました。その後、音楽や作曲への情熱は一生続くという想いから、現在は洗足学園音楽大学でその勉強をやり続けています。" data-en="Originally from Hawaii, USA, I moved to Fujisawa, Kanagawa during middle school. Upon entering middle school in Japan, I began studying music as a percussionist and saxophonist. Around the same time, I started composing and arranging as a hobby, performing my own original scores and compositions with friends at school concerts. Realizing my passion for music and composition would last a lifetime, I am currently continuing my studies at Senzoku Gakuen College of Music.">アメリカのハワイ州出身、中学校の途中に神奈川県の藤沢市へ移住しました。日本の中学校に入学した当時から打楽器やサックソフォンなどの演奏者として音楽の勉強始めました。
         同時期に趣味で作曲や編曲を始め、学内演奏会で自身で制作した楽譜・楽曲を友人と演奏することもしていました。その後、音楽や作曲への情熱は一生続くという想いから、現在は洗足学園音楽大学でその勉強をやり続けています。</p>
       <div class="hero-skills">
-        <p><strong>SKILLS -</strong> 作曲・編曲、DAWと楽譜制作 - オーケストラ、吹奏楽、室内楽、ビッグバンド、ゲーム音楽、CM音楽。<br> サウンドデザイン、アニメーション・イラスト、3DCGデザイン。</p>
-        <p><strong>SOFTWARE -</strong> Cubase 15（現在）, Ableton Live, Logic Pro, Musescore <br> Blender, Adobe Photoshop・Illustrator・After Effects・Premiere Pro・Animate.</p>
+        <p data-ja="<strong>SKILLS -</strong> 作曲・編曲、DAWと楽譜制作 - オーケストラ、吹奏楽、室内楽、ビッグバンド、ゲーム音楽、CM音楽。<br> サウンドデザイン、アニメーション・イラスト、3DCGデザイン。" data-en="<strong>SKILLS -</strong> Composition &amp; Arrangement, DAW &amp; Score Production — Orchestra, Wind Ensemble, Chamber Music, Big Band, Game Music, Commercial Music.<br> Sound Design, Animation &amp; Illustration, 3DCG Design."><strong>SKILLS -</strong> 作曲・編曲、DAWと楽譜制作 - オーケストラ、吹奏楽、室内楽、ビッグバンド、ゲーム音楽、CM音楽。<br> サウンドデザイン、アニメーション・イラスト、3DCGデザイン。</p>
+        <p data-ja="<strong>SOFTWARE -</strong> Cubase 15（現在）, Ableton Live, Logic Pro, Musescore <br> Blender, Adobe Photoshop・Illustrator・After Effects・Premiere Pro・Animate." data-en="<strong>SOFTWARE -</strong> Cubase 15 (Current), Ableton Live, Logic Pro, MuseScore <br> Blender, Adobe Photoshop · Illustrator · After Effects · Premiere Pro · Animate."><strong>SOFTWARE -</strong> Cubase 15（現在）, Ableton Live, Logic Pro, Musescore <br> Blender, Adobe Photoshop・Illustrator・After Effects・Premiere Pro・Animate.</p>
       </div>
       <a href="#music" class="btn">EXPLORE</a>
     </div>
@@ -1099,7 +1355,7 @@
             <iframe src="https://www.youtube.com/embed/B6FvJaW8cBQ" title="The Queen's Final Stance OST YouTube Video" frameborder="0" allowfullscreen></iframe>
             <a href="https://www.youtube.com/watch?v=B6FvJaW8cBQ" target="_blank" rel="noopener noreferrer" class="yt-mobile-tap" aria-label="Open The Queen's Final Stance OST in YouTube"></a>
           </div>
-          <h3 class="work-title">The Queen's Final Stance OST - Thinking Music<br>(O2A2 2024 - Visual Novel Jam) <i>ゲームの制作コンペ</i></h3>
+          <h3 class="work-title" data-ja="The Queen's Final Stance OST - Thinking Music<br>(O2A2 2024 - Visual Novel Jam) <i>ゲームの制作コンペ</i>" data-en="The Queen's Final Stance OST - Thinking Music<br>(O2A2 2024 - Visual Novel Jam) <i>Game Jam Competition</i>">The Queen's Final Stance OST - Thinking Music<br>(O2A2 2024 - Visual Novel Jam) <i>ゲームの制作コンペ</i></h3>
         </div>
         <div class="work-card" data-yt-url="https://www.youtube.com/watch?v=2QYCTZonzB8&t=2786s">
           <div class="video-container">
@@ -1130,9 +1386,9 @@
         </div>
         
         <div class="player-display">
-          <div class="spectrograph-box" id="visualizer" aria-label="Audio Waveform and Logarithmic Frequency Spectrograph (50Hz to 16000Hz)">
+          <div class="spectrograph-box" id="visualizer" aria-label="Audio Waveform and Logarithmic Frequency Spectrograph (50Hz to 7000Hz)">
             <div class="spectrograph-hud" aria-hidden="true">
-              <span>SPECTROGRAPH // LOGARITHMIC 50Hz — 16,000Hz</span>
+              <span>SPECTROGRAPH // LOGARITHMIC 50Hz — 7,000Hz</span>
               <div class="spectrograph-hud-meta">
                 <span id="spectro-peak-label">PEAK: -- Hz</span>
                 <span id="spectro-state-label">STANDBY</span>
@@ -1151,9 +1407,18 @@
             
             <div class="time-display" id="time-text" aria-live="polite">0:00 / 0:00</div>
 
-            <div class="volume-wrapper" id="volume-wrapper">
-              <div class="ascii-bar-text" id="vol-text" aria-hidden="true">VOL [=====-----]</div>
-              <input type="range" id="vol-bar" value="50" min="0" max="100" oninput="changeVolume()" aria-label="Adjust Volume">
+            <div class="volume-knob-unit" id="volume-wrapper">
+              <div class="vol-popup-badge" id="vol-popup-badge" aria-hidden="true">VOL 30%</div>
+              <div class="volume-knob" id="volume-knob" role="slider" tabindex="0" aria-label="Volume Knob (Drag left or right)" aria-valuemin="0" aria-valuemax="100" aria-valuenow="30">
+                <div class="volume-knob-dial" id="volume-knob-dial">
+                  <div class="volume-knob-indicator"></div>
+                </div>
+                <div class="volume-knob-cap"></div>
+              </div>
+              <div class="volume-value-row">
+                <span class="volume-value-label">VOL</span>
+                <input type="number" id="vol-number-input" class="vol-number-input" value="30" min="0" max="100" step="1" aria-label="Volume Level 0 to 100">
+              </div>
             </div>
           </div>
         </div>
@@ -1174,8 +1439,12 @@
         <h2 id="dreamscape-heading" class="section-title wave-text">THE DREAMSCAPE</h2>
 
         <div class="dreamscape-intro-box">
-          <p>「Dreamscape」は「夢の世界」との意味をして、オリジナルゲーム物語です。主人公の「ヌリ」からの視点、Dreamscape</p>
-          <p>個人で制作をしているモノで、ゲームとして公開する予定はまだ調整中です。</p>
+          <p data-ja="「夢の世界」との意味をして、オリジナルゲーム物語です。とある古い伝説「夢」にまつわる物語、昔々に夢はただ見るだけのモノではありませんでした。神々に創られたその世界の名は「ドリームスケープ」" data-en="Meaning &quot;World of Dreams,&quot; this is an original game story based on an ancient legend surrounding dreams. Long ago, dreams were not merely something you saw while asleep—the world created by the gods was known as &quot;The Dreamscape.&quot;">「夢の世界」との意味をして、オリジナルゲーム物語です。とある古い伝説
+「夢」にまつわる物語、昔々に夢はただ見るだけのモノではありませんでした。神々に創られたその世界の名は「ドリームスケープ」
+          </p>
+          <p data-ja="友人と組んだ小さなチームで制作中、進捗はちょっとずつ進んでいます。最初は学内イベントを目的にして、コンセプト映像を作成しましたが、" data-en="Currently in development with a small team of friends, progressing step by step. Initially, we created a concept video for a campus event, which continues to evolve into this project.">友人と組んだ小さなチームで制作中、進捗はちょっとずつ進んでいます。最初は学内イベントを目的にして、コンセプト映像を作成しましたが、
+
+          </p>
         </div>
       </div>
 
@@ -1186,7 +1455,7 @@
           </div>
           <div class="dreamscape-text-box parallax-item" data-speed="-0.015">
             <span class="dreamscape-text-label">DESCRIPTION 01</span>
-            <p>ここに画像01（左側の枠）に対応する説明文を入力します。画像ボックスとは独立したテキストエリアとして横に配置されています。</p>
+            <p data-ja="ここに画像01（左側の枠）に対応する説明文を入力します。画像ボックスとは独立したテキストエリアとして横に配置されています。" data-en="Enter the description corresponding to Image 01 (left frame) here. Placed alongside the image box as an independent text area.">ここに画像01（左側の枠）に対応する説明文を入力します。画像ボックスとは独立したテキストエリアとして横に配置されています。</p>
           </div>
         </article>
 
@@ -1196,14 +1465,14 @@
           </div>
           <div class="dreamscape-text-box parallax-item" data-speed="0.018">
             <span class="dreamscape-text-label">DESCRIPTION 02</span>
-            <p>ここに画像02に対応する説明文やシーン解説、キャラクター・アートワークの詳細などを記入します。</p>
+            <p data-ja="ここに画像02に対応する説明文やシーン解説、キャラクター・アートワークの詳細などを記入します。" data-en="Enter the description, scene commentary, or character and artwork details corresponding to Image 02 here.">ここに画像02に対応する説明文やシーン解説、キャラクター・アートワークの詳細などを記入します。</p>
           </div>
         </article>
 
         <article class="dreamscape-entry entry-3">
           <div class="dreamscape-text-box parallax-item" data-speed="0.015">
             <span class="dreamscape-text-label">DESCRIPTION 03</span>
-            <p>ここに画像03（右側の枠）に対応する説明文を入力します。単調な並びにならないよう、左右の配置や高さをずらしたレイアウトになっています。</p>
+            <p data-ja="ここに画像03（右側の枠）に対応する説明文を入力します。単調な並びにならないよう、左右の配置や高さをずらしたレイアウトになっています。" data-en="Enter the description corresponding to Image 03 (right frame) here. The left/right placement and vertical offset are staggered for an artistic layout.">ここに画像03（右側の枠）に対応する説明文を入力します。単調な並びにならないよう、左右の配置や高さをずらしたレイアウトになっています。</p>
           </div>
           <div class="dreamscape-image-box parallax-item" data-speed="-0.03">
             <div class="dreamscape-preview" data-slot="IMAGE 03 // 1:1"><img src="" alt="DREAMSCAPE Image 03"></div>
@@ -1216,7 +1485,7 @@
           </div>
           <div class="dreamscape-text-box parallax-item" data-speed="-0.018">
             <span class="dreamscape-text-label">DESCRIPTION 04</span>
-            <p>ここに画像04に対応する説明文やゲームシステム、エリア・BGMとの連動についての解説を入力します。</p>
+            <p data-ja="ここに画像04に対応する説明文やゲームシステム、エリア・BGMとの連動についての解説を入力します。" data-en="Enter the description corresponding to Image 04, such as game systems or how the area and BGM are interconnected.">ここに画像04に対応する説明文やゲームシステム、エリア・BGMとの連動についての解説を入力します。</p>
           </div>
         </article>
 
@@ -1226,14 +1495,14 @@
           </div>
           <div class="dreamscape-text-box parallax-item" data-speed="0.02">
             <span class="dreamscape-text-label">DESCRIPTION 05</span>
-            <p>ここに画像05（ワイド画面比率）に対応するイベントシーンや演出についての説明文を入力します。</p>
+            <p data-ja="ここに画像05（ワイド画面比率）に対応するイベントシーンや演出についての説明文を入力します。" data-en="Enter the description for Image 05 (widescreen aspect ratio), detailing event scenes and visual direction.">ここに画像05（ワイド画面比率）に対応するイベントシーンや演出についての説明文を入力します。</p>
           </div>
         </article>
 
         <article class="dreamscape-entry entry-6">
           <div class="dreamscape-text-box parallax-item" data-speed="-0.015">
             <span class="dreamscape-text-label">DESCRIPTION 06</span>
-            <p>ここに画像06に対応する説明文や3DCGモデル、コンセプトアートの解説を入力します。</p>
+            <p data-ja="ここに画像06に対応する説明文や3DCGモデル、コンセプトアートの解説を入力します。" data-en="Enter the description corresponding to Image 06, such as 3DCG models and concept art commentary.">ここに画像06に対応する説明文や3DCGモデル、コンセプトアートの解説を入力します。</p>
           </div>
           <div class="dreamscape-image-box parallax-item" data-speed="0.025">
             <div class="dreamscape-preview" data-slot="IMAGE 06 // 4:5"><img src="" alt="DREAMSCAPE Image 06"></div>
@@ -1251,7 +1520,7 @@
           </div>
         </div>
         <div class="dreamscape-trailer-desc-box">
-          <p class="dreamscape-trailer-title">Dreamscape Trailer 1</p>
+          <p class="dreamscape-trailer-title">Dreamscape CONCEPT TRAILER</p>
         </div>
       </div>
     </div>
@@ -1264,38 +1533,80 @@
   <section id="gallery" aria-labelledby="gallery-heading">
     <div class="wrap">
       <h2 id="gallery-heading" class="section-title wave-text">Gallery</h2>
-      <div class="brutal-grid">
-        <div class="brutal-item large" tabindex="0" aria-label="View Image: 2026年3月、洗足ゲーム音楽研究会の定期演奏会" role="button">
-          <img src="assets/album/2026 3getu teiki GOK.png" alt="2026年3月、洗足ゲーム音楽研究会の定期演奏会">
-          <div class="caption">2026年3月、洗足ゲーム音楽研究会の定期演奏会</div>
+      <div class="gallery-subtitle-box">
+        <p data-ja="<strong>洗足学園音楽大学の学内演奏会、外部演奏会、ゼミ活動、<br>友人との制作活動などの写真をまとめたギャラリーです。</strong>" data-en="<strong>A photo gallery of campus concerts at Senzoku Gakuen College of Music, external performances, seminar activities,<br>and creative projects with friends.</strong>"><strong>洗足学園音楽大学の学内演奏会、外部演奏会、ゼミ活動、<br>友人との制作活動などの写真をまとめたギャラリーです。</strong></p>
+      </div>
+      <div class="gallery-grid-viewport is-collapsed" id="gallery-grid-viewport">
+        <div class="brutal-grid" id="gallery-grid">
+          <div class="brutal-item large" tabindex="0" aria-label="View Image: 2026年3月、洗足ゲーム音楽研究会の定期演奏会" role="button">
+            <img src="assets/album/2026 3getu teiki GOK.png" alt="2026年3月、洗足ゲーム音楽研究会の定期演奏会">
+            <div class="caption" data-ja="2026年3月、洗足ゲーム音楽研究会の定期演奏会" data-en="March 2026 — Senzoku Gaming Orchestra (GOK) Regular Concert">2026年3月、洗足ゲーム音楽研究会の定期演奏会</div>
+          </div>
+          <div class="brutal-item" tabindex="0" aria-label="View Image: 2025年3月、洗足ゲーム音楽研究会の定期演奏会" role="button">
+            <img src="assets/album/2025teiki_1.jpg" alt="2025年3月、洗足ゲーム音楽研究会の定期演奏会">
+            <div class="caption" data-ja="2025年3月、洗足ゲーム音楽研究会の定期演奏会" data-en="March 2025 — Senzoku Gaming Orchestra (GOK) Regular Concert">2025年3月、洗足ゲーム音楽研究会の定期演奏会</div>
+          </div>
+          <div class="brutal-item" tabindex="0" aria-label="View Image: ゼミの演奏会後の集合写真" role="button">
+            <img src="assets/album/zemi.png" alt="ゼミの演奏会後の集合写真">
+            <div class="caption" data-ja="ゼミの演奏会後の集合写真" data-en="Group photo after our seminar concert">ゼミの演奏会後の集合写真</div>
+          </div>
+          <div class="brutal-item large" tabindex="0" aria-label="View Image: 定期演奏会に自分の編曲を指揮する" role="button">
+            <img src="assets/album/shiki.png" alt="定期演奏会に自分の編曲を指揮する">
+            <div class="caption" data-ja="定期演奏会に自分の編曲を指揮する" data-en="Conducting my own arrangement at the Regular Concert">定期演奏会に自分の編曲を指揮する</div>
+          </div>
+          
+          <div class="brutal-item" tabindex="0" aria-label="View Image: 大学の友人たちと外部演奏会の集合写真" role="button">
+            <img src="assets/album/2024teiki.png" alt="大学の友人たちと外部演奏会の集合写真">
+            <div class="caption" data-ja="大学の友人たちと外部演奏会の集合写真" data-en="Group photo with university friends at an external concert">大学の友人たちと外部演奏会の集合写真</div>
+          </div>
+          <div class="brutal-item" tabindex="0" aria-label="View Image: 2025年定期演奏会のサックスパート集合写真" role="button">
+            <img src="assets/album/sax2026.png" alt="2025年定期演奏会のサックスパート集合写真">
+            <div class="caption" data-ja="2025年定期演奏会のサックスパート集合写真" data-en="Saxophone section group photo at the 2025 Regular Concert">2025年定期演奏会のサックスパート集合写真</div>
+          </div>
+          <div class="brutal-item" tabindex="0" aria-label="View Image: 外部のピアノ教室、友人とオリジナル楽曲を制作" role="button">
+            <img src="assets/album/duet.png" alt="外部のピアノ教室、友人とオリジナル楽曲を制作">
+            <div class="caption" data-ja="外部のピアノ教室発表会、友人とオリジナル楽曲を制作し演奏する" data-en="Performing an original piece co-created with a friend at an external piano recital">外部のピアノ教室発表会、友人とオリジナル楽曲を制作し演奏する</div>
+          </div>
+
+          <!-- Newly Added Selected Gallery Images from assets/album/ -->
+          <div class="brutal-item large" tabindex="0" aria-label="View Image: ヤマハ銀座でのアンサンブル演奏会" role="button">
+            <img src="assets/album/YamahaGINZA.png" alt="ヤマハ銀座でのアンサンブル演奏会">
+            <div class="caption" data-ja="ヤマハ銀座店にオリジナル楽曲を発表し、４重奏アンサンブルで演奏（自分はアルトサックスフォン）" data-en="Premiering an original piece at Yamaha Ginza with a quartet ensemble (playing alto saxophone)">ヤマハ銀座店にオリジナル楽曲を発表し、４重奏アンサンブルで演奏（自分はアルトサックスフォン）</div>
+          </div>
+          <div class="brutal-item" tabindex="0" aria-label="View Image: 音楽フェスティバルでのステージインタビュー" role="button">
+            <img src="assets/album/fes_interview.png" alt="音楽フェスティバルでのステージインタビュー">
+            <div class="caption" data-ja="洗足学園音楽大学・Music Design Fes.2026 <br> 自作ゲーム「DREAMSCAPE」のコンセプト映像を発表し、インタビューする" data-en="Senzoku Gakuen College of Music · Music Design Fes. 2026 <br> Presenting the concept video for our indie game &quot;DREAMSCAPE&quot; &amp; stage interview">洗足学園音楽大学・Music Design Fes.2026 <br> 自作ゲーム「DREAMSCAPE」のコンセプト映像を発表し、インタビューする</div>
+          </div>
+          <div class="brutal-item" tabindex="0" aria-label="View Image: 学内ホールでの演奏会後の全体集合写真" role="button">
+            <img src="assets/album/newshokudou.png" alt="学内ホールでの演奏会後の全体集合写真">
+            <div class="caption" data-ja="大学の食堂でサークルと演奏会" data-en="Club concert performance in the university cafeteria">大学の食堂でサークルと演奏会</div>
+          </div>
+          <div class="brutal-item" tabindex="0" aria-label="View Image: キャンパス中庭での野外アンサンブル演奏" role="button">
+            <img src="assets/album/NIWAENSOU.png" alt="キャンパス中庭での野外アンサンブル演奏">
+            <div class="caption" data-ja="新入生歓迎会演奏会の集合写真" data-en="Group photo from the Freshman Welcome Concert">新入生歓迎会演奏会の集合写真</div>
+          </div>
+          <div class="brutal-item" tabindex="0" aria-label="View Image: 学内イベントでのメンバー集合写真" role="button">
+            <img src="assets/album/hatushoku.png" alt="学内イベントでのメンバー集合写真">
+            <div class="caption" data-ja="初めてのサークル演奏会" data-en="Our very first club concert">初めてのサークル演奏会</div>
+          </div>
+          <div class="brutal-item" tabindex="0" aria-label="View Image: 2025年定期演奏会、終演後の記念写真" role="button">
+            <img src="assets/album/2025teiki.png" alt="2025年定期演奏会、終演後の記念写真">
+            <div class="caption" data-ja="2025年定期演奏会、友人と写真" data-en="Photo with friends at the 2025 Regular Concert">2025年定期演奏会、友人と写真</div>
+          </div>
+          <div class="brutal-item" tabindex="0" aria-label="View Image: 2026年定期演奏会、サックスメンバーでの記念撮影" role="button">
+            <img src="assets/album/2026teiki.png" alt="2026年定期演奏会、サックスメンバーでの記念撮影">
+            <div class="caption" data-ja="2026年定期演奏会、コスプレでサックスメンバーでの記念撮影" data-en="2026 Regular Concert — Commemorative photo in cosplay with the saxophone section">2026年定期演奏会、コスプレでサックスメンバーでの記念撮影</div>
+          </div>
+          <div class="brutal-item" tabindex="0" aria-label="View Image: 学園祭コンサート終演後の集合写真" role="button">
+            <img src="assets/album/Gakuensai.png" alt="学園祭コンサート終演後の集合写真">
+            <div class="caption" data-ja="2024年度学園祭コンサート終演後の集合写真" data-en="Group photo after the 2024 Campus Festival Concert">2024年度学園祭コンサート終演後の集合写真</div>
+          </div>
         </div>
-        <div class="brutal-item" tabindex="0" aria-label="View Image: 2025年3月、洗足ゲーム音楽研究会の定期演奏会" role="button">
-          <img src="assets/album/2025teiki_1.jpg" alt="2025年3月、洗足ゲーム音楽研究会の定期演奏会">
-          <div class="caption">2025年3月、洗足ゲーム音楽研究会の定期演奏会</div>
-        </div>
-        <div class="brutal-item" tabindex="0" aria-label="View Image: ゼミの演奏会後の集合写真" role="button">
-          <img src="assets/album/zemi.png" alt="ゼミの演奏会後の集合写真">
-          <div class="caption">ゼミの演奏会後の集合写真</div>
-        </div>
-        <div class="brutal-item large" tabindex="0" aria-label="View Image: 定期演奏会に自分の編曲を指揮する" role="button">
-          <img src="assets/album/shiki.png" alt="定期演奏会に自分の編曲を指揮する">
-          <div class="caption">定期演奏会に自分の編曲を指揮する</div>
-        </div>
-        
-        <div class="brutal-item hidden-item" tabindex="0" aria-label="View Image: 大学の友人たちと外部演奏会の集合写真" role="button">
-          <img src="assets/album/2024teiki.png" alt="大学の友人たちと外部演奏会の集合写真">
-          <div class="caption">大学の友人たちと外部演奏会の集合写真</div>
-        </div>
-        <div class="brutal-item hidden-item" tabindex="0" aria-label="View Image: 2025年定期演奏会のサックスパート集合写真" role="button">
-          <img src="assets/album/sax2026.png" alt="2025年定期演奏会のサックスパート集合写真">
-          <div class="caption">2025年定期演奏会のサックスパート集合写真</div>
-        </div>
-        <div class="brutal-item hidden-item" tabindex="0" aria-label="View Image: 外部のピアノ教室、友人とオリジナル楽曲を制作" role="button">
-          <img src="assets/album/duet.png" alt="外部のピアノ教室、友人とオリジナル楽曲を制作">
-          <div class="caption">外部のピアノ教室、友人とオリジナル楽曲を制作</div>
+        <div class="gallery-dither-fade" id="gallery-dither-fade" aria-hidden="true">
+          <canvas id="gallery-dither-canvas" class="gallery-dither-canvas"></canvas>
         </div>
       </div>
-      <div style="text-align: center; margin-top: 60px;">
+      <div style="text-align: center; margin-top: clamp(28px, 3.5vw, 48px); position: relative; z-index: 15;">
         <button id="toggle-gallery" class="btn" aria-expanded="false" onclick="toggleGallery()">SHOW MORE ARCHIVES</button>
       </div>
     </div>
@@ -1303,8 +1614,8 @@
 
   <section id="circle" aria-labelledby="circle-heading">
     <div class="wrap">
-      <h2 id="circle-heading" class="section-title wave-text">大学活動・ゲーム音楽研究会 (GOK)</h2>
-      <p class="circle-desc">
+      <h2 id="circle-heading" class="section-title wave-text" data-ja="大学活動・ゲーム音楽研究会 (GOK)" data-en="UNIVERSITY CLUB · GAMING ORCHESTRA (GOK)">大学活動・ゲーム音楽研究会 (GOK)</h2>
+      <p class="circle-desc" data-ja="洗足学園音楽大学のサークル、洗足ゲーム音楽研究会の副部長と編曲監督として勤めました。演奏会に向けての演奏する楽曲を編曲し、編曲者の楽譜を添削し制作サポートしたり、参加者や演奏者の募集したり、企画を制作することの担当でした。<br><b><i>以下は編曲と演奏で参加した演奏会イベントです。</i></b>" data-en="Served as Vice President and Arrangement Director of the Senzoku Gaming Orchestra Club (GOK) at Senzoku Gakuen College of Music. I was responsible for arranging music for concerts, reviewing scores and supporting fellow arrangers, recruiting performers and participants, and planning concert projects.<br><b><i>Below are the concert events I participated in as an arranger and performer.</i></b>">
         洗足学園音楽大学のサークル、洗足ゲーム音楽研究会の副部長と編曲監督として勤めました。演奏会に向けての演奏する楽曲を編曲し、編曲者の楽譜を添削し制作サポートしたり、参加者や演奏者の募集したり、企画を制作することの担当でした。
         <br><b><i>以下は編曲と演奏で参加した演奏会イベントです。</i></b>
       </p>
@@ -1319,7 +1630,7 @@
           <div class="node-content" tabindex="0">
             <div class="node-header">
               <span class="node-date">2026-03-16</span>
-              <h3 class="node-title">第6回ゲーミングオーケストラ定期演奏会</h3>
+              <h3 class="node-title" data-ja="第6回ゲーミングオーケストラ定期演奏会" data-en="6th Gaming Orchestra Regular Concert">第6回ゲーミングオーケストラ定期演奏会</h3>
             </div>
             <div class="node-img-wrapper"><img src="assets/poster/2026-03-16_dai6kai-geoke.png" alt="第6回ゲーミングオーケストラ定期演奏会 Poster"></div>
           </div>
@@ -1328,7 +1639,7 @@
           <div class="node-content" tabindex="0">
             <div class="node-header">
               <span class="node-date">2025-10-12</span>
-              <h3 class="node-title">山本大雅と愉快な仲間たち in GOK<br>2025年度学園祭2日目</h3>
+              <h3 class="node-title" data-ja="山本大雅と愉快な仲間たち in GOK<br>2025年度学園祭2日目" data-en="Taiga Yamamoto &amp; Friends in GOK<br>2025 Campus Festival — Day 2">山本大雅と愉快な仲間たち in GOK<br>2025年度学園祭2日目</h3>
             </div>
             <div class="node-img-wrapper"><img src="assets/poster/2025-10-12_baritube.png" alt="山本大雅と愉快な仲間たち Poster"></div>
           </div>
@@ -1337,7 +1648,7 @@
           <div class="node-content" tabindex="0">
             <div class="node-header">
               <span class="node-date">2025-10-11</span>
-              <h3 class="node-title">Pokemon Concert in GOK<br>2025年度学園祭1日目</h3>
+              <h3 class="node-title" data-ja="Pokemon Concert in GOK<br>2025年度学園祭1日目" data-en="Pokémon Concert in GOK<br>2025 Campus Festival — Day 1">Pokemon Concert in GOK<br>2025年度学園祭1日目</h3>
             </div>
             <div class="node-img-wrapper"><img src="assets/poster/2025-10-11_pokemon-concert.png" alt="Pokemon Concert Poster"></div>
           </div>
@@ -1346,7 +1657,7 @@
           <div class="node-content" tabindex="0">
             <div class="node-header">
               <span class="node-date">2025-10-11</span>
-              <h3 class="node-title">第５回ゲーミングオーケストラ定期演奏会<br>2025年度学園祭1日目</h3>
+              <h3 class="node-title" data-ja="第５回ゲーミングオーケストラ定期演奏会<br>2025年度学園祭1日目" data-en="5th Gaming Orchestra Regular Concert<br>2025 Campus Festival — Day 1">第５回ゲーミングオーケストラ定期演奏会<br>2025年度学園祭1日目</h3>
             </div>
             <div class="node-img-wrapper"><img src="assets/poster/2025-10-11_dai5kai-geoke.png" alt="第５回ゲーミングオーケストラ定期演奏会 Poster"></div>
           </div>
@@ -1355,7 +1666,7 @@
           <div class="node-content" tabindex="0">
             <div class="node-header">
               <span class="node-date">2025-09-18</span>
-              <h3 class="node-title">GOK Concert</h3>
+              <h3 class="node-title" data-ja="GOK Concert" data-en="GOK Concert">GOK Concert</h3>
             </div>
             <div class="node-img-wrapper"><img src="assets/poster/2025-09-18_gok-concert.jpg" alt="GOK Concert Poster"></div>
           </div>
@@ -1364,7 +1675,7 @@
           <div class="node-content" tabindex="0">
             <div class="node-header">
               <span class="node-date">2025-07-15</span>
-              <h3 class="node-title">第4回ゲーミングオーケストラ定期演奏会</h3>
+              <h3 class="node-title" data-ja="第4回ゲーミングオーケストラ定期演奏会" data-en="4th Gaming Orchestra Regular Concert">第4回ゲーミングオーケストラ定期演奏会</h3>
             </div>
             <div class="node-img-wrapper"><img src="assets/poster/2025-07-15_dai4kai-geoke.jpg" alt="第4回ゲーミングオーケストラ定期演奏会 Poster"></div>
           </div>
@@ -1373,7 +1684,7 @@
           <div class="node-content" tabindex="0">
             <div class="node-header">
               <span class="node-date">2025-02-27</span>
-              <h3 class="node-title">第3回ゲーミングオーケストラ定期演奏会</h3>
+              <h3 class="node-title" data-ja="第3回ゲーミングオーケストラ定期演奏会" data-en="3rd Gaming Orchestra Regular Concert">第3回ゲーミングオーケストラ定期演奏会</h3>
             </div>
             <div class="node-img-wrapper"><img src="assets/poster/2025-02-27_dai3kai-teiki-ensokai.png" alt="第3回ゲーミングオーケストラ定期演奏会 Poster"></div>
           </div>
@@ -1382,7 +1693,7 @@
           <div class="node-content" tabindex="0">
             <div class="node-header">
               <span class="node-date">2024-11-10</span>
-              <h3 class="node-title">Nintendo Music Concert by GOK<br>2024年度学園祭2日目</h3>
+              <h3 class="node-title" data-ja="Nintendo Music Concert by GOK<br>2024年度学園祭2日目" data-en="Nintendo Music Concert by GOK<br>2024 Campus Festival — Day 2">Nintendo Music Concert by GOK<br>2024年度学園祭2日目</h3>
             </div>
             <div class="node-img-wrapper"><img src="assets/poster/2024-11-10_nintendo-music-concert.jpg" alt="Nintendo Music Concert Poster"></div>
           </div>
@@ -1391,7 +1702,7 @@
           <div class="node-content" tabindex="0">
             <div class="node-header">
               <span class="node-date">2024-11-09</span>
-              <h3 class="node-title">第2回ゲーミングオーケストラ定期演奏会<br>2024年度学園祭1日目</h3>
+              <h3 class="node-title" data-ja="第2回ゲーミングオーケストラ定期演奏会<br>2024年度学園祭1日目" data-en="2nd Gaming Orchestra Regular Concert<br>2024 Campus Festival — Day 1">第2回ゲーミングオーケストラ定期演奏会<br>2024年度学園祭1日目</h3>
             </div>
             <div class="node-img-wrapper"><img src="assets/poster/2024-11-09_dai2kai-geoke.jpg" alt="第2回ゲーミングオーケストラ定期演奏会 Poster"></div>
           </div>
@@ -1400,7 +1711,7 @@
           <div class="node-content" tabindex="0">
             <div class="node-header">
               <span class="node-date">2024-10-03</span>
-              <h3 class="node-title">ゲーム音楽研究会 ~田園の調べ~ 演奏会</h3>
+              <h3 class="node-title" data-ja="ゲーム音楽研究会 ~田園の調べ~ 演奏会" data-en="Gaming Orchestra ~Pastoral Melodies~ Concert">ゲーム音楽研究会 ~田園の調べ~ 演奏会</h3>
             </div>
             <div class="node-img-wrapper"><img src="assets/poster/2024-10-03_dennen-no-shirabe.jpg" alt="田園の調べ 演奏会 Poster"></div>
           </div>
@@ -1409,7 +1720,7 @@
           <div class="node-content" tabindex="0">
             <div class="node-header">
               <span class="node-date">2024-09-26</span>
-              <h3 class="node-title">第一回GOK演奏会 ~冒険の調べ~</h3>
+              <h3 class="node-title" data-ja="第一回GOK演奏会 ~冒険の調べ~" data-en="1st GOK Concert ~Melodies of Adventure~">第一回GOK演奏会 ~冒険の調べ~</h3>
             </div>
             <div class="node-img-wrapper"><img src="assets/poster/2024-09-26_bouken-no-shirabe.jpg" alt="第一回GOK演奏会 Poster"></div>
           </div>
@@ -1436,15 +1747,17 @@
       <div class="socials">
         <a href="https://www.youtube.com/@kyarinnko" target="_blank" rel="noopener noreferrer">YOUTUBE</a>
         <a href="https://x.com/iamkyarin" target="_blank" rel="noopener noreferrer">TWITTER</a>
+        <a href="https://www.instagram.com/iamkyarin/" target="_blank" rel="noopener noreferrer">INSTAGRAM</a>
+        <a href="https://www.linkedin.com/in/%E3%83%AD%E3%83%9E%E3%83%B3-%E3%83%9F%E3%83%8D%E3%82%A2-51454b446/" target="_blank" rel="noopener noreferrer">LINKEDIN</a>
       </div>
-      <p class="contact-email">依頼や連絡 Email - Cattoe4work@gmail.com</p>
+      <p class="contact-email" data-ja="依頼と連絡先 <br> Email - Cattoe4work@gmail.com" data-en="Commissions &amp; Inquiries <br> Email - Cattoe4work@gmail.com">依頼と連絡先 <br> Email - Cattoe4work@gmail.com</p>
     </div>
   </section>
 </main>
 
 <footer>
   &copy; <span id="year"></span> KYARIN・きゃりー
-  <h3 class="section-title wave-text">all made in HTML by me</h3>
+  <h3 class="section-title wave-text">all rights reserved, KYARIN</h3>
 </footer>
 
 <div id="lightbox" onclick="closeLightbox()" role="dialog" aria-modal="true" aria-label="Image Preview Lightbox" tabindex="-1">
@@ -1453,17 +1766,32 @@
 
 <script>
   // ==========================================
-  // 1. HIGH-RESOLUTION 50Hz–16,000Hz LOGARITHMIC AUDIO SPECTROGRAPH & WAVEFORM PLAYER
+  // 0. LANGUAGE HOT-SWAP (日本 / EN) & SCROLL HIDE
+  // ==========================================
+  let currentLang = 'ja';
+
+  // ==========================================
+  // 1. HIGH-SENSITIVITY 50Hz–7,000Hz LOGARITHMIC AUDIO SPECTROGRAPH & ROTARY VOLUME KNOB
   // ==========================================
   const audioTracks = [
-    { title: "川崎市職員採用PR動画の楽曲「光導」", src: "assets/music/kawasaki.mp3" },
-    { title: "MUSIC DESIGN SYMPHONIC ORCHESTRA 2025、The Sky and Sea", src: "assets/music/skyandsea.mp3" },
-    { title: "03. Song Name Three", src: "assets/audio/song3.mp3" },
-    { title: "04. Visual Novel Draft Mix", src: "assets/audio/song4.mp3" },
-    { title: "05. RPG Battle Theme 1", src: "assets/audio/song5.mp3" },
-    { title: "06. String Quartet arrangement", src: "assets/audio/song6.mp3" },
-    { title: "07. Piano Solo Concept", src: "assets/audio/song7.mp3" },
-    { title: "08. GOK Live Session Audio", src: "assets/audio/song8.mp3" }
+    {
+      title: "川崎市職員採用PR動画の楽曲「光導」",
+      titleJa: "川崎市職員採用PR動画の楽曲「光導」",
+      titleEn: "Kawasaki City Staff Recruitment PR Video Music — \"Kōdō\"",
+      src: "assets/music/kawasaki.mp3"
+    },
+    {
+      title: "MUSIC DESIGN SYMPHONIC ORCHESTRA 2025、The Sky and Sea",
+      titleJa: "MUSIC DESIGN SYMPHONIC ORCHESTRA 2025、The Sky and Sea",
+      titleEn: "MUSIC DESIGN SYMPHONIC ORCHESTRA 2025, The Sky and Sea",
+      src: "assets/music/skyandsea.mp3"
+    },
+    { title: "03. Song Name Three", titleJa: "03. Song Name Three", titleEn: "03. Song Name Three", src: "assets/audio/song3.mp3" },
+    { title: "04. Visual Novel Draft Mix", titleJa: "04. Visual Novel Draft Mix", titleEn: "04. Visual Novel Draft Mix", src: "assets/audio/song4.mp3" },
+    { title: "05. RPG Battle Theme 1", titleJa: "05. RPG Battle Theme 1", titleEn: "05. RPG Battle Theme 1", src: "assets/audio/song5.mp3" },
+    { title: "06. String Quartet arrangement", titleJa: "06. String Quartet arrangement", titleEn: "06. String Quartet arrangement", src: "assets/audio/song6.mp3" },
+    { title: "07. Piano Solo Concept", titleJa: "07. Piano Solo Concept", titleEn: "07. Piano Solo Concept", src: "assets/audio/song7.mp3" },
+    { title: "08. GOK Live Session Audio", titleJa: "08. GOK Live Session Audio", titleEn: "08. GOK Live Session Audio", src: "assets/audio/song8.mp3" }
   ];
 
   let currentTrackIdx = 0;
@@ -1475,12 +1803,14 @@
   const spectroPeakLabel = document.getElementById("spectro-peak-label");
   const spectroStateLabel = document.getElementById("spectro-state-label");
   const seekBar = document.getElementById("seek-bar");
-  const volBar = document.getElementById("vol-bar");
   const timeText = document.getElementById("time-text");
   const progressText = document.getElementById("progress-text");
-  const volText = document.getElementById("vol-text");
   const progressWrapper = document.getElementById("progress-wrapper");
   const volumeWrapper = document.getElementById("volume-wrapper");
+  const volumeKnob = document.getElementById("volume-knob");
+  const volumeKnobDial = document.getElementById("volume-knob-dial");
+  const volNumberInput = document.getElementById("vol-number-input");
+  const volPopupBadge = document.getElementById("vol-popup-badge");
   const tracklistEl = document.getElementById("tracklist-container");
 
   let isPlaying = false;
@@ -1488,14 +1818,13 @@
   // High-resolution FFT (4096 samples -> 2048 frequency bins, ~10.7Hz resolution per bin)
   const FFT_SIZE = 4096;
   const MIN_FREQ = 50;
-  const MAX_FREQ = 16000;
-  const FREQ_TICKS = [50, 100, 200, 500, 1000, 2000, 5000, 10000, 16000];
+  const MAX_FREQ = 7000;
+  const FREQ_TICKS = [50, 100, 200, 500, 1000, 2000, 3500, 5000, 7000];
   let freqData = new Uint8Array(FFT_SIZE / 2);
   let timeData = new Uint8Array(FFT_SIZE);
 
-  // Dynamic character capacities for seek & volume bars
+  // Dynamic character capacity for seek bar
   let progressCharLen = 20;
-  let volCharLen = 10;
 
   // Logarithmic band smoothing and peak-hold arrays
   const NUM_LOG_BANDS = 112;
@@ -1503,7 +1832,146 @@
   const peakHoldBands = new Float32Array(NUM_LOG_BANDS);
   let standbyPhase = 0;
 
-  audioEl.volume = 0.5;
+  // Default Volume = 30%
+  let currentVolume = 30;
+  let volPopupTimeout = null;
+  let isKnobDragging = false;
+  let dragStartX = 0;
+  let dragStartY = 0;
+  let dragStartVol = 30;
+
+  audioEl.volume = currentVolume / 100;
+
+  function setVolumeLevel(val, showPopup = false) {
+    const clamped = Math.max(0, Math.min(100, Math.round(Number(val) || 0)));
+    currentVolume = clamped;
+    audioEl.volume = clamped / 100;
+
+    // Map 0..100 to -135deg..+135deg
+    const angle = -135 + (clamped / 100) * 270;
+    if (volumeKnobDial) {
+      volumeKnobDial.style.setProperty('--knob-angle', `${angle.toFixed(1)}deg`);
+    }
+    if (volumeKnob) {
+      volumeKnob.setAttribute('aria-valuenow', String(clamped));
+    }
+    if (volNumberInput && document.activeElement !== volNumberInput) {
+      volNumberInput.value = String(clamped);
+    }
+    if (volPopupBadge) {
+      volPopupBadge.textContent = `VOL ${clamped}%`;
+      if (showPopup) {
+        volPopupBadge.classList.add('is-active');
+        clearTimeout(volPopupTimeout);
+      }
+    }
+  }
+
+  function hideVolumePopupDelayed(delay = 550) {
+    clearTimeout(volPopupTimeout);
+    volPopupTimeout = setTimeout(() => {
+      if (volPopupBadge && !isKnobDragging) {
+        volPopupBadge.classList.remove('is-active');
+      }
+    }, delay);
+  }
+
+  // Initialize knob at 30%
+  setVolumeLevel(30, false);
+
+  if (volumeKnob) {
+    volumeKnob.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      isKnobDragging = true;
+      dragStartX = e.clientX;
+      dragStartY = e.clientY;
+      dragStartVol = currentVolume;
+      volumeKnob.classList.add('is-dragging');
+      if (volumeKnob.setPointerCapture) {
+        try { volumeKnob.setPointerCapture(e.pointerId); } catch (_) {}
+      }
+      setVolumeLevel(currentVolume, true);
+    });
+
+    volumeKnob.addEventListener('pointermove', (e) => {
+      if (!isKnobDragging) return;
+      e.preventDefault();
+      // Drag right (or up) to increase, drag left (or down) to decrease
+      const deltaX = e.clientX - dragStartX;
+      const deltaY = dragStartY - e.clientY;
+      const combinedDelta = deltaX + deltaY * 0.35;
+      const nextVol = dragStartVol + (combinedDelta / 1.35);
+      setVolumeLevel(nextVol, true);
+    });
+
+    const finishKnobDrag = (e) => {
+      if (!isKnobDragging) return;
+      isKnobDragging = false;
+      volumeKnob.classList.remove('is-dragging');
+      if (e && e.pointerId !== undefined && volumeKnob.releasePointerCapture) {
+        try { volumeKnob.releasePointerCapture(e.pointerId); } catch (_) {}
+      }
+      if (volNumberInput) volNumberInput.value = String(currentVolume);
+      hideVolumePopupDelayed(450);
+    };
+
+    volumeKnob.addEventListener('pointerup', finishKnobDrag);
+    volumeKnob.addEventListener('pointercancel', finishKnobDrag);
+    volumeKnob.addEventListener('lostpointercapture', finishKnobDrag);
+
+    // Explicit non-passive touch listeners so iOS Safari / Android Chrome never scroll the viewport while dragging the knob
+    volumeKnob.addEventListener('touchstart', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+    volumeKnob.addEventListener('touchmove', (e) => {
+      if (isKnobDragging) e.preventDefault();
+    }, { passive: false });
+
+    // Keyboard arrow support on the knob
+    volumeKnob.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+        e.preventDefault();
+        setVolumeLevel(currentVolume + 2, true);
+        if (volNumberInput) volNumberInput.value = String(currentVolume);
+        hideVolumePopupDelayed(700);
+      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+        e.preventDefault();
+        setVolumeLevel(currentVolume - 2, true);
+        if (volNumberInput) volNumberInput.value = String(currentVolume);
+        hideVolumePopupDelayed(700);
+      }
+    });
+  }
+
+  // Editable 0-100 Volume Number Input under the knob
+  if (volNumberInput) {
+    volNumberInput.addEventListener('focus', () => {
+      volNumberInput.select();
+      setVolumeLevel(currentVolume, true);
+    });
+    volNumberInput.addEventListener('input', () => {
+      if (volNumberInput.value === '') return;
+      const parsed = parseInt(volNumberInput.value, 10);
+      if (!isNaN(parsed)) {
+        setVolumeLevel(parsed, true);
+      }
+    });
+    const commitVolInput = () => {
+      const parsed = parseInt(volNumberInput.value, 10);
+      setVolumeLevel(isNaN(parsed) ? currentVolume : parsed, true);
+      volNumberInput.value = String(currentVolume);
+      hideVolumePopupDelayed(450);
+    };
+    volNumberInput.addEventListener('change', commitVolInput);
+    volNumberInput.addEventListener('blur', commitVolInput);
+    volNumberInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        commitVolInput();
+        volNumberInput.blur();
+      }
+    });
+  }
 
   function measureCharWidth(el) {
     const style = window.getComputedStyle(el);
@@ -1515,9 +1983,6 @@
   function recalcPlayerDimensions() {
     const progCharW = measureCharWidth(progressWrapper);
     progressCharLen = Math.max(6, Math.floor(progressWrapper.clientWidth / progCharW) - 3);
-
-    const volCharW = measureCharWidth(volumeWrapper);
-    volCharLen = Math.max(4, Math.floor(volumeWrapper.clientWidth / volCharW) - 7);
 
     if (spectroCanvas) {
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
@@ -1532,12 +1997,10 @@
 
     const percent = (audioEl.currentTime / audioEl.duration) * 100 || 0;
     updateAsciiBar(progressText, percent, progressCharLen);
-    updateAsciiBar(volText, volBar.value, volCharLen, "VOL ");
   }
 
   const playerObserver = new ResizeObserver(() => recalcPlayerDimensions());
   playerObserver.observe(progressWrapper);
-  playerObserver.observe(volumeWrapper);
   playerObserver.observe(visualizer);
 
   function initAudioContext() {
@@ -1545,9 +2008,10 @@
       audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       analyser = audioCtx.createAnalyser();
       analyser.fftSize = FFT_SIZE;
-      analyser.smoothingTimeConstant = 0.78;
-      analyser.minDecibels = -92;
-      analyser.maxDecibels = -10;
+      // Balanced response & 30% reduced sensitivity so loud passages never clip into solid blue
+      analyser.smoothingTimeConstant = 0.72;
+      analyser.minDecibels = -95;
+      analyser.maxDecibels = -12;
       freqData = new Uint8Array(analyser.frequencyBinCount);
       timeData = new Uint8Array(analyser.fftSize);
       source = audioCtx.createMediaElementSource(audioEl);
@@ -1560,12 +2024,13 @@
   function loadTracklist() {
     tracklistEl.innerHTML = "";
     audioTracks.forEach((track, index) => {
+      const displayTitle = (currentLang === 'en' && track.titleEn) ? track.titleEn : (track.titleJa || track.title);
       const el = document.createElement("div");
       el.className = `track ${index === currentTrackIdx ? 'active' : ''}`;
-      el.innerHTML = `<span>${index+1}. ${track.title}</span>`;
+      el.innerHTML = `<span>${index+1}. ${displayTitle}</span>`;
       el.setAttribute("role", "button");
       el.setAttribute("tabindex", "0");
-      el.setAttribute("aria-label", `Play track: ${track.title}`);
+      el.setAttribute("aria-label", `Play track: ${displayTitle}`);
       
       el.onclick = () => playTrack(index);
       el.onkeydown = (e) => {
@@ -1605,7 +2070,7 @@
     }
   }
 
-  // Convert a frequency (Hz) in [50, 16000] to normalized logarithmic X position [0..1]
+  // Convert a frequency (Hz) in [50, 7000] to normalized logarithmic X position [0..1]
   function freqToLogNorm(hz) {
     return Math.log(hz / MIN_FREQ) / Math.log(MAX_FREQ / MIN_FREQ);
   }
@@ -1621,7 +2086,10 @@
   }
 
   function formatHzLabel(hz) {
-    return hz >= 1000 ? `${hz / 1000}kHz` : `${hz}Hz`;
+    if (hz >= 1000) {
+      return (hz % 1000 === 0) ? `${hz / 1000}kHz` : `${(hz / 1000).toFixed(1)}kHz`;
+    }
+    return `${hz}Hz`;
   }
 
   function animateVisualizer() {
@@ -1638,14 +2106,14 @@
 
       spectroCtx.clearRect(0, 0, W, H);
 
-      // 1. Background & Technical Grid (50Hz to 16,000Hz Logarithmic X-Axis + dB Y-Axis)
+      // 1. Background & Technical Grid (50Hz to 7,000Hz Logarithmic X-Axis + dB Y-Axis)
       spectroCtx.fillStyle = "#f8f9ff";
       spectroCtx.fillRect(0, 0, W, H);
 
       spectroCtx.font = `600 ${Math.round(9.5 * dpr)}px "JetBrains Mono", monospace`;
       spectroCtx.textBaseline = "middle";
 
-      // Horizontal dB reference lines (-20dB, -40dB, -60dB, -80dB)
+      // Horizontal dB reference lines
       const dbSteps = [
         { label: " 0dB", norm: 0.0 },
         { label: "-24dB", norm: 0.33 },
@@ -1667,11 +2135,11 @@
         spectroCtx.fillText(step.label, padLeft - Math.round(6 * dpr), y);
       });
 
-      // Vertical logarithmic frequency grid lines (50Hz .. 16kHz)
+      // Vertical logarithmic frequency grid lines (50Hz .. 7kHz)
       FREQ_TICKS.forEach((hz, idx) => {
         const normX = freqToLogNorm(hz);
         const x = Math.round(padLeft + normX * plotW) + 0.5;
-        spectroCtx.strokeStyle = (hz === 1000 || hz === 50 || hz === 16000)
+        spectroCtx.strokeStyle = (hz === 1000 || hz === 50 || hz === 7000)
           ? "rgba(0, 8, 255, 0.24)"
           : "rgba(0, 8, 255, 0.11)";
         spectroCtx.beginPath();
@@ -1680,7 +2148,7 @@
         spectroCtx.stroke();
 
         // Hide crowded labels on very narrow mobile screens
-        if (W < 420 * dpr && (hz === 200 || hz === 2000 || hz === 10000)) return;
+        if (W < 420 * dpr && (hz === 200 || hz === 2000 || hz === 5000)) return;
         spectroCtx.fillStyle = "rgb(0, 8, 255)";
         if (idx === 0) spectroCtx.textAlign = "left";
         else if (idx === FREQ_TICKS.length - 1) spectroCtx.textAlign = "right";
@@ -1689,7 +2157,7 @@
       });
       spectroCtx.setLineDash([]);
 
-      // 2. Sample Live Audio Spectrum (50Hz - 16,000Hz) & Time-Domain Waveform
+      // 2. Sample Live Audio Spectrum (50Hz - 7,000Hz) & Time-Domain Waveform
       const sampleRate = (audioCtx && audioCtx.sampleRate) ? audioCtx.sampleRate : 44100;
       let hasSignal = false;
       let peakMag = 0;
@@ -1699,11 +2167,11 @@
         analyser.getByteFrequencyData(freqData);
         analyser.getByteTimeDomainData(timeData);
         for (let i = 0; i < freqData.length; i++) {
-          if (freqData[i] > 2) { hasSignal = true; break; }
+          if (freqData[i] > 1) { hasSignal = true; break; }
         }
       }
 
-      standbyPhase += 0.035;
+      standbyPhase += 0.045;
 
       for (let b = 0; b < NUM_LOG_BANDS; b++) {
         const norm0 = b / NUM_LOG_BANDS;
@@ -1722,33 +2190,34 @@
             sampleFrequencyMagnitude(fB, sampleRate) * 1.4 +
             sampleFrequencyMagnitude(fC, sampleRate)
           ) / 3.4;
-          // Slight perceptual tilt (+3dB/octave compensation so high frequencies up to 16kHz read clearly)
-          const tilt = 0.85 + 0.32 * normMid;
-          targetVal = Math.min(1, Math.pow(raw * tilt, 1.15));
+          // 30% less sensitive gain & steeper power curve so loud passages keep clear headroom across 50Hz - 7kHz
+          const tilt = 0.92 + 0.35 * normMid;
+          const scaled = Math.min(1, raw * tilt * 1.25);
+          targetVal = Math.min(0.92, Math.pow(scaled, 1.05));
         } else if (isPlaying && !hasSignal) {
-          // Graceful animated synthesis if previewing without local MP3 files
+          // Balanced animated synthesis when previewing without local MP3 files (-30% amplitude)
           const synth =
-            Math.exp(-Math.pow((normMid - 0.22) / 0.14, 2)) * (0.55 + 0.35 * Math.sin(standbyPhase * 2.1 + b * 0.15)) +
-            Math.exp(-Math.pow((normMid - 0.55) / 0.18, 2)) * (0.42 + 0.3 * Math.cos(standbyPhase * 3.4 - b * 0.22)) +
-            Math.exp(-Math.pow((normMid - 0.82) / 0.12, 2)) * (0.28 + 0.22 * Math.sin(standbyPhase * 5.0 + b * 0.3));
-          targetVal = Math.max(0.02, Math.min(0.95, synth));
+            Math.exp(-Math.pow((normMid - 0.22) / 0.14, 2)) * (0.48 + 0.22 * Math.sin(standbyPhase * 2.4 + b * 0.15)) +
+            Math.exp(-Math.pow((normMid - 0.55) / 0.18, 2)) * (0.40 + 0.25 * Math.cos(standbyPhase * 3.8 - b * 0.22)) +
+            Math.exp(-Math.pow((normMid - 0.82) / 0.14, 2)) * (0.32 + 0.22 * Math.sin(standbyPhase * 5.2 + b * 0.3));
+          targetVal = Math.max(0.025, Math.min(0.76, synth));
         } else {
           // Clean subtle idle baseline
           targetVal = 0.025 + 0.018 * Math.sin(standbyPhase + normMid * Math.PI * 3);
         }
 
-        // Smooth attack & release
+        // Controlled attack & release (-30% less twitchy)
         if (targetVal > smoothedBands[b]) {
-          smoothedBands[b] += (targetVal - smoothedBands[b]) * 0.32;
+          smoothedBands[b] += (targetVal - smoothedBands[b]) * 0.38;
         } else {
-          smoothedBands[b] += (targetVal - smoothedBands[b]) * 0.12;
+          smoothedBands[b] += (targetVal - smoothedBands[b]) * 0.14;
         }
 
         // Peak hold decay
         if (smoothedBands[b] >= peakHoldBands[b]) {
           peakHoldBands[b] = smoothedBands[b];
         } else {
-          peakHoldBands[b] = Math.max(0, peakHoldBands[b] - 0.0045);
+          peakHoldBands[b] = Math.max(0, peakHoldBands[b] - 0.0055);
         }
 
         if (smoothedBands[b] > peakMag) {
@@ -1758,7 +2227,7 @@
       }
 
       if (spectroPeakLabel) {
-        if (isPlaying && peakMag > 0.06) {
+        if (isPlaying && peakMag > 0.05) {
           spectroPeakLabel.textContent = `PEAK: ${ peakFreq >= 1000 ? (peakFreq / 1000).toFixed(2) + ' kHz' : Math.round(peakFreq) + ' Hz' }`;
         } else {
           spectroPeakLabel.textContent = "PEAK: -- Hz";
@@ -1774,12 +2243,12 @@
       spectroCtx.moveTo(padLeft, padTop + plotH);
       for (let b = 0; b < NUM_LOG_BANDS; b++) {
         const x = padLeft + (b + 0.5) * barStep;
-        const y = padTop + plotH - (smoothedBands[b] * plotH * 0.92);
+        const y = padTop + plotH - (smoothedBands[b] * plotH * 0.94);
         if (b === 0) {
           spectroCtx.lineTo(x, y);
         } else {
           const prevX = padLeft + (b - 0.5) * barStep;
-          const prevY = padTop + plotH - (smoothedBands[b - 1] * plotH * 0.92);
+          const prevY = padTop + plotH - (smoothedBands[b - 1] * plotH * 0.94);
           const cx = (prevX + x) * 0.5;
           const cy = (prevY + y) * 0.5;
           spectroCtx.quadraticCurveTo(prevX, prevY, cx, cy);
@@ -1787,20 +2256,20 @@
       }
       spectroCtx.lineTo(padLeft + plotW, padTop + plotH);
       spectroCtx.closePath();
-      spectroCtx.fillStyle = "rgba(0, 8, 255, 0.12)";
+      spectroCtx.fillStyle = "rgba(0, 8, 255, 0.14)";
       spectroCtx.fill();
 
       // Discrete high-resolution logarithmic bars + peak-hold ticks
       for (let b = 0; b < NUM_LOG_BANDS; b++) {
         const x = padLeft + b * barStep + (barStep - barWidth) * 0.5;
-        const barH = Math.max(2 * dpr, smoothedBands[b] * plotH * 0.92);
+        const barH = Math.max(2 * dpr, smoothedBands[b] * plotH * 0.94);
         const y = padTop + plotH - barH;
 
-        spectroCtx.fillStyle = "rgba(0, 8, 255, 0.82)";
+        spectroCtx.fillStyle = "rgba(0, 8, 255, 0.84)";
         spectroCtx.fillRect(x, y, barWidth, barH);
 
         // Peak-hold tick
-        const peakY = padTop + plotH - (peakHoldBands[b] * plotH * 0.92);
+        const peakY = padTop + plotH - (peakHoldBands[b] * plotH * 0.94);
         spectroCtx.fillStyle = "rgb(0, 8, 255)";
         spectroCtx.fillRect(x, Math.max(padTop, peakY - 2 * dpr), barWidth, Math.max(1.5 * dpr, 2 * dpr));
       }
@@ -1809,7 +2278,7 @@
       spectroCtx.beginPath();
       for (let b = 0; b < NUM_LOG_BANDS; b++) {
         const x = padLeft + (b + 0.5) * barStep;
-        const y = padTop + plotH - (smoothedBands[b] * plotH * 0.92);
+        const y = padTop + plotH - (smoothedBands[b] * plotH * 0.94);
         if (b === 0) spectroCtx.moveTo(x, y);
         else spectroCtx.lineTo(x, y);
       }
@@ -1817,23 +2286,25 @@
       spectroCtx.lineWidth = 1.6 * dpr;
       spectroCtx.stroke();
 
-      // 4. Clean Time-Domain Audio Waveform Overlay across Upper Midline
-      const waveCenterY = padTop + plotH * 0.34;
-      const waveAmp = plotH * 0.24;
+      // 4. Time-Domain Audio Waveform Overlay across Upper Midline (30% reduced sensitivity)
+      const waveCenterY = padTop + plotH * 0.36;
+      const waveAmp = plotH * 0.30;
       spectroCtx.beginPath();
-      const waveSamples = 240;
+      const waveSamples = 260;
       for (let i = 0; i <= waveSamples; i++) {
         const normX = i / waveSamples;
         const x = padLeft + normX * plotW;
         let sample = 0;
         if (isPlaying && hasSignal) {
           const idx = Math.min(timeData.length - 1, Math.floor(normX * (timeData.length - 1)));
-          sample = (timeData[idx] - 128) / 128;
+          const rawWave = (timeData[idx] - 128) / 128;
+          // Reduced waveform gain by ~30% (1.70x instead of 2.45x) for cleaner dynamics on loud sections
+          sample = Math.tanh(rawWave * 1.70);
         } else if (isPlaying && !hasSignal) {
           sample =
-            Math.sin(normX * Math.PI * 10 - standbyPhase * 4) * 0.35 *
+            Math.sin(normX * Math.PI * 12 - standbyPhase * 4.5) * 0.44 *
             Math.sin(normX * Math.PI) *
-            (0.6 + 0.4 * Math.cos(normX * 24 + standbyPhase * 2));
+            (0.6 + 0.4 * Math.cos(normX * 26 + standbyPhase * 2.4));
         } else {
           sample = Math.sin(normX * Math.PI * 4 + standbyPhase) * 0.03 * Math.sin(normX * Math.PI);
         }
@@ -1842,7 +2313,7 @@
         else spectroCtx.lineTo(x, y);
       }
       spectroCtx.strokeStyle = "rgba(0, 8, 255, 0.95)";
-      spectroCtx.lineWidth = 2 * dpr;
+      spectroCtx.lineWidth = 2.2 * dpr;
       spectroCtx.stroke();
 
       // Outer plot frame border
@@ -1867,11 +2338,6 @@
     audioEl.currentTime = audioEl.duration * (seekBar.value / 100);
   }
 
-  function changeVolume() {
-    audioEl.volume = volBar.value / 100;
-    updateAsciiBar(volText, volBar.value, volCharLen, "VOL ");
-  }
-
   function updateAsciiBar(el, pct, len, pre = "") {
     const safeLen = Math.max(2, len);
     const f = Math.max(0, Math.min(safeLen, Math.round((pct / 100) * safeLen)));
@@ -1887,16 +2353,42 @@
   loadTracklist();
 
   // ==========================================
-  // 2. TOGGLES (Gallery & GOK 3.5 Events Clip)
+  // 2. TOGGLES (Gallery Dither Clip & GOK 3.5 Events Clip)
   // ==========================================
-  function toggleGallery() {
-    const hidden = document.querySelectorAll('#gallery .hidden-item');
-    const btn = document.getElementById('toggle-gallery');
-    let expand = btn.innerText.includes("SHOW MORE");
-    hidden.forEach(i => i.style.display = expand ? 'block' : 'none');
-    btn.innerText = expand ? "HIDE ARCHIVES" : "SHOW MORE ARCHIVES";
-    btn.setAttribute("aria-expanded", expand);
+  const galleryViewport = document.getElementById('gallery-grid-viewport');
+  const galleryGrid = document.getElementById('gallery-grid');
+  const toggleGalleryBtn = document.getElementById('toggle-gallery');
+
+  function updateGalleryClip() {
+    if (!galleryViewport || !galleryGrid) return;
+    if (!galleryViewport.classList.contains('is-collapsed')) {
+      galleryViewport.style.maxHeight = 'none';
+      return;
+    }
+    const items = galleryGrid.querySelectorAll('.brutal-item');
+    if (items.length >= 3) {
+      // Show the first row of photos plus half of the second row, fading out into the Bayer dither
+      const secondRowItem = items[2];
+      const clipH = secondRowItem.offsetTop + (secondRowItem.offsetHeight * 0.55);
+      galleryViewport.style.maxHeight = `${Math.ceil(clipH)}px`;
+    }
   }
+
+  function toggleGallery() {
+    if (!galleryViewport || !toggleGalleryBtn) return;
+    const isCollapsed = galleryViewport.classList.toggle('is-collapsed');
+    toggleGalleryBtn.innerText = isCollapsed ? "SHOW MORE ARCHIVES" : "HIDE ARCHIVES";
+    toggleGalleryBtn.setAttribute("aria-expanded", String(!isCollapsed));
+    updateGalleryClip();
+  }
+
+  if (galleryGrid) {
+    const galleryObserver = new ResizeObserver(() => updateGalleryClip());
+    galleryObserver.observe(galleryGrid);
+  }
+  window.addEventListener('resize', updateGalleryClip);
+  window.addEventListener('load', updateGalleryClip);
+  updateGalleryClip();
 
   // Calculate exact height for 3.5 events (first 3 events + half of the 4th event)
   const eventTreeViewport = document.getElementById('event-tree-viewport');
@@ -1940,6 +2432,16 @@
   // ==========================================
   let treeLatest = true;
 
+  function updateSortButtonLabel() {
+    const sortBtn = document.getElementById('sort-date-btn');
+    if (!sortBtn) return;
+    if (currentLang === 'en') {
+      sortBtn.innerText = treeLatest ? "SORT: LATEST" : "SORT: OLDEST";
+    } else {
+      sortBtn.innerText = treeLatest ? "SORT: 最近" : "SORT: 過去";
+    }
+  }
+
   function toggleTreeSort() {
     treeLatest = !treeLatest;
     const tree = document.getElementById('event-tree');
@@ -1951,7 +2453,7 @@
     });
     tree.innerHTML = '';
     nodes.forEach(n => tree.appendChild(n));
-    document.getElementById('sort-date-btn').innerText = treeLatest ? "SORT: 最近" : "SORT: 過去";
+    updateSortButtonLabel();
     updateCircleTreeClip();
   }
 
@@ -2048,18 +2550,54 @@
   });
 
   // Accessible Wave Text implementation (keeps words grouped in .wave-word so words never split mid-word)
-  document.querySelectorAll('.wave-text').forEach(el => {
-    const originalText = el.innerText;
-    el.setAttribute('aria-label', originalText);
+  function renderWaveTextElement(el, rawText) {
+    const textToRender = rawText !== undefined ? rawText : el.innerText;
+    el.setAttribute('aria-label', textToRender);
     let charIdx = 0;
-    el.innerHTML = originalText.split(' ').map(word => {
+    el.innerHTML = textToRender.split(' ').map(word => {
       const chars = word.split('').map(char => {
         const delay = (charIdx++ * 0.1).toFixed(1);
         return `<span class="wave-char" aria-hidden="true" style="animation-delay: ${delay}s">${char}</span>`;
       }).join('');
       return `<span class="wave-word" aria-hidden="true">${chars}</span>`;
     }).join(' ');
+  }
+
+  document.querySelectorAll('.wave-text').forEach(el => {
+    renderWaveTextElement(el);
   });
+
+  function setLanguage(lang) {
+    currentLang = (lang === 'en') ? 'en' : 'ja';
+    document.documentElement.lang = currentLang;
+
+    const jaOpt = document.getElementById('lang-opt-ja');
+    const enOpt = document.getElementById('lang-opt-en');
+    if (jaOpt && enOpt) {
+      jaOpt.classList.toggle('active', currentLang === 'ja');
+      enOpt.classList.toggle('active', currentLang === 'en');
+    }
+
+    document.querySelectorAll('[data-ja][data-en]').forEach(el => {
+      const nextVal = currentLang === 'en' ? el.getAttribute('data-en') : el.getAttribute('data-ja');
+      if (nextVal === null) return;
+      if (el.classList.contains('wave-text')) {
+        renderWaveTextElement(el, nextVal);
+      } else {
+        el.innerHTML = nextVal;
+      }
+    });
+
+    loadTracklist();
+    updateSortButtonLabel();
+    updateGalleryClip();
+    updateCircleTreeClip();
+    updateDreamscapeAsciiBounds();
+  }
+
+  function toggleLanguage() {
+    setLanguage(currentLang === 'ja' ? 'en' : 'ja');
+  }
 
   // FLUID WAVY ASCII BACKGROUND (Global + Taller Dreamscape Background below Title)
   const asciiBg = document.getElementById('ascii-bg');
@@ -2121,7 +2659,7 @@
   drawAsciiBg();
 
   // ==========================================
-  // 5. BAYER PIXEL DITHER FADES (#dreamscape -> #gallery AND #circle 3.5 events fade)
+  // 5. BAYER PIXEL DITHER FADES (#dreamscape -> #gallery, #gallery clip, AND #circle 3.5 events fade)
   // ==========================================
   const bayer4 = [
     [ 0,  8,  2, 10],
@@ -2175,11 +2713,38 @@
     }
   }
 
+  function renderGalleryDither() {
+    const canvas = document.getElementById('gallery-dither-canvas');
+    if (!canvas) return;
+    const pixelSize = 5;
+    const rect = canvas.getBoundingClientRect();
+    const width = Math.max(48, Math.ceil((rect.width || window.innerWidth) / pixelSize));
+    const height = 22;
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, width, height);
+
+    for (let y = 0; y < height; y++) {
+      // Dither from transparent (0.0) at top to solid gallery blue (1.0) at bottom
+      const t = y / (height - 1);
+      for (let x = 0; x < width; x++) {
+        const threshold = (bayer4[y % 4][x % 4] + 0.5) / 16;
+        if (t >= threshold) {
+          ctx.fillStyle = 'rgb(0, 8, 255)';
+          ctx.fillRect(x, y, 1, 1);
+        }
+      }
+    }
+  }
+
   renderDreamscapeDither();
   renderCircleDither();
+  renderGalleryDither();
   window.addEventListener('resize', () => {
     renderDreamscapeDither();
     renderCircleDither();
+    renderGalleryDither();
   });
 
   // ==========================================
@@ -2197,6 +2762,7 @@
   ];
 
   const heroSectionEl = document.querySelector('.hero');
+  const langSwitchBtn = document.getElementById('lang-switch-btn');
 
   function updateJumpBarScaleFromGap(activeSectionEl) {
     if (!sideJumpBar) return;
@@ -2231,6 +2797,15 @@
   }
 
   function updateSideJumpBar() {
+    // Hide the standout language toggle button when scrolling down
+    if (langSwitchBtn) {
+      if (window.scrollY > 36) {
+        langSwitchBtn.classList.add('is-hidden-scroll');
+      } else {
+        langSwitchBtn.classList.remove('is-hidden-scroll');
+      }
+    }
+
     if (!sideJumpBar) return;
     // Show ONLY after the top profile (.hero) section is completely scrolled off the screen
     const heroGone = heroSectionEl ? (heroSectionEl.getBoundingClientRect().bottom <= 0) : (window.scrollY > window.innerHeight);
