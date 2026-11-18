@@ -13,6 +13,7 @@
 
 :root {
   --blue: rgb(0, 8, 255);
+  --navy: #03066b; /* page background: darker so the blue windows stand out */
   --white-10: rgba(255, 255, 255, 0.1);
   --white-20: rgba(255, 255, 255, 0.2);
   --white-50: rgba(255, 255, 255, 0.5);
@@ -39,7 +40,7 @@
 html {
   -webkit-text-size-adjust: 100%; text-size-adjust: 100%;
   scroll-behavior: smooth; scroll-padding-top: calc(var(--bar-h) + 16px);
-  background: var(--blue); /* body stays transparent so the ASCII layer shows through */
+  background: var(--navy); /* body stays transparent so the ASCII layer shows through */
   overflow-x: clip;
 }
 html:has(dialog[open]), body.menu-open, html.js:not(.loaded) body { overflow: hidden; }
@@ -73,8 +74,8 @@ html[lang="ja"] body [lang="en"], html[lang="en"] body [lang="ja"] { display: no
   overflow: hidden; pointer-events: none;
 }
 #ascii-bg {
-  margin: 0; font-family: var(--font-ensemble); font-size: clamp(10px, 0.95vw, 18px); line-height: 1.1;
-  color: var(--white-20); white-space: pre;
+  margin: 0; font-family: var(--font-ensemble); font-size: clamp(12px, 1.1vw, 18px); line-height: 1.1;
+  color: rgba(255, 255, 255, 0.3); white-space: pre;
 }
 
 /* ---------- Loader (~3 s) ---------- */
@@ -221,7 +222,7 @@ body.menu-open .topnav { opacity: 1; visibility: visible; transition-delay: 0s; 
 .icon-links a:hover { background: #fff; color: var(--blue); transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--white-50); }
 .icon-links svg { width: 24px; height: 24px; }
 
-.updates { position: relative; padding: 14px 12px 12px; border: 2px solid #fff; background: rgba(0, 8, 255, 0.55); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+.updates { position: relative; padding: 14px 12px 12px; border: 2px solid #fff; background: var(--blue); box-shadow: 10px 10px 0 rgba(255, 255, 255, 0.22), inset -2px -2px 0 rgba(0, 0, 0, 0.25), inset 2px 2px 0 rgba(255, 255, 255, 0.25); }
 .updates-tab { position: absolute; top: -2px; right: -2px; padding: 2px 8px; background: #fff; color: var(--blue); font-family: var(--font-ensemble); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.12em; }
 .updates ul { display: grid; gap: 8px; margin-top: 12px; }
 .update {
@@ -241,9 +242,8 @@ body.menu-open .topnav { opacity: 1; visibility: visible; transition-delay: 0s; 
 /* ---------- Windows (each section) ---------- */
 .section { padding-block: 36px; }
 .window {
-  position: relative; border: 2px solid #fff; background: rgba(0, 8, 255, 0.7);
-  -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px);
-  box-shadow: 10px 10px 0 rgba(255, 255, 255, 0.18);
+  position: relative; border: 2px solid #fff; background: var(--blue);
+  box-shadow: 12px 12px 0 rgba(255, 255, 255, 0.22), inset -2px -2px 0 rgba(0, 0, 0, 0.25), inset 2px 2px 0 rgba(255, 255, 255, 0.25);
 }
 .window-bar {
   display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 36px; padding: 6px 10px 6px 12px;
@@ -284,8 +284,12 @@ body.menu-open .topnav { opacity: 1; visibility: visible; transition-delay: 0s; 
 .about-role { margin-top: 18px; font-weight: 700; font-size: 1.05rem; line-height: 1.55; }
 .about-bio { margin-top: 12px; color: var(--white-75); line-height: 1.85; max-width: 66ch; }
 .cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-.skills { display: grid; gap: 18px; padding-top: 20px; border-top: 1px dashed var(--white-50); }
-.skill-group { display: grid; gap: 10px; }
+.skills { display: grid; gap: 14px; padding-top: 24px; border-top: 1px dashed var(--white-50); }
+.skill-card { display: flex; flex-direction: column; border: 2px solid #fff; background: rgba(255, 255, 255, 0.08); text-align: center; }
+.skill-head { padding: 6px 10px; background: #fff; color: var(--blue); font-family: var(--font-ensemble); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; }
+.skill-list { flex: 1; display: flex; flex-wrap: wrap; justify-content: center; align-content: center; align-items: center; row-gap: 6px; padding: 16px 14px 18px; font-size: 0.95rem; line-height: 1.5; }
+.skill-list li { display: inline-flex; align-items: center; }
+.skill-list li:not(:last-child)::after { content: "·"; margin: 0 0.55em; opacity: 0.6; }
 
 /* ---------- Media: video cards ---------- */
 .video-grid { display: grid; gap: 18px; }
@@ -497,7 +501,7 @@ dialog[open] .window, dialog[open] .lightbox-figure { animation: pop 0.25s var(-
 
   .about { grid-template-columns: 220px 1fr; column-gap: 48px; row-gap: 36px; align-items: start; }
   .about-photo { width: 220px; }
-  .skills { grid-column: 1 / -1; grid-template-columns: repeat(3, 1fr); gap: 32px; }
+  .skills { grid-column: 1 / -1; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 
   .video-grid { grid-template-columns: repeat(12, 1fr); gap: 28px; align-items: start; }
   .video-card:nth-child(1) { grid-column: 1 / 8; margin-top: 20px; }

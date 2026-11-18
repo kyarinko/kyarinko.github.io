@@ -165,7 +165,15 @@
   const asciiBg = $('#ascii-bg');
   const dreamAscii = $('#dreamscape-ascii-bg');
   const ASCII_CHARS = ' ..::++--==__ ';
-  const COLS = 120, ROWS = 45;
+  // Grid size follows the screen so the pattern reaches every edge.
+  let COLS = 120, ROWS = 45;
+  function sizeAscii() {
+    const fs = parseFloat(getComputedStyle(asciiBg).fontSize) || 14;
+    COLS = Math.min(260, Math.ceil(innerWidth / (fs * 0.6)) + 2);
+    ROWS = Math.min(110, Math.ceil(innerHeight / (fs * 1.1)) + 1);
+  }
+  sizeAscii();
+  window.addEventListener('resize', sizeAscii);
   let asciiTime = 0;
   let mouseX = innerWidth / 2, mouseY = innerHeight / 2, targetX = mouseX, targetY = mouseY;
   let dreamRows = 95;
