@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>KYARIN・きゃりー | 作曲家・編曲家</title>
-<meta name="description" content="作曲家・編曲家 KYARIN（ミネアロマン）のポートフォリオ。ゲーム音楽、オーケストラ、吹奏楽などの作品。">
+<meta name="description" content="作曲家・編曲家 KYARIN・きゃりーのポートフォリオ。ゲーム音楽、オーケストラ、吹奏楽などの作品。">
 <meta name="theme-color" content="#0008ff">
 <link rel="canonical" href="https://kyarinko.online/">
 <link rel="alternate" hreflang="ja" href="https://kyarinko.online/?lang=ja">
@@ -14,31 +14,33 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://kyarinko.online/">
 <meta property="og:title" content="KYARIN・きゃりー | Composer &amp; Arranger">
-<meta property="og:description" content="作曲家・編曲家 KYARIN のポートフォリオ。Portfolio of composer and arranger KYARIN (Roman Minear).">
+<meta property="og:description" content="作曲家・編曲家 KYARIN のポートフォリオ。Portfolio of composer and arranger KYARIN.">
 <meta property="og:image" content="https://kyarinko.online/assets/img/og.jpg">
 <meta name="twitter:card" content="summary_large_image">
 
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
 <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
 
-<!-- Pick the language before the page paints (no flash of the wrong language).
-     Order: ?lang=en / ?lang=ja in the URL → the visitor's last choice → browser language. -->
+<!-- Runs before the page paints: picks the language and decides whether to show the loader.
+     Language order: ?lang=en / ?lang=ja in the URL → the visitor's last choice → browser language. -->
 <script>
   (function () {
+    var root = document.documentElement;
+    root.classList.add('js');
+    try { if (sessionStorage.getItem('loaded')) root.classList.add('loaded'); } catch (e) {}
     var q = new URLSearchParams(location.search).get('lang'), s = null;
     if (q === 'jp') q = 'ja';
     try { s = localStorage.getItem('lang'); } catch (e) {}
     var nav = (navigator.languages && navigator.languages[0]) || navigator.language || '';
-    document.documentElement.lang =
-      (q === 'ja' || q === 'en') ? q : (s === 'ja' || s === 'en') ? s : (/^ja\b/i.test(nav) ? 'ja' : 'en');
+    root.lang = (q === 'ja' || q === 'en') ? q : (s === 'ja' || s === 'en') ? s : (/^ja\b/i.test(nav) ? 'ja' : 'en');
   })();
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@100..700&family=BIZ+UDPMincho:wght@400;700&family=JetBrains+Mono:wght@300;500&display=swap">
-<link rel="stylesheet" href="assets/css/style.css?v=3">
-<script src="assets/js/main.js?v=3" defer></script>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;500;700&family=Manrope:wght@400;500;700&family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@700&family=Syne:wght@600;800&display=swap">
+<link rel="stylesheet" href="assets/css/style.css?v=7">
+<script src="assets/js/main.js?v=7" defer></script>
 </head>
 <body>
 <!--
@@ -49,17 +51,32 @@
   Image alt text works the same way: alt="日本語" data-alt-en="English".
   Share an English link with: https://kyarinko.online/?lang=en
 -->
-<a class="skip-link" href="#main"><span lang="ja">本文へスキップ</span><span lang="en">Skip to main content</span></a>
+<a class="skip-link" href="#about"><span lang="ja">本文へスキップ</span><span lang="en">Skip to main content</span></a>
 
-<header class="site-header">
-  <div class="container header-inner">
+<!-- Loading screen (~3 s, first visit per browser session; click to skip) -->
+<div class="loader" aria-hidden="true">
+  <div class="loader-logo"><span class="loader-oval"></span><span class="loader-word">KYARIN</span></div>
+  <div class="loader-meta"><span>LOADING</span><span class="loader-pct">000%</span></div>
+  <div class="loader-bar"><i></i></div>
+  <p class="loader-sys">kyarin.online // ver. 2026.11</p>
+</div>
+
+<!-- Full-page ASCII background (original) -->
+<div id="ascii-container" aria-hidden="true"><pre id="ascii-bg"></pre></div>
+
+<!-- Wipe used when switching language -->
+<div class="lang-wipe" aria-hidden="true"></div>
+
+<!-- Slim top bar: appears once you scroll past the home screen -->
+<header class="topbar">
+  <div class="container topbar-inner">
     <a class="brand" href="#top">
-      <img class="brand-icon" src="assets/img/kyarin.webp" width="36" height="36" alt="">
-      <span class="brand-text"><b>KYARIN</b><small>// きゃりー</small></span>
+      <img class="brand-icon" src="assets/img/kyarin.webp" width="34" height="34" alt="">
+      <b>KYARIN</b>
     </a>
-
-    <nav class="site-nav" id="site-nav" aria-label="Main">
+    <nav class="topnav" id="topnav" aria-label="Main">
       <ul>
+        <li><a href="#about"><span lang="ja">プロフィール</span><span lang="en">About</span></a></li>
         <li><a href="#works"><span lang="ja">楽曲</span><span lang="en">Music</span></a></li>
         <li><a href="#dreamscape">Dreamscape</a></li>
         <li><a href="#gallery"><span lang="ja">写真</span><span lang="en">Photos</span></a></li>
@@ -67,79 +84,158 @@
         <li><a href="#contact"><span lang="ja">連絡</span><span lang="en">Contact</span></a></li>
       </ul>
     </nav>
-
-    <div class="segmented lang-toggle" role="group" aria-label="Language / 言語">
-      <button type="button" data-set-lang="ja" aria-pressed="true">日本語</button>
-      <button type="button" data-set-lang="en" aria-pressed="false">EN</button>
-    </div>
-
-    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="site-nav" aria-label="メニュー" data-label-en="Menu">
+    <button type="button" class="switch lang-switch" aria-label="Switch to English">
+      <span class="switch-thumb" aria-hidden="true"></span>
+      <span class="switch-opt" aria-hidden="true">日本語</span>
+      <span class="switch-opt" aria-hidden="true">EN</span>
+    </button>
+    <button type="button" class="menu-btn" aria-expanded="false" aria-controls="topnav" aria-label="メニュー" data-label-en="Menu">
       <span class="menu-icon" aria-hidden="true"></span>
-      <span class="menu-label" aria-hidden="true"><span lang="ja">メニュー</span><span lang="en">Menu</span></span>
     </button>
   </div>
 </header>
 
-<main id="main">
+<main>
 
-  <!-- ============ HERO ============ -->
-  <section class="hero" id="top">
-    <div class="hero-ghost" aria-hidden="true"><span>KYARIN</span><span>KYARIN</span><span>KYARIN</span><span>KYARIN</span></div>
-    <div class="container">
-      <div class="hero-grid">
-        <div class="hero-text">
-          <p class="tag slam"><span lang="ja">ようこそ、ゲストさん</span><span lang="en">welcome, guest</span></p>
-          <p class="hero-eyebrow slam" style="--d:1"><span lang="ja">作曲・編曲・演奏</span><span lang="en">Composition · Arrangement · Performance</span></p>
-          <h1 class="hero-title slam" style="--d:2"><span class="wave">KYARIN</span><span class="kana">・きゃりー</span></h1>
-          <p class="hero-name slam" style="--d:3">ROMAN MINEAR・ミネアロマン</p>
-          <p class="hero-role slam" style="--d:4">
-            <span lang="ja">洗足学園音楽大学、音楽・音響デザインコースの作編曲4年生</span>
-            <span lang="en">4th-year Composition &amp; Arrangement student, Music &amp; Sound Design Course, Senzoku Gakuen College of Music</span>
-          </p>
-          <p class="hero-bio slam" style="--d:5">
-            <span lang="ja">アメリカのハワイ州出身、中学校の途中に神奈川県の藤沢市へ移住しました。日本の中学校に入学した当時から打楽器やサックソフォンなどの演奏者として音楽の勉強始めました。同時期に趣味で作曲や編曲を始め、学内演奏会で自身で制作した楽譜・楽曲を友人と演奏することもしていました。その後、音楽や作曲への情熱は一生続くという想いから、現在は洗足学園音楽大学でその勉強をやり続けています。</span>
-            <span lang="en">Originally from Hawaii, USA, I moved to Fujisawa in Kanagawa Prefecture partway through middle school. From the time I entered middle school in Japan, I began studying music as a performer of percussion, saxophone and other instruments. Around the same time, I started composing and arranging as a hobby, and I also performed scores and pieces I had made myself with my friends at school concerts. Since then, believing that my passion for music and composition will last a lifetime, I have continued those studies at Senzoku Gakuen College of Music.</span>
-          </p>
-          <div class="hero-cta slam" style="--d:6">
-            <a class="btn btn--solid" href="#works"><span lang="ja">作品を見る</span><span lang="en">View works</span></a>
-            <a class="btn" href="#contact"><span lang="ja">連絡する</span><span lang="en">Contact</span></a>
-          </div>
-        </div>
-        <figure class="hero-photo slam" style="--d:3">
-          <span class="side-label" aria-hidden="true">profile</span>
-          <img src="assets/img/kyarin.webp" width="480" height="480" alt="KYARIN（ミネアロマン）のプロフィール写真" data-alt-en="Profile photo of KYARIN (Roman Minear)" fetchpriority="high">
-        </figure>
+  <!-- ============ HOME "DESKTOP" ============ -->
+  <section class="home" id="top">
+    <div class="home-ghost" aria-hidden="true"><span style="--n:0">KYARIN</span><span style="--n:1">KYARIN</span><span style="--n:2">KYARIN</span><span style="--n:3">KYARIN</span></div>
+
+    <div class="container home-grid">
+      <div class="home-top">
+        <a class="home-id" href="#about">
+          <img src="assets/img/kyarin.webp" width="56" height="56" alt="">
+          <span>
+            <b>KYARIN・きゃりー</b>
+            <small><span lang="ja">作曲・編曲・演奏</span><span lang="en">Composition · Arrangement · Performance</span></small>
+          </span>
+        </a>
+        <button type="button" class="switch lang-switch" aria-label="Switch to English">
+          <span class="switch-thumb" aria-hidden="true"></span>
+          <span class="switch-opt" aria-hidden="true">日本語</span>
+          <span class="switch-opt" aria-hidden="true">EN</span>
+        </button>
       </div>
 
-      <div class="skills">
-        <div class="skill-group reveal">
-          <h2 class="tag"><span lang="ja">作曲・編曲</span><span lang="en">Composition &amp; Arrangement</span></h2>
-          <ul class="chips">
-            <li class="chip"><span lang="ja">オーケストラ</span><span lang="en">Orchestra</span></li>
-            <li class="chip"><span lang="ja">吹奏楽</span><span lang="en">Wind band</span></li>
-            <li class="chip"><span lang="ja">室内楽</span><span lang="en">Chamber music</span></li>
-            <li class="chip"><span lang="ja">ビッグバンド</span><span lang="en">Big band</span></li>
-            <li class="chip"><span lang="ja">ゲーム音楽</span><span lang="en">Game music</span></li>
-            <li class="chip"><span lang="ja">CM音楽</span><span lang="en">Commercial music</span></li>
-          </ul>
+      <div class="home-main">
+        <h1 class="home-title"><span class="wave">KYARIN</span><span class="home-kana">・きゃりー</span></h1>
+
+        <nav class="home-nav" aria-label="Sections">
+          <a href="#about"><span lang="ja">プロフィール</span><span lang="en">About</span></a>
+          <a href="#works"><span lang="ja">楽曲</span><span lang="en">Music</span></a>
+          <a href="#dreamscape">Dreamscape</a>
+          <a href="#gallery"><span lang="ja">写真</span><span lang="en">Photos</span></a>
+          <a href="#club"><span lang="ja">活動</span><span lang="en">Activities</span></a>
+          <a href="#contact"><span lang="ja">連絡</span><span lang="en">Contact</span></a>
+        </nav>
+
+        <div class="home-links">
+          <p class="mono-label">✱ links</p>
+          <div class="icon-links">
+            <a href="https://www.youtube.com/@kyarinnko" target="_blank" rel="noopener" aria-label="YouTube">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="5" width="20" height="14" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 9l5 3-5 3z" fill="currentColor"/></svg>
+            </a>
+            <a href="https://x.com/iamkyarin" target="_blank" rel="noopener" aria-label="X (Twitter)">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4l16 16M20 4L4 20" stroke="currentColor" stroke-width="1.8"/></svg>
+            </a>
+            <a href="https://www.instagram.com/iamkyarin/" target="_blank" rel="noopener" aria-label="Instagram">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.3" cy="6.7" r="1.2" fill="currentColor"/></svg>
+            </a>
+            <a href="https://www.linkedin.com/in/%E3%83%AD%E3%83%9E%E3%83%B3-%E3%83%9F%E3%83%8D%E3%82%A2-51454b446/" target="_blank" rel="noopener" aria-label="LinkedIn">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 10v7M8 7v.01M12 17v-7M12 13c0-2 1-3 2.5-3S17 11 17 13v4" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+            </a>
+            <a href="mailto:Cattoe4work@gmail.com" aria-label="Email">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="1" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 6l9 7 9-7" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
+            </a>
+          </div>
         </div>
-        <div class="skill-group reveal" style="--d:1">
-          <h2 class="tag"><span lang="ja">その他のスキル</span><span lang="en">Other skills</span></h2>
-          <ul class="chips">
-            <li class="chip"><span lang="ja">DAW・楽譜制作</span><span lang="en">DAW &amp; score production</span></li>
-            <li class="chip"><span lang="ja">効果音・サウンドデザイン</span><span lang="en">Sound effects &amp; sound design</span></li>
-            <li class="chip"><span lang="ja">2D・3Dアニメーション</span><span lang="en">2D &amp; 3D animation</span></li>
-            <li class="chip"><span lang="ja">3Dデザイン・イラストレーション</span><span lang="en">3D design &amp; illustration</span></li>
-            <li class="chip"><span lang="ja">HTMLウェブサイトデザイン</span><span lang="en">HTML website design</span></li>
-          </ul>
-        </div>
-        <div class="skill-group reveal" style="--d:2">
-          <h2 class="tag"><span lang="ja">ソフトウェア</span><span lang="en">Software</span></h2>
-          <ul class="chips">
-            <li class="chip">Cubase 15</li><li class="chip">Ableton Live</li><li class="chip">Logic Pro</li><li class="chip">MuseScore</li>
-            <li class="chip">Blender</li><li class="chip">Photoshop</li><li class="chip">Illustrator</li>
-            <li class="chip">After Effects</li><li class="chip">Premiere Pro</li><li class="chip">Animate</li>
-          </ul>
+      </div>
+
+      <!-- "updates" panel — highlights that jump to sections below -->
+      <aside class="updates" aria-label="Updates">
+        <span class="updates-tab" aria-hidden="true">updates</span>
+        <ul>
+          <li><a class="update" href="#club">
+            <b><span lang="ja">第6回ゲーミングオーケストラ定期演奏会</span><span lang="en">6th Gaming Orchestra Regular Concert</span></b>
+            <small>2026-03-16 // <span lang="ja">洗足ゲーム音楽研究会</span><span lang="en">Senzoku Game Music Research Society</span></small>
+          </a></li>
+          <li><a class="update" href="#dreamscape">
+            <b>Dreamscape CONCEPT TRAILER</b>
+            <small>Music Design Fes. 2026 // <span lang="ja">自作ゲームのコンセプト映像</span><span lang="en">concept video for my own game</span></small>
+          </a></li>
+          <li><a class="update" href="#works">
+            <b>Sons of Milesios</b>
+            <small>MUSIC DESIGN CHAMBER PROJECT 2025 // <span lang="ja">選曲</span><span lang="en">selected piece</span></small>
+          </a></li>
+          <li><a class="update" href="#player">
+            <b><span lang="ja">デモ音源</span><span lang="en">Demo tracks</span></b>
+            <small><span lang="ja">川崎市職員採用PR動画の楽曲「光導」</span><span lang="en">“Kōdō” — Kawasaki City staff recruitment PR video</span></small>
+          </a></li>
+        </ul>
+      </aside>
+    </div>
+
+    <p class="version-tag" aria-hidden="true">kyarin.online // ver. 2026.11</p>
+    <a class="scroll-cue" href="#about"><span lang="ja">スクロール</span><span lang="en">scroll</span> ↓</a>
+  </section>
+
+  <!-- ============ 00 ABOUT ============ -->
+  <section class="section" id="about" aria-labelledby="about-title">
+    <div class="container">
+      <div class="window reveal">
+        <div class="window-bar"><span>00 // profile</span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-body about">
+          <figure class="about-photo">
+            <img src="assets/img/kyarin.webp" width="480" height="480" loading="lazy" alt="KYARIN・きゃりーのプロフィール写真" data-alt-en="Profile photo of KYARIN">
+          </figure>
+          <div class="about-text">
+            <p class="mono-label"><span lang="ja">作曲・編曲・演奏</span><span lang="en">Composition · Arrangement · Performance</span></p>
+            <h2 class="about-title" id="about-title"><span class="wave">KYARIN</span><span class="kana">・きゃりー</span></h2>
+            <p class="about-role">
+              <span lang="ja">洗足学園音楽大学、音楽・音響デザインコースの作編曲4年生</span>
+              <span lang="en">4th-year Composition &amp; Arrangement student, Music &amp; Sound Design Course, Senzoku Gakuen College of Music</span>
+            </p>
+            <p class="about-bio">
+              <span lang="ja">アメリカのハワイ州出身、中学校の途中に神奈川県の藤沢市へ移住しました。日本の中学校に入学した当時から打楽器やサックソフォンなどの演奏者として音楽の勉強始めました。同時期に趣味で作曲や編曲を始め、学内演奏会で自身で制作した楽譜・楽曲を友人と演奏することもしていました。その後、音楽や作曲への情熱は一生続くという想いから、現在は洗足学園音楽大学でその勉強をやり続けています。</span>
+              <span lang="en">Originally from Hawaii, USA, I moved to Fujisawa in Kanagawa Prefecture partway through middle school. From the time I entered middle school in Japan, I began studying music as a performer of percussion, saxophone and other instruments. Around the same time, I started composing and arranging as a hobby, and I also performed scores and pieces I had made myself with my friends at school concerts. Since then, believing that my passion for music and composition will last a lifetime, I have continued those studies at Senzoku Gakuen College of Music.</span>
+            </p>
+            <div class="cta">
+              <a class="btn btn--solid" href="#works"><span lang="ja">作品を見る</span><span lang="en">View works</span></a>
+              <a class="btn" href="#contact"><span lang="ja">連絡する</span><span lang="en">Contact</span></a>
+            </div>
+          </div>
+
+          <div class="skills">
+            <div class="skill-group">
+              <h3 class="mono-label"><span lang="ja">作曲・編曲</span><span lang="en">Composition &amp; Arrangement</span></h3>
+              <ul class="chips">
+                <li class="chip"><span lang="ja">オーケストラ</span><span lang="en">Orchestra</span></li>
+                <li class="chip"><span lang="ja">吹奏楽</span><span lang="en">Wind band</span></li>
+                <li class="chip"><span lang="ja">室内楽</span><span lang="en">Chamber music</span></li>
+                <li class="chip"><span lang="ja">ビッグバンド</span><span lang="en">Big band</span></li>
+                <li class="chip"><span lang="ja">ゲーム音楽</span><span lang="en">Game music</span></li>
+                <li class="chip"><span lang="ja">CM音楽</span><span lang="en">Commercial music</span></li>
+              </ul>
+            </div>
+            <div class="skill-group">
+              <h3 class="mono-label"><span lang="ja">その他のスキル</span><span lang="en">Other skills</span></h3>
+              <ul class="chips">
+                <li class="chip"><span lang="ja">DAW・楽譜制作</span><span lang="en">DAW &amp; score production</span></li>
+                <li class="chip"><span lang="ja">効果音・サウンドデザイン</span><span lang="en">Sound effects &amp; sound design</span></li>
+                <li class="chip"><span lang="ja">2D・3Dアニメーション</span><span lang="en">2D &amp; 3D animation</span></li>
+                <li class="chip"><span lang="ja">3Dデザイン・イラストレーション</span><span lang="en">3D design &amp; illustration</span></li>
+                <li class="chip"><span lang="ja">HTMLウェブサイトデザイン</span><span lang="en">HTML website design</span></li>
+              </ul>
+            </div>
+            <div class="skill-group">
+              <h3 class="mono-label"><span lang="ja">ソフトウェア</span><span lang="en">Software</span></h3>
+              <ul class="chips">
+                <li class="chip">Cubase 15</li><li class="chip">Ableton Live</li><li class="chip">Logic Pro</li><li class="chip">MuseScore</li>
+                <li class="chip">Blender</li><li class="chip">Photoshop</li><li class="chip">Illustrator</li>
+                <li class="chip">After Effects</li><li class="chip">Premiere Pro</li><li class="chip">Animate</li>
+              </ul>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -147,331 +243,330 @@
 
   <!-- ============ 01 MUSIC / MEDIA ============ -->
   <section class="section" id="works" aria-labelledby="works-title">
-    <span class="side-label side-label--section" aria-hidden="true">music</span>
     <div class="container">
-      <div class="section-head section-head--row">
-        <p class="tag reveal"><span class="num">01 //</span><span lang="ja">楽曲・映像</span><span lang="en">Music &amp; video</span></p>
-        <h2 class="section-title reveal" id="works-title">Media</h2>
-        <a class="btn head-action reveal" href="https://www.youtube.com/@kyarinnko" target="_blank" rel="noopener">
-          <span lang="ja">YouTubeチャンネル</span><span lang="en">YouTube channel</span> <span class="arrow" aria-hidden="true">↗</span>
-        </a>
-      </div>
+      <div class="window window--light reveal">
+        <div class="window-bar"><span>01 // <span lang="ja">楽曲・映像</span><span lang="en">music &amp; video</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-body">
+          <div class="section-head section-head--row">
+            <h2 class="title-music wave" id="works-title">MEDIA</h2>
+            <a class="btn btn--blue" href="https://www.youtube.com/@kyarinnko" target="_blank" rel="noopener">
+              <span lang="ja">YouTubeチャンネル</span><span lang="en">YouTube channel</span> <span class="arrow" aria-hidden="true">↗</span>
+            </a>
+          </div>
 
-      <!-- Video cards: data-yt = YouTube video ID, data-start = start time in seconds (optional). -->
-      <div class="video-grid">
-        <a class="video-card panel reveal" href="https://www.youtube.com/watch?v=B6FvJaW8cBQ" data-yt="B6FvJaW8cBQ" target="_blank" rel="noopener">
-          <div class="thumb">
-            <img src="https://i.ytimg.com/vi/B6FvJaW8cBQ/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
-            <span class="play-badge">▶ PLAY</span>
+          <!-- Video cards: data-yt = YouTube video ID, data-start = start time in seconds (optional). -->
+          <div class="video-grid">
+            <a class="video-card" href="https://www.youtube.com/watch?v=B6FvJaW8cBQ" data-yt="B6FvJaW8cBQ" target="_blank" rel="noopener">
+              <div class="thumb">
+                <img src="https://i.ytimg.com/vi/B6FvJaW8cBQ/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
+                <span class="play-badge">▶ PLAY</span>
+              </div>
+              <h3 class="card-title">The Queen's Final Stance OST — Thinking Music</h3>
+              <p class="card-meta">(O2A2 2024 - Visual Novel Jam) <span lang="ja">ゲームの制作コンペ</span><span lang="en">Game production competition</span></p>
+            </a>
+            <a class="video-card" href="https://www.youtube.com/watch?v=2QYCTZonzB8&amp;t=2786s" data-yt="2QYCTZonzB8" data-start="2786" target="_blank" rel="noopener">
+              <div class="thumb">
+                <img src="https://i.ytimg.com/vi/2QYCTZonzB8/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
+                <span class="play-badge">▶ PLAY</span>
+              </div>
+              <h3 class="card-title">Sons of Milesios</h3>
+              <p class="card-meta"><span lang="ja">選曲・洗足学園音楽大学 - MUSIC DESIGN CHAMBER PROJECT 2025 学内コンペ</span><span lang="en">Selected piece · Senzoku Gakuen College of Music - MUSIC DESIGN CHAMBER PROJECT 2025, in-school competition</span></p>
+            </a>
+            <a class="video-card" href="https://www.youtube.com/watch?v=Zg2tbgmIBZc" data-yt="Zg2tbgmIBZc" target="_blank" rel="noopener">
+              <div class="thumb">
+                <img src="https://i.ytimg.com/vi/Zg2tbgmIBZc/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
+                <span class="play-badge">▶ PLAY</span>
+              </div>
+              <h3 class="card-title"><span lang="ja">青木ヶ原の詩</span><span lang="en">Poem of Aokigahara</span></h3>
+              <p class="card-meta"><span lang="ja">初めて作曲した曲、作曲の原点を記録として上げています</span><span lang="en">The first piece I ever composed — uploaded as a record of where my composing began.</span></p>
+            </a>
+            <a class="video-card" href="https://youtu.be/3dulJY6dgtQ" data-yt="3dulJY6dgtQ" target="_blank" rel="noopener">
+              <div class="thumb">
+                <img src="https://i.ytimg.com/vi/3dulJY6dgtQ/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
+                <span class="play-badge">▶ PLAY</span>
+              </div>
+              <h3 class="card-title"><span lang="ja">ゼルダの伝説・時のオカリナメドレー</span><span lang="en">The Legend of Zelda: Ocarina of Time Medley</span></h3>
+              <p class="card-meta"><span lang="ja">大学サークル、ゲーム音楽研究会「GOK」の初オーケストラ定期演奏会</span><span lang="en">The first orchestra regular concert of GOK, the Game Music Research Society (a university club)</span></p>
+            </a>
           </div>
-          <div class="card-body">
-            <h3 class="card-title">The Queen's Final Stance OST — Thinking Music</h3>
-            <p class="card-meta">(O2A2 2024 - Visual Novel Jam) <span lang="ja">ゲームの制作コンペ</span><span lang="en">Game production competition</span></p>
-          </div>
-        </a>
 
-        <a class="video-card panel reveal" style="--d:1" href="https://www.youtube.com/watch?v=2QYCTZonzB8&amp;t=2786s" data-yt="2QYCTZonzB8" data-start="2786" target="_blank" rel="noopener">
-          <div class="thumb">
-            <img src="https://i.ytimg.com/vi/2QYCTZonzB8/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
-            <span class="play-badge">▶ PLAY</span>
+          <!-- Demo player. To add a track, copy one <li> and change data-src + both titles. -->
+          <div class="player" id="player">
+            <div class="player-head">
+              <p class="mono-label">KYARIN_DEMO_MUSIC_ALBUM</p>
+              <p class="mono-label"><span lang="ja">デモ音源</span><span lang="en">Demo tracks</span></p>
+            </div>
+            <p class="player-now" id="player-now" aria-live="polite"><span lang="ja">トラックを選んで再生</span><span lang="en">Select a track to play</span></p>
+            <div class="viz">
+              <canvas id="viz-canvas" aria-hidden="true"></canvas>
+              <div class="viz-hud" aria-hidden="true"><span>SPECTROGRAPH // LOGARITHMIC 50Hz — 7,000Hz</span><span id="viz-peak">PEAK: -- Hz</span></div>
+            </div>
+            <div class="controls">
+              <button type="button" class="icon-btn ctl-prev" id="btn-prev" aria-label="前の曲" data-label-en="Previous track">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h2v12H3zM14 2v12L6 8z" fill="currentColor"/></svg>
+              </button>
+              <button type="button" class="icon-btn icon-btn--play ctl-play" id="btn-play" aria-pressed="false" aria-label="再生 / 一時停止" data-label-en="Play / pause">
+                <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
+                <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h3.5v12H3zM9.5 2H13v12H9.5z" fill="currentColor"/></svg>
+              </button>
+              <button type="button" class="icon-btn ctl-next" id="btn-next" aria-label="次の曲" data-label-en="Next track">
+                <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11 2h2v12h-2zM2 2v12l8-6z" fill="currentColor"/></svg>
+              </button>
+              <input type="range" class="range seek" id="seek" min="0" max="1000" value="0" step="1" aria-label="再生位置" data-label-en="Playback position">
+              <span class="time" id="time">0:00 / 0:00</span>
+              <label class="volume">
+                <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M2 7h3l4-4v12l-4-4H2z" fill="currentColor"/><path d="M12 6a4 4 0 010 6M14.5 3.5a7.5 7.5 0 010 11" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+                <span class="visually-hidden"><span lang="ja">音量</span><span lang="en">Volume</span></span>
+                <input type="range" class="range" id="volume" min="0" max="100" value="30" step="1">
+              </label>
+            </div>
+            <ol class="tracklist">
+              <li><button type="button" class="track" data-src="assets/music/kawasaki.mp3">
+                <span class="track-num">01</span>
+                <span><span lang="ja">川崎市職員採用PR動画の楽曲「光導」</span><span lang="en">“Kōdō” — music for the Kawasaki City staff recruitment PR video</span></span>
+                <span class="track-len"></span>
+              </button></li>
+              <li><button type="button" class="track" data-src="assets/music/skyandsea.mp3">
+                <span class="track-num">02</span>
+                <span><span lang="ja">MUSIC DESIGN SYMPHONIC ORCHESTRA 2025、The Sky and Sea</span><span lang="en">MUSIC DESIGN SYMPHONIC ORCHESTRA 2025, The Sky and Sea</span></span>
+                <span class="track-len"></span>
+              </button></li>
+            </ol>
+            <audio id="audio" preload="metadata"></audio>
           </div>
-          <div class="card-body">
-            <h3 class="card-title">Sons of Milesios</h3>
-            <p class="card-meta"><span lang="ja">選曲・洗足学園音楽大学 - MUSIC DESIGN CHAMBER PROJECT 2025 学内コンペ</span><span lang="en">Selected piece · Senzoku Gakuen College of Music - MUSIC DESIGN CHAMBER PROJECT 2025, in-school competition</span></p>
-          </div>
-        </a>
-
-        <a class="video-card panel reveal" href="https://www.youtube.com/watch?v=Zg2tbgmIBZc" data-yt="Zg2tbgmIBZc" target="_blank" rel="noopener">
-          <div class="thumb">
-            <img src="https://i.ytimg.com/vi/Zg2tbgmIBZc/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
-            <span class="play-badge">▶ PLAY</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title"><span lang="ja">青木ヶ原の詩</span><span lang="en">Poem of Aokigahara</span></h3>
-            <p class="card-meta"><span lang="ja">初めて作曲した曲、作曲の原点を記録として上げています</span><span lang="en">The first piece I ever composed — uploaded as a record of where my composing began.</span></p>
-          </div>
-        </a>
-
-        <a class="video-card panel reveal" style="--d:1" href="https://youtu.be/3dulJY6dgtQ" data-yt="3dulJY6dgtQ" target="_blank" rel="noopener">
-          <div class="thumb">
-            <img src="https://i.ytimg.com/vi/3dulJY6dgtQ/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
-            <span class="play-badge">▶ PLAY</span>
-          </div>
-          <div class="card-body">
-            <h3 class="card-title"><span lang="ja">ゼルダの伝説・時のオカリナメドレー</span><span lang="en">The Legend of Zelda: Ocarina of Time Medley</span></h3>
-            <p class="card-meta"><span lang="ja">大学サークル、ゲーム音楽研究会「GOK」の初オーケストラ定期演奏会</span><span lang="en">The first orchestra regular concert of GOK, the Game Music Research Society (a university club)</span></p>
-          </div>
-        </a>
-      </div>
-
-      <!-- Demo player. To add a track, copy one <li> and change data-src + both titles. -->
-      <div class="player panel reveal" id="player">
-        <div class="player-head">
-          <p class="tag">KYARIN_DEMO_MUSIC_ALBUM</p>
-          <p class="tag"><span lang="ja">デモ音源</span><span lang="en">Demo tracks</span></p>
         </div>
-        <p class="player-now" id="player-now" aria-live="polite"><span lang="ja">トラックを選んで再生</span><span lang="en">Select a track to play</span></p>
-
-        <div class="viz">
-          <canvas id="viz-canvas" aria-hidden="true"></canvas>
-          <div class="viz-hud" aria-hidden="true"><span>SPECTRUM // 50Hz – 7kHz</span><span id="viz-peak">PEAK — Hz</span></div>
-        </div>
-
-        <div class="controls">
-          <button type="button" class="icon-btn ctl-prev" id="btn-prev" aria-label="前の曲" data-label-en="Previous track">
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h2v12H3zM14 2v12L6 8z" fill="currentColor"/></svg>
-          </button>
-          <button type="button" class="icon-btn icon-btn--play ctl-play" id="btn-play" aria-pressed="false" aria-label="再生 / 一時停止" data-label-en="Play / pause">
-            <svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg>
-            <svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h3.5v12H3zM9.5 2H13v12H9.5z" fill="currentColor"/></svg>
-          </button>
-          <button type="button" class="icon-btn ctl-next" id="btn-next" aria-label="次の曲" data-label-en="Next track">
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M11 2h2v12h-2zM2 2v12l8-6z" fill="currentColor"/></svg>
-          </button>
-          <input type="range" class="range seek" id="seek" min="0" max="1000" value="0" step="1" aria-label="再生位置" data-label-en="Playback position">
-          <span class="time" id="time">0:00 / 0:00</span>
-          <label class="volume">
-            <svg viewBox="0 0 18 18" aria-hidden="true"><path d="M2 7h3l4-4v12l-4-4H2z" fill="currentColor"/><path d="M12 6a4 4 0 010 6M14.5 3.5a7.5 7.5 0 010 11" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-            <span class="visually-hidden"><span lang="ja">音量</span><span lang="en">Volume</span></span>
-            <input type="range" class="range" id="volume" min="0" max="100" value="30" step="1">
-          </label>
-        </div>
-
-        <ol class="tracklist">
-          <li><button type="button" class="track" data-src="assets/music/kawasaki.mp3">
-            <span class="track-num">01</span>
-            <span><span lang="ja">川崎市職員採用PR動画の楽曲「光導」</span><span lang="en">“Kōdō” — music for the Kawasaki City staff recruitment PR video</span></span>
-            <span class="track-len"></span>
-          </button></li>
-          <li><button type="button" class="track" data-src="assets/music/skyandsea.mp3">
-            <span class="track-num">02</span>
-            <span><span lang="ja">MUSIC DESIGN SYMPHONIC ORCHESTRA 2025、The Sky and Sea</span><span lang="en">MUSIC DESIGN SYMPHONIC ORCHESTRA 2025, The Sky and Sea</span></span>
-            <span class="track-len"></span>
-          </button></li>
-        </ol>
-        <audio id="audio" preload="metadata"></audio>
       </div>
     </div>
   </section>
 
   <!-- ============ 02 THE DREAMSCAPE ============ -->
-  <section class="section section--dark dream" id="dreamscape" aria-labelledby="dream-title">
-    <pre class="ascii" aria-hidden="true"></pre>
+  <section class="section" id="dreamscape" aria-labelledby="dream-title">
     <div class="container">
-      <div class="section-head">
-        <p class="tag reveal"><span class="num">02 //</span><span lang="ja">オリジナルゲーム</span><span lang="en">Original game</span></p>
-        <h2 class="dream-title reveal" id="dream-title">THE DREAMSCAPE</h2>
-      </div>
-
-      <div class="dream-intro reveal">
-        <p>
-          <span lang="ja">「夢の世界」との意味をして、オリジナルゲーム物語です。とある古い伝説「夢」にまつわる物語、昔々に夢はただ見るだけのモノではありませんでした。神々に創られたその世界の名は「ドリームスケープ」</span>
-          <span lang="en">Meaning "the world of dreams," this is an original game story. It is a story surrounding a certain old legend, "dreams": long, long ago, dreams were not something you merely saw. The name of that world, created by the gods, is "Dreamscape."</span>
-        </p>
-        <p>
-          <span lang="ja">友人と組んだ小さなチームで制作中、進捗はちょっとずつ進んでいます。最初は学内イベントを目的にして、コンセプト映像を作成しましたが、</span>
-          <span lang="en">We are making it with a small team of friends, and progress is moving forward little by little. At first, we made a concept video for an on-campus event, but</span>
-        </p>
-      </div>
-
-      <!-- Image + text entries. Remove the word "hidden" below once real images and text are ready. -->
-      <div class="dream-entries" hidden>
-        <article class="dream-entry reveal">
-          <figure><img src="" alt="" loading="lazy"></figure>
-          <p><span lang="ja">画像01の説明文</span><span lang="en">Description for image 01</span></p>
-        </article>
-        <article class="dream-entry reveal">
-          <figure><img src="" alt="" loading="lazy"></figure>
-          <p><span lang="ja">画像02の説明文</span><span lang="en">Description for image 02</span></p>
-        </article>
-      </div>
-
-      <div class="dream-trailer">
-        <a class="video-card panel reveal" href="https://youtu.be/bztzJvlkSeY" data-yt="bztzJvlkSeY" target="_blank" rel="noopener">
-          <div class="thumb">
-            <img src="https://i.ytimg.com/vi/bztzJvlkSeY/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
-            <span class="play-badge">▶ PLAY</span>
+      <div class="window window--dark dream reveal">
+        <div class="window-bar"><span>02 // <span lang="ja">オリジナルゲーム</span><span lang="en">original game</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-body dream-body">
+          <pre class="dream-ascii" id="dreamscape-ascii-bg" aria-hidden="true"></pre>
+          <h2 class="dream-title wave" id="dream-title">THE DREAMSCAPE</h2>
+          <div class="dream-intro parallax" data-speed="0.012">
+            <p>
+              <span lang="ja">「夢の世界」との意味をして、オリジナルゲーム物語です。とある古い伝説「夢」にまつわる物語、昔々に夢はただ見るだけのモノではありませんでした。神々に創られたその世界の名は「ドリームスケープ」</span>
+              <span lang="en">Meaning "the world of dreams," this is an original game story. It is a story surrounding a certain old legend, "dreams": long, long ago, dreams were not something you merely saw. The name of that world, created by the gods, is "Dreamscape."</span>
+            </p>
+            <p>
+              <span lang="ja">友人と組んだ小さなチームで制作中、進捗はちょっとずつ進んでいます。最初は学内イベントを目的にして、コンセプト映像を作成しましたが、</span>
+              <span lang="en">We are making it with a small team of friends, and progress is moving forward little by little. At first, we made a concept video for an on-campus event, but</span>
+            </p>
           </div>
-          <div class="card-body">
-            <h3 class="card-title">Dreamscape CONCEPT TRAILER</h3>
+
+          <!-- Image + text entries. Remove the word "hidden" below once real images and text are ready. -->
+          <div class="dream-entries" hidden>
+            <article class="dream-entry">
+              <figure><img src="" alt="" loading="lazy"></figure>
+              <p><span lang="ja">画像01の説明文</span><span lang="en">Description for image 01</span></p>
+            </article>
+            <article class="dream-entry">
+              <figure><img src="" alt="" loading="lazy"></figure>
+              <p><span lang="ja">画像02の説明文</span><span lang="en">Description for image 02</span></p>
+            </article>
           </div>
-        </a>
+
+          <div class="dream-trailer parallax" data-speed="-0.02">
+            <a class="video-card" href="https://youtu.be/bztzJvlkSeY" data-yt="bztzJvlkSeY" target="_blank" rel="noopener">
+              <div class="thumb">
+                <img src="https://i.ytimg.com/vi/bztzJvlkSeY/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
+                <span class="play-badge">▶ PLAY</span>
+              </div>
+              <h3 class="card-title dream-trailer-title">Dreamscape CONCEPT TRAILER</h3>
+            </a>
+          </div>
+        </div>
+        <div class="dither" data-dither="#000000,#0008ff" aria-hidden="true"></div>
       </div>
     </div>
-    <div class="dither" data-dither="#050507,#0008ff" aria-hidden="true"></div>
   </section>
 
   <!-- ============ 03 GALLERY ============ -->
   <section class="section" id="gallery" aria-labelledby="gallery-title">
-    <span class="side-label side-label--section" aria-hidden="true">photos</span>
     <div class="container">
-      <div class="section-head">
-        <p class="tag reveal"><span class="num">03 //</span><span lang="ja">写真</span><span lang="en">Photos</span></p>
-        <h2 class="section-title reveal" id="gallery-title">Gallery</h2>
-        <p class="section-lead reveal">
-          <span lang="ja">洗足学園音楽大学の学内演奏会、外部演奏会、ゼミ活動、友人との制作活動などの写真をまとめたギャラリーです。</span>
-          <span lang="en">A gallery collecting photos of on-campus concerts at Senzoku Gakuen College of Music, outside concerts, seminar activities, creative projects with friends, and more.</span>
-        </p>
-      </div>
+      <div class="window reveal">
+        <div class="window-bar"><span>03 // <span lang="ja">写真</span><span lang="en">photos</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-body">
+          <div class="section-head section-head--right">
+            <h2 class="title-gallery wave" id="gallery-title">Gallery</h2>
+            <p class="section-lead">
+              <span lang="ja">洗足学園音楽大学の学内演奏会、外部演奏会、ゼミ活動、友人との制作活動などの写真をまとめたギャラリーです。</span>
+              <span lang="en">A gallery collecting photos of on-campus concerts at Senzoku Gakuen College of Music, outside concerts, seminar activities, creative projects with friends, and more.</span>
+            </p>
+          </div>
 
-      <!-- Each photo: data-full = large image, <img> = small thumbnail, .cap = caption (both languages). -->
-      <div class="gallery is-collapsed" id="gallery-grid">
-        <button type="button" class="photo photo--wide" data-group="gallery" data-full="assets/img/album/2026-3getu-teiki-gok.webp">
-          <img src="assets/img/album/2026-3getu-teiki-gok-sm.webp" loading="lazy" decoding="async" alt="2026年3月、洗足ゲーム音楽研究会の定期演奏会" data-alt-en="March 2026, regular concert of the Senzoku Game Music Research Society">
-          <span class="cap"><span lang="ja">2026年3月、洗足ゲーム音楽研究会の定期演奏会</span><span lang="en">March 2026, regular concert of the Senzoku Game Music Research Society</span></span>
-        </button>
-        <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/2025teiki_1.webp">
-          <img src="assets/img/album/2025teiki_1-sm.webp" loading="lazy" decoding="async" alt="2025年3月、洗足ゲーム音楽研究会の定期演奏会" data-alt-en="March 2025, regular concert of the Senzoku Game Music Research Society">
-          <span class="cap"><span lang="ja">2025年3月、洗足ゲーム音楽研究会の定期演奏会</span><span lang="en">March 2025, regular concert of the Senzoku Game Music Research Society</span></span>
-        </button>
-        <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/zemi.webp">
-          <img src="assets/img/album/zemi-sm.webp" loading="lazy" decoding="async" alt="ゼミの演奏会後の集合写真" data-alt-en="Group photo after the seminar concert">
-          <span class="cap"><span lang="ja">ゼミの演奏会後の集合写真</span><span lang="en">Group photo after the seminar concert</span></span>
-        </button>
-        <button type="button" class="photo photo--wide" data-group="gallery" data-full="assets/img/album/shiki.webp">
-          <img src="assets/img/album/shiki-sm.webp" loading="lazy" decoding="async" alt="定期演奏会に自分の編曲を指揮する" data-alt-en="Conducting my own arrangement at a regular concert">
-          <span class="cap"><span lang="ja">定期演奏会に自分の編曲を指揮する</span><span lang="en">Conducting my own arrangement at a regular concert</span></span>
-        </button>
-        <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/2024teiki.webp">
-          <img src="assets/img/album/2024teiki-sm.webp" loading="lazy" decoding="async" alt="大学の友人たちと外部演奏会の集合写真" data-alt-en="Group photo at an outside concert with university friends">
-          <span class="cap"><span lang="ja">大学の友人たちと外部演奏会の集合写真</span><span lang="en">Group photo at an outside concert with university friends</span></span>
-        </button>
-        <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/sax2026.webp">
-          <img src="assets/img/album/sax2026-sm.webp" loading="lazy" decoding="async" alt="2025年定期演奏会のサックスパート集合写真" data-alt-en="Group photo of the saxophone section at the 2025 regular concert">
-          <span class="cap"><span lang="ja">2025年定期演奏会のサックスパート集合写真</span><span lang="en">Group photo of the saxophone section at the 2025 regular concert</span></span>
-        </button>
-        <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/duet.webp">
-          <img src="assets/img/album/duet-sm.webp" loading="lazy" decoding="async" alt="外部のピアノ教室、友人とオリジナル楽曲を制作" data-alt-en="An outside piano school — creating an original piece with a friend">
-          <span class="cap"><span lang="ja">外部のピアノ教室発表会、友人とオリジナル楽曲を制作し演奏する</span><span lang="en">Recital at an outside piano school — creating and performing an original piece with a friend</span></span>
-        </button>
-        <button type="button" class="photo photo--wide" data-group="gallery" data-full="assets/img/album/yamahaginza.webp">
-          <img src="assets/img/album/yamahaginza-sm.webp" loading="lazy" decoding="async" alt="ヤマハ銀座でのアンサンブル演奏会" data-alt-en="Ensemble concert at Yamaha Ginza">
-          <span class="cap"><span lang="ja">ヤマハ銀座店にオリジナル楽曲を発表し、４重奏アンサンブルで演奏（自分はアルトサックスフォン）</span><span lang="en">Presenting an original piece at Yamaha Ginza, performed by a quartet ensemble (I played alto saxophone)</span></span>
-        </button>
-        <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/fes_interview.webp">
-          <img src="assets/img/album/fes_interview-sm.webp" loading="lazy" decoding="async" alt="音楽フェスティバルでのステージインタビュー" data-alt-en="Stage interview at a music festival">
-          <span class="cap"><span lang="ja">洗足学園音楽大学・Music Design Fes.2026　自作ゲーム「DREAMSCAPE」のコンセプト映像を発表し、インタビューする</span><span lang="en">Senzoku Gakuen College of Music · Music Design Fes. 2026 — presenting the concept video for my own game “DREAMSCAPE” and being interviewed</span></span>
-        </button>
-        <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/newshokudou.webp">
-          <img src="assets/img/album/newshokudou-sm.webp" loading="lazy" decoding="async" alt="大学の食堂でサークルと演奏会" data-alt-en="A concert with the club in the university cafeteria">
-          <span class="cap"><span lang="ja">大学の食堂でサークルと演奏会</span><span lang="en">A concert with the club in the university cafeteria</span></span>
-        </button>
-        <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/niwaensou.webp">
-          <img src="assets/img/album/niwaensou-sm.webp" loading="lazy" decoding="async" alt="新入生歓迎会演奏会の集合写真" data-alt-en="Group photo from the freshman welcome party concert">
-          <span class="cap"><span lang="ja">新入生歓迎会演奏会の集合写真</span><span lang="en">Group photo from the freshman welcome party concert</span></span>
-        </button>
-        <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/hatushoku.webp">
-          <img src="assets/img/album/hatushoku-sm.webp" loading="lazy" decoding="async" alt="初めてのサークル演奏会" data-alt-en="My first club concert">
-          <span class="cap"><span lang="ja">初めてのサークル演奏会</span><span lang="en">My first club concert</span></span>
-        </button>
-        <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/2025teiki.webp">
-          <img src="assets/img/album/2025teiki-sm.webp" loading="lazy" decoding="async" alt="2025年定期演奏会、友人と写真" data-alt-en="2025 regular concert, photo with friends">
-          <span class="cap"><span lang="ja">2025年定期演奏会、友人と写真</span><span lang="en">2025 regular concert, photo with friends</span></span>
-        </button>
-        <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/2026teiki.webp">
-          <img src="assets/img/album/2026teiki-sm.webp" loading="lazy" decoding="async" alt="2026年定期演奏会、サックスメンバーでの記念撮影" data-alt-en="2026 regular concert, commemorative photo with the sax members">
-          <span class="cap"><span lang="ja">2026年定期演奏会、コスプレでサックスメンバーでの記念撮影</span><span lang="en">2026 regular concert, commemorative photo with the sax members in cosplay</span></span>
-        </button>
-        <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/gakuensai.webp">
-          <img src="assets/img/album/gakuensai-sm.webp" loading="lazy" decoding="async" alt="学園祭コンサート終演後の集合写真" data-alt-en="Group photo after the school festival concert">
-          <span class="cap"><span lang="ja">2024年度学園祭コンサート終演後の集合写真</span><span lang="en">Group photo after the 2024 school festival concert</span></span>
-        </button>
-      </div>
-      <div class="more">
-        <button type="button" class="btn" aria-expanded="false" aria-controls="gallery-grid" data-toggle-collapse>
-          <span class="when-collapsed"><span lang="ja">写真をさらに表示</span><span lang="en">Show more photos</span></span>
-          <span class="when-expanded"><span lang="ja">写真を閉じる</span><span lang="en">Close photos</span></span>
-        </button>
+          <!-- Each photo: data-full = large image, <img> = small thumbnail, .cap = caption (both languages). -->
+          <div class="collapsible is-collapsed" id="gallery-wrap" data-rows="2.55">
+          <div class="gallery">
+            <button type="button" class="photo photo--wide" data-group="gallery" data-full="assets/img/album/2026-3getu-teiki-gok.webp">
+              <img src="assets/img/album/2026-3getu-teiki-gok-sm.webp" loading="lazy" decoding="async" alt="2026年3月、洗足ゲーム音楽研究会の定期演奏会" data-alt-en="March 2026, regular concert of the Senzoku Game Music Research Society">
+              <span class="cap"><span lang="ja">2026年3月、洗足ゲーム音楽研究会の定期演奏会</span><span lang="en">March 2026, regular concert of the Senzoku Game Music Research Society</span></span>
+            </button>
+            <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/2025teiki_1.webp">
+              <img src="assets/img/album/2025teiki_1-sm.webp" loading="lazy" decoding="async" alt="2025年3月、洗足ゲーム音楽研究会の定期演奏会" data-alt-en="March 2025, regular concert of the Senzoku Game Music Research Society">
+              <span class="cap"><span lang="ja">2025年3月、洗足ゲーム音楽研究会の定期演奏会</span><span lang="en">March 2025, regular concert of the Senzoku Game Music Research Society</span></span>
+            </button>
+            <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/zemi.webp">
+              <img src="assets/img/album/zemi-sm.webp" loading="lazy" decoding="async" alt="ゼミの演奏会後の集合写真" data-alt-en="Group photo after the seminar concert">
+              <span class="cap"><span lang="ja">ゼミの演奏会後の集合写真</span><span lang="en">Group photo after the seminar concert</span></span>
+            </button>
+            <button type="button" class="photo photo--wide" data-group="gallery" data-full="assets/img/album/shiki.webp">
+              <img src="assets/img/album/shiki-sm.webp" loading="lazy" decoding="async" alt="定期演奏会に自分の編曲を指揮する" data-alt-en="Conducting my own arrangement at a regular concert">
+              <span class="cap"><span lang="ja">定期演奏会に自分の編曲を指揮する</span><span lang="en">Conducting my own arrangement at a regular concert</span></span>
+            </button>
+            <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/2024teiki.webp">
+              <img src="assets/img/album/2024teiki-sm.webp" loading="lazy" decoding="async" alt="大学の友人たちと外部演奏会の集合写真" data-alt-en="Group photo at an outside concert with university friends">
+              <span class="cap"><span lang="ja">大学の友人たちと外部演奏会の集合写真</span><span lang="en">Group photo at an outside concert with university friends</span></span>
+            </button>
+            <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/sax2026.webp">
+              <img src="assets/img/album/sax2026-sm.webp" loading="lazy" decoding="async" alt="2025年定期演奏会のサックスパート集合写真" data-alt-en="Group photo of the saxophone section at the 2025 regular concert">
+              <span class="cap"><span lang="ja">2025年定期演奏会のサックスパート集合写真</span><span lang="en">Group photo of the saxophone section at the 2025 regular concert</span></span>
+            </button>
+            <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/duet.webp">
+              <img src="assets/img/album/duet-sm.webp" loading="lazy" decoding="async" alt="外部のピアノ教室、友人とオリジナル楽曲を制作" data-alt-en="An outside piano school — creating an original piece with a friend">
+              <span class="cap"><span lang="ja">外部のピアノ教室発表会、友人とオリジナル楽曲を制作し演奏する</span><span lang="en">Recital at an outside piano school — creating and performing an original piece with a friend</span></span>
+            </button>
+            <button type="button" class="photo photo--wide" data-group="gallery" data-full="assets/img/album/yamahaginza.webp">
+              <img src="assets/img/album/yamahaginza-sm.webp" loading="lazy" decoding="async" alt="ヤマハ銀座でのアンサンブル演奏会" data-alt-en="Ensemble concert at Yamaha Ginza">
+              <span class="cap"><span lang="ja">ヤマハ銀座店にオリジナル楽曲を発表し、４重奏アンサンブルで演奏（自分はアルトサックスフォン）</span><span lang="en">Presenting an original piece at Yamaha Ginza, performed by a quartet ensemble (I played alto saxophone)</span></span>
+            </button>
+            <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/fes_interview.webp">
+              <img src="assets/img/album/fes_interview-sm.webp" loading="lazy" decoding="async" alt="音楽フェスティバルでのステージインタビュー" data-alt-en="Stage interview at a music festival">
+              <span class="cap"><span lang="ja">洗足学園音楽大学・Music Design Fes.2026　自作ゲーム「DREAMSCAPE」のコンセプト映像を発表し、インタビューする</span><span lang="en">Senzoku Gakuen College of Music · Music Design Fes. 2026 — presenting the concept video for my own game “DREAMSCAPE” and being interviewed</span></span>
+            </button>
+            <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/newshokudou.webp">
+              <img src="assets/img/album/newshokudou-sm.webp" loading="lazy" decoding="async" alt="大学の食堂でサークルと演奏会" data-alt-en="A concert with the club in the university cafeteria">
+              <span class="cap"><span lang="ja">大学の食堂でサークルと演奏会</span><span lang="en">A concert with the club in the university cafeteria</span></span>
+            </button>
+            <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/niwaensou.webp">
+              <img src="assets/img/album/niwaensou-sm.webp" loading="lazy" decoding="async" alt="新入生歓迎会演奏会の集合写真" data-alt-en="Group photo from the freshman welcome party concert">
+              <span class="cap"><span lang="ja">新入生歓迎会演奏会の集合写真</span><span lang="en">Group photo from the freshman welcome party concert</span></span>
+            </button>
+            <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/hatushoku.webp">
+              <img src="assets/img/album/hatushoku-sm.webp" loading="lazy" decoding="async" alt="初めてのサークル演奏会" data-alt-en="My first club concert">
+              <span class="cap"><span lang="ja">初めてのサークル演奏会</span><span lang="en">My first club concert</span></span>
+            </button>
+            <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/2025teiki.webp">
+              <img src="assets/img/album/2025teiki-sm.webp" loading="lazy" decoding="async" alt="2025年定期演奏会、友人と写真" data-alt-en="2025 regular concert, photo with friends">
+              <span class="cap"><span lang="ja">2025年定期演奏会、友人と写真</span><span lang="en">2025 regular concert, photo with friends</span></span>
+            </button>
+            <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/2026teiki.webp">
+              <img src="assets/img/album/2026teiki-sm.webp" loading="lazy" decoding="async" alt="2026年定期演奏会、サックスメンバーでの記念撮影" data-alt-en="2026 regular concert, commemorative photo with the sax members">
+              <span class="cap"><span lang="ja">2026年定期演奏会、コスプレでサックスメンバーでの記念撮影</span><span lang="en">2026 regular concert, commemorative photo with the sax members in cosplay</span></span>
+            </button>
+            <button type="button" class="photo" data-group="gallery" data-full="assets/img/album/gakuensai.webp">
+              <img src="assets/img/album/gakuensai-sm.webp" loading="lazy" decoding="async" alt="学園祭コンサート終演後の集合写真" data-alt-en="Group photo after the school festival concert">
+              <span class="cap"><span lang="ja">2024年度学園祭コンサート終演後の集合写真</span><span lang="en">Group photo after the 2024 school festival concert</span></span>
+            </button>
+          </div>
+          <div class="collapse-fade" data-dither="transparent,#0008ff" aria-hidden="true"></div>
+          </div>
+          <div class="more">
+            <button type="button" class="btn" aria-expanded="false" aria-controls="gallery-wrap" data-toggle-collapse>
+              <span class="when-collapsed"><span lang="ja">写真をさらに表示</span><span lang="en">Show more photos</span></span>
+              <span class="when-expanded"><span lang="ja">写真を閉じる</span><span lang="en">Close photos</span></span>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </section>
 
   <!-- ============ 04 ACTIVITIES (GOK) ============ -->
   <section class="section" id="club" aria-labelledby="club-title">
-    <span class="side-label side-label--section" aria-hidden="true">activities</span>
     <div class="container">
-      <div class="section-head">
-        <p class="tag reveal"><span class="num">04 //</span><span lang="ja">活動</span><span lang="en">Activities</span></p>
-        <h2 class="section-title section-title--sm reveal" id="club-title">
-          <span lang="ja">大学活動・ゲーム音楽研究会 (GOK)</span><span lang="en">University activities · Game Music Research Society (GOK)</span>
-        </h2>
-        <p class="section-lead reveal">
-          <span lang="ja">洗足学園音楽大学のサークル、洗足ゲーム音楽研究会の副部長と編曲監督として勤めました。演奏会に向けての演奏する楽曲を編曲し、編曲者の楽譜を添削し制作サポートしたり、参加者や演奏者の募集したり、企画を制作することの担当でした。<br><strong><em>以下は編曲と演奏で参加した演奏会イベントです。</em></strong></span>
-          <span lang="en">I served as vice president and arrangement director of the Senzoku Game Music Research Society, a club at Senzoku Gakuen College of Music. I was in charge of arranging the pieces to be performed at concerts, correcting other arrangers' scores and supporting their work, recruiting participants and performers, and planning events.<br><strong><em>Below are the concert events I took part in as an arranger and performer.</em></strong></span>
-        </p>
-      </div>
+      <div class="window reveal">
+        <div class="window-bar"><span>04 // <span lang="ja">活動</span><span lang="en">activities</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-body">
+          <div class="section-head section-head--center">
+            <h2 class="title-club wave" id="club-title"><span lang="ja">大学活動・ゲーム音楽研究会 (GOK)</span><span lang="en">University activities · Game Music Research Society (GOK)</span></h2>
+            <p class="section-lead">
+              <span lang="ja">洗足学園音楽大学のサークル、洗足ゲーム音楽研究会の副部長と編曲監督として勤めました。演奏会に向けての演奏する楽曲を編曲し、編曲者の楽譜を添削し制作サポートしたり、参加者や演奏者の募集したり、企画を制作することの担当でした。<br><strong><em>以下は編曲と演奏で参加した演奏会イベントです。</em></strong></span>
+              <span lang="en">I served as vice president and arrangement director of the Senzoku Game Music Research Society, a club at Senzoku Gakuen College of Music. I was in charge of arranging the pieces to be performed at concerts, correcting other arrangers' scores and supporting their work, recruiting participants and performers, and planning events.<br><strong><em>Below are the concert events I took part in as an arranger and performer.</em></strong></span>
+            </p>
+          </div>
 
-      <div class="timeline-bar">
-        <p class="tag"><span lang="ja">演奏会 11件</span><span lang="en">11 concerts</span></p>
-        <div class="segmented" role="group" aria-label="並び順" data-label-en="Sort order">
-          <button type="button" data-sort="desc" aria-pressed="true"><span lang="ja">最近</span><span lang="en">Recent</span></button>
-          <button type="button" data-sort="asc" aria-pressed="false"><span lang="ja">過去</span><span lang="en">Past</span></button>
+          <div class="timeline-bar">
+            <p class="mono-label"><span lang="ja">演奏会 11件</span><span lang="en">11 concerts</span></p>
+            <button type="button" class="switch sort-switch" id="sort-switch" aria-pressed="false" aria-label="並び順：最近 / 過去" data-label-en="Sort order: recent / past">
+              <span class="switch-thumb" aria-hidden="true"></span>
+              <span class="switch-opt" aria-hidden="true"><span lang="ja">最近</span><span lang="en">Recent</span></span>
+              <span class="switch-opt" aria-hidden="true"><span lang="ja">過去</span><span lang="en">Past</span></span>
+            </button>
+          </div>
+
+          <!-- Each event: data-date (YYYY-MM-DD) is used for sorting. data-full = poster. -->
+          <div class="collapsible is-collapsed" id="timeline-wrap" data-rows="3.5">
+          <ol class="timeline" id="timeline">
+            <li data-date="2026-03-16"><button type="button" class="event" data-group="posters" data-full="assets/img/poster/2026-03-16_dai6kai-geoke.webp">
+              <img src="assets/img/poster/2026-03-16_dai6kai-geoke-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="第6回ゲーミングオーケストラ定期演奏会 ポスター" data-alt-en="Poster: 6th Gaming Orchestra Regular Concert">
+              <span class="event-text"><time datetime="2026-03-16">2026-03-16</time>
+              <span class="event-title"><span lang="ja">第6回ゲーミングオーケストラ定期演奏会</span><span lang="en">6th Gaming Orchestra Regular Concert</span></span></span>
+            </button></li>
+            <li data-date="2025-10-12"><button type="button" class="event" data-group="posters" data-full="assets/img/poster/2025-10-12_baritube.webp">
+              <img src="assets/img/poster/2025-10-12_baritube-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="山本大雅と愉快な仲間たち ポスター" data-alt-en="Poster: Taiga Yamamoto and His Merry Friends">
+              <span class="event-text"><time datetime="2025-10-12">2025-10-12</time>
+              <span class="event-title"><span lang="ja">山本大雅と愉快な仲間たち in GOK<br>2025年度学園祭2日目</span><span lang="en">Taiga Yamamoto and His Merry Friends in GOK<br>2025 School Festival, Day 2</span></span></span>
+            </button></li>
+            <li data-date="2025-10-11"><button type="button" class="event" data-group="posters" data-full="assets/img/poster/2025-10-11_pokemon-concert.webp">
+              <img src="assets/img/poster/2025-10-11_pokemon-concert-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="Pokemon Concert in GOK ポスター" data-alt-en="Poster: Pokemon Concert in GOK">
+              <span class="event-text"><time datetime="2025-10-11">2025-10-11</time>
+              <span class="event-title"><span lang="ja">Pokemon Concert in GOK<br>2025年度学園祭1日目</span><span lang="en">Pokemon Concert in GOK<br>2025 School Festival, Day 1</span></span></span>
+            </button></li>
+            <li data-date="2025-10-11"><button type="button" class="event" data-group="posters" data-full="assets/img/poster/2025-10-11_dai5kai-geoke.webp">
+              <img src="assets/img/poster/2025-10-11_dai5kai-geoke-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="第５回ゲーミングオーケストラ定期演奏会 ポスター" data-alt-en="Poster: 5th Gaming Orchestra Regular Concert">
+              <span class="event-text"><time datetime="2025-10-11">2025-10-11</time>
+              <span class="event-title"><span lang="ja">第５回ゲーミングオーケストラ定期演奏会<br>2025年度学園祭1日目</span><span lang="en">5th Gaming Orchestra Regular Concert<br>2025 School Festival, Day 1</span></span></span>
+            </button></li>
+            <li data-date="2025-09-18"><button type="button" class="event" data-group="posters" data-full="assets/img/poster/2025-09-18_gok-concert.webp">
+              <img src="assets/img/poster/2025-09-18_gok-concert-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="GOK Concert ポスター" data-alt-en="Poster: GOK Concert">
+              <span class="event-text"><time datetime="2025-09-18">2025-09-18</time>
+              <span class="event-title">GOK Concert</span></span>
+            </button></li>
+            <li data-date="2025-07-15"><button type="button" class="event" data-group="posters" data-full="assets/img/poster/2025-07-15_dai4kai-geoke.webp">
+              <img src="assets/img/poster/2025-07-15_dai4kai-geoke-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="第4回ゲーミングオーケストラ定期演奏会 ポスター" data-alt-en="Poster: 4th Gaming Orchestra Regular Concert">
+              <span class="event-text"><time datetime="2025-07-15">2025-07-15</time>
+              <span class="event-title"><span lang="ja">第4回ゲーミングオーケストラ定期演奏会</span><span lang="en">4th Gaming Orchestra Regular Concert</span></span></span>
+            </button></li>
+            <li data-date="2025-02-27"><button type="button" class="event" data-group="posters" data-full="assets/img/poster/2025-02-27_dai3kai-teiki-ensokai.webp">
+              <img src="assets/img/poster/2025-02-27_dai3kai-teiki-ensokai-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="第3回ゲーミングオーケストラ定期演奏会 ポスター" data-alt-en="Poster: 3rd Gaming Orchestra Regular Concert">
+              <span class="event-text"><time datetime="2025-02-27">2025-02-27</time>
+              <span class="event-title"><span lang="ja">第3回ゲーミングオーケストラ定期演奏会</span><span lang="en">3rd Gaming Orchestra Regular Concert</span></span></span>
+            </button></li>
+            <li data-date="2024-11-10"><button type="button" class="event" data-group="posters" data-full="assets/img/poster/2024-11-10_nintendo-music-concert.webp">
+              <img src="assets/img/poster/2024-11-10_nintendo-music-concert-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="Nintendo Music Concert by GOK ポスター" data-alt-en="Poster: Nintendo Music Concert by GOK">
+              <span class="event-text"><time datetime="2024-11-10">2024-11-10</time>
+              <span class="event-title"><span lang="ja">Nintendo Music Concert by GOK<br>2024年度学園祭2日目</span><span lang="en">Nintendo Music Concert by GOK<br>2024 School Festival, Day 2</span></span></span>
+            </button></li>
+            <li data-date="2024-11-09"><button type="button" class="event" data-group="posters" data-full="assets/img/poster/2024-11-09_dai2kai-geoke.webp">
+              <img src="assets/img/poster/2024-11-09_dai2kai-geoke-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="第2回ゲーミングオーケストラ定期演奏会 ポスター" data-alt-en="Poster: 2nd Gaming Orchestra Regular Concert">
+              <span class="event-text"><time datetime="2024-11-09">2024-11-09</time>
+              <span class="event-title"><span lang="ja">第2回ゲーミングオーケストラ定期演奏会<br>2024年度学園祭1日目</span><span lang="en">2nd Gaming Orchestra Regular Concert<br>2024 School Festival, Day 1</span></span></span>
+            </button></li>
+            <li data-date="2024-10-03"><button type="button" class="event" data-group="posters" data-full="assets/img/poster/2024-10-03_dennen-no-shirabe.webp">
+              <img src="assets/img/poster/2024-10-03_dennen-no-shirabe-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="田園の調べ 演奏会 ポスター" data-alt-en="Poster: Pastoral Melodies concert">
+              <span class="event-text"><time datetime="2024-10-03">2024-10-03</time>
+              <span class="event-title"><span lang="ja">ゲーム音楽研究会 ~田園の調べ~ 演奏会</span><span lang="en">Game Music Research Society ~Pastoral Melodies~ Concert</span></span></span>
+            </button></li>
+            <li data-date="2024-09-26"><button type="button" class="event" data-group="posters" data-full="assets/img/poster/2024-09-26_bouken-no-shirabe.webp">
+              <img src="assets/img/poster/2024-09-26_bouken-no-shirabe-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="第一回GOK演奏会 ポスター" data-alt-en="Poster: 1st GOK Concert">
+              <span class="event-text"><time datetime="2024-09-26">2024-09-26</time>
+              <span class="event-title"><span lang="ja">第一回GOK演奏会 ~冒険の調べ~</span><span lang="en">1st GOK Concert ~Melodies of Adventure~</span></span></span>
+            </button></li>
+          </ol>
+          <div class="collapse-fade" data-dither="transparent,#0008ff" aria-hidden="true"></div>
+          </div>
+          <div class="more">
+            <button type="button" class="btn" aria-expanded="false" aria-controls="timeline-wrap" data-toggle-collapse>
+              <span class="when-collapsed"><span lang="ja">イベントをさらに表示</span><span lang="en">Show more events</span></span>
+              <span class="when-expanded"><span lang="ja">イベントを閉じる</span><span lang="en">Close events</span></span>
+            </button>
+          </div>
         </div>
-      </div>
-
-      <!-- Each event: data-date (YYYY-MM-DD) is used for sorting. data-full = poster. -->
-      <ol class="timeline is-collapsed" id="timeline">
-        <li class="reveal" data-date="2026-03-16"><button type="button" class="event panel" data-group="posters" data-full="assets/img/poster/2026-03-16_dai6kai-geoke.webp">
-          <img src="assets/img/poster/2026-03-16_dai6kai-geoke-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="第6回ゲーミングオーケストラ定期演奏会 ポスター" data-alt-en="Poster: 6th Gaming Orchestra Regular Concert">
-          <span class="event-text"><time datetime="2026-03-16">2026.03.16</time>
-          <span class="event-title"><span lang="ja">第6回ゲーミングオーケストラ定期演奏会</span><span lang="en">6th Gaming Orchestra Regular Concert</span></span></span>
-        </button></li>
-        <li class="reveal" data-date="2025-10-12"><button type="button" class="event panel" data-group="posters" data-full="assets/img/poster/2025-10-12_baritube.webp">
-          <img src="assets/img/poster/2025-10-12_baritube-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="山本大雅と愉快な仲間たち ポスター" data-alt-en="Poster: Taiga Yamamoto and His Merry Friends">
-          <span class="event-text"><time datetime="2025-10-12">2025.10.12</time>
-          <span class="event-title"><span lang="ja">山本大雅と愉快な仲間たち in GOK<br>2025年度学園祭2日目</span><span lang="en">Taiga Yamamoto and His Merry Friends in GOK<br>2025 School Festival, Day 2</span></span></span>
-        </button></li>
-        <li class="reveal" data-date="2025-10-11"><button type="button" class="event panel" data-group="posters" data-full="assets/img/poster/2025-10-11_pokemon-concert.webp">
-          <img src="assets/img/poster/2025-10-11_pokemon-concert-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="Pokemon Concert in GOK ポスター" data-alt-en="Poster: Pokemon Concert in GOK">
-          <span class="event-text"><time datetime="2025-10-11">2025.10.11</time>
-          <span class="event-title"><span lang="ja">Pokemon Concert in GOK<br>2025年度学園祭1日目</span><span lang="en">Pokemon Concert in GOK<br>2025 School Festival, Day 1</span></span></span>
-        </button></li>
-        <li class="reveal" data-date="2025-10-11"><button type="button" class="event panel" data-group="posters" data-full="assets/img/poster/2025-10-11_dai5kai-geoke.webp">
-          <img src="assets/img/poster/2025-10-11_dai5kai-geoke-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="第５回ゲーミングオーケストラ定期演奏会 ポスター" data-alt-en="Poster: 5th Gaming Orchestra Regular Concert">
-          <span class="event-text"><time datetime="2025-10-11">2025.10.11</time>
-          <span class="event-title"><span lang="ja">第５回ゲーミングオーケストラ定期演奏会<br>2025年度学園祭1日目</span><span lang="en">5th Gaming Orchestra Regular Concert<br>2025 School Festival, Day 1</span></span></span>
-        </button></li>
-        <li class="reveal" data-date="2025-09-18"><button type="button" class="event panel" data-group="posters" data-full="assets/img/poster/2025-09-18_gok-concert.webp">
-          <img src="assets/img/poster/2025-09-18_gok-concert-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="GOK Concert ポスター" data-alt-en="Poster: GOK Concert">
-          <span class="event-text"><time datetime="2025-09-18">2025.09.18</time>
-          <span class="event-title">GOK Concert</span></span>
-        </button></li>
-        <li class="reveal" data-date="2025-07-15"><button type="button" class="event panel" data-group="posters" data-full="assets/img/poster/2025-07-15_dai4kai-geoke.webp">
-          <img src="assets/img/poster/2025-07-15_dai4kai-geoke-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="第4回ゲーミングオーケストラ定期演奏会 ポスター" data-alt-en="Poster: 4th Gaming Orchestra Regular Concert">
-          <span class="event-text"><time datetime="2025-07-15">2025.07.15</time>
-          <span class="event-title"><span lang="ja">第4回ゲーミングオーケストラ定期演奏会</span><span lang="en">4th Gaming Orchestra Regular Concert</span></span></span>
-        </button></li>
-        <li class="reveal" data-date="2025-02-27"><button type="button" class="event panel" data-group="posters" data-full="assets/img/poster/2025-02-27_dai3kai-teiki-ensokai.webp">
-          <img src="assets/img/poster/2025-02-27_dai3kai-teiki-ensokai-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="第3回ゲーミングオーケストラ定期演奏会 ポスター" data-alt-en="Poster: 3rd Gaming Orchestra Regular Concert">
-          <span class="event-text"><time datetime="2025-02-27">2025.02.27</time>
-          <span class="event-title"><span lang="ja">第3回ゲーミングオーケストラ定期演奏会</span><span lang="en">3rd Gaming Orchestra Regular Concert</span></span></span>
-        </button></li>
-        <li class="reveal" data-date="2024-11-10"><button type="button" class="event panel" data-group="posters" data-full="assets/img/poster/2024-11-10_nintendo-music-concert.webp">
-          <img src="assets/img/poster/2024-11-10_nintendo-music-concert-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="Nintendo Music Concert by GOK ポスター" data-alt-en="Poster: Nintendo Music Concert by GOK">
-          <span class="event-text"><time datetime="2024-11-10">2024.11.10</time>
-          <span class="event-title"><span lang="ja">Nintendo Music Concert by GOK<br>2024年度学園祭2日目</span><span lang="en">Nintendo Music Concert by GOK<br>2024 School Festival, Day 2</span></span></span>
-        </button></li>
-        <li class="reveal" data-date="2024-11-09"><button type="button" class="event panel" data-group="posters" data-full="assets/img/poster/2024-11-09_dai2kai-geoke.webp">
-          <img src="assets/img/poster/2024-11-09_dai2kai-geoke-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="第2回ゲーミングオーケストラ定期演奏会 ポスター" data-alt-en="Poster: 2nd Gaming Orchestra Regular Concert">
-          <span class="event-text"><time datetime="2024-11-09">2024.11.09</time>
-          <span class="event-title"><span lang="ja">第2回ゲーミングオーケストラ定期演奏会<br>2024年度学園祭1日目</span><span lang="en">2nd Gaming Orchestra Regular Concert<br>2024 School Festival, Day 1</span></span></span>
-        </button></li>
-        <li class="reveal" data-date="2024-10-03"><button type="button" class="event panel" data-group="posters" data-full="assets/img/poster/2024-10-03_dennen-no-shirabe.webp">
-          <img src="assets/img/poster/2024-10-03_dennen-no-shirabe-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="田園の調べ 演奏会 ポスター" data-alt-en="Poster: Pastoral Melodies concert">
-          <span class="event-text"><time datetime="2024-10-03">2024.10.03</time>
-          <span class="event-title"><span lang="ja">ゲーム音楽研究会 ~田園の調べ~ 演奏会</span><span lang="en">Game Music Research Society ~Pastoral Melodies~ Concert</span></span></span>
-        </button></li>
-        <li class="reveal" data-date="2024-09-26"><button type="button" class="event panel" data-group="posters" data-full="assets/img/poster/2024-09-26_bouken-no-shirabe.webp">
-          <img src="assets/img/poster/2024-09-26_bouken-no-shirabe-sm.webp" width="400" height="566" loading="lazy" decoding="async" alt="第一回GOK演奏会 ポスター" data-alt-en="Poster: 1st GOK Concert">
-          <span class="event-text"><time datetime="2024-09-26">2024.09.26</time>
-          <span class="event-title"><span lang="ja">第一回GOK演奏会 ~冒険の調べ~</span><span lang="en">1st GOK Concert ~Melodies of Adventure~</span></span></span>
-        </button></li>
-      </ol>
-      <div class="more">
-        <button type="button" class="btn" aria-expanded="false" aria-controls="timeline" data-toggle-collapse>
-          <span class="when-collapsed"><span lang="ja">イベントをさらに表示</span><span lang="en">Show more events</span></span>
-          <span class="when-expanded"><span lang="ja">イベントを閉じる</span><span lang="en">Close events</span></span>
-        </button>
       </div>
     </div>
   </section>
@@ -479,21 +574,22 @@
   <!-- ============ 05 CONTACT ============ -->
   <section class="section contact" id="contact" aria-labelledby="contact-title">
     <div class="marquee" aria-hidden="true">
-      <span>CONNECT / CONNECT / CONNECT / CONNECT / </span>
-      <span>CONNECT / CONNECT / CONNECT / CONNECT / </span>
+      <span>CONNECT/CONNECT/CONNECT/CONNECT/CONNECT/CONNECT/</span>
+      <span>CONNECT/CONNECT/CONNECT/CONNECT/CONNECT/CONNECT/</span>
     </div>
     <div class="container">
-      <div class="section-head">
-        <p class="tag reveal"><span class="num">05 //</span><span lang="ja">連絡</span><span lang="en">Contact</span></p>
-        <h2 class="section-title section-title--sm reveal" id="contact-title"><span lang="ja">依頼と連絡先</span><span lang="en">Requests &amp; contact</span></h2>
-      </div>
-      <a class="email-link reveal" href="mailto:Cattoe4work@gmail.com"><span class="tag">Email</span> Cattoe4work@gmail.com</a>
-
-      <div class="socials">
-        <a class="social panel reveal" href="https://www.youtube.com/@kyarinnko" target="_blank" rel="noopener"><strong>YouTube</strong><span>@kyarinnko</span><i aria-hidden="true">↗</i></a>
-        <a class="social panel reveal" style="--d:1" href="https://x.com/iamkyarin" target="_blank" rel="noopener"><strong>X (Twitter)</strong><span>@iamkyarin</span><i aria-hidden="true">↗</i></a>
-        <a class="social panel reveal" style="--d:2" href="https://www.instagram.com/iamkyarin/" target="_blank" rel="noopener"><strong>Instagram</strong><span>@iamkyarin</span><i aria-hidden="true">↗</i></a>
-        <a class="social panel reveal" style="--d:3" href="https://www.linkedin.com/in/%E3%83%AD%E3%83%9E%E3%83%B3-%E3%83%9F%E3%83%8D%E3%82%A2-51454b446/" target="_blank" rel="noopener"><strong>LinkedIn</strong><span>ロマン ミネア</span><i aria-hidden="true">↗</i></a>
+      <div class="window reveal">
+        <div class="window-bar"><span>05 // <span lang="ja">連絡</span><span lang="en">contact</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-body contact-body">
+          <h2 class="contact-title" id="contact-title"><span lang="ja">依頼と連絡先</span><span lang="en">Requests &amp; contact</span></h2>
+          <a class="email-link" href="mailto:Cattoe4work@gmail.com">Email - Cattoe4work@gmail.com</a>
+          <div class="socials">
+            <a class="social" href="https://www.youtube.com/@kyarinnko" target="_blank" rel="noopener"><strong>YOUTUBE</strong><span>@kyarinnko</span><i aria-hidden="true">↗</i></a>
+            <a class="social" href="https://x.com/iamkyarin" target="_blank" rel="noopener"><strong>TWITTER</strong><span>@iamkyarin</span><i aria-hidden="true">↗</i></a>
+            <a class="social" href="https://www.instagram.com/iamkyarin/" target="_blank" rel="noopener"><strong>INSTAGRAM</strong><span>@iamkyarin</span><i aria-hidden="true">↗</i></a>
+            <a class="social" href="https://www.linkedin.com/in/%E3%83%AD%E3%83%9E%E3%83%B3-%E3%83%9F%E3%83%8D%E3%82%A2-51454b446/" target="_blank" rel="noopener"><strong>LINKEDIN</strong><span>KYARIN・きゃりー</span><i aria-hidden="true">↗</i></a>
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -503,15 +599,14 @@
   <div class="container footer-inner">
     <p>© <span id="year">2026</span> KYARIN・きゃりー — all rights reserved</p>
     <a href="#top"><span lang="ja">トップへ戻る ↑</span><span lang="en">Back to top ↑</span></a>
-    <p class="version-tag">guest@kyarin // ver. 2026.11</p>
   </div>
 </footer>
 
 <!-- Video player dialog -->
 <dialog class="video-dialog" id="video-dialog" aria-labelledby="video-dialog-title">
-  <div class="dialog-panel">
-    <div class="dialog-bar">
-      <p class="dialog-title" id="video-dialog-title"></p>
+  <div class="window">
+    <div class="window-bar">
+      <span id="video-dialog-title" class="dialog-title"></span>
       <button type="button" class="dialog-close" data-close aria-label="閉じる" data-label-en="Close">
         <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M1 1l12 12M13 1L1 13" stroke="currentColor" stroke-width="1.6"/></svg>
       </button>
