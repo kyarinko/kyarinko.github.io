@@ -60,10 +60,13 @@
     const f = btn.dataset.filter;
     filters.forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
     products.forEach(p => {
-      const show = f === 'all' || p.dataset.cat === f;
-      p.classList.toggle('is-hidden', !show);
-      if (show && !reduced.matches) { p.classList.remove('is-in-anim'); void p.offsetWidth; p.classList.add('is-in-anim'); }
+      p.classList.toggle('is-hidden', f !== 'all' && p.dataset.cat !== f);
+      p.classList.remove('is-in-anim');
     });
+    if (!reduced.matches) {
+      void document.body.offsetWidth; // one reflow restarts every card's animation
+      products.forEach(p => { if (!p.classList.contains('is-hidden')) p.classList.add('is-in-anim'); });
+    }
     updateCount();
   }));
 

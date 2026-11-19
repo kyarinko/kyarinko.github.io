@@ -373,21 +373,22 @@
     if (e.key === 'ArrowLeft') showLightboxItem(lbIndex - 1);
     if (e.key === 'ArrowRight') showLightboxItem(lbIndex + 1);
   });
-  let swipeX = null; // swipe left/right on touch screens
+  let swipeX = null, swiped = false; // swipe left/right on touch screens
   lightbox.addEventListener('pointerdown', e => { swipeX = e.clientX; });
   lightbox.addEventListener('pointerup', e => {
     if (swipeX === null || lbItems.length < 2) return;
     const dx = e.clientX - swipeX;
     swipeX = null;
-    if (Math.abs(dx) > 50) { showLightboxItem(lbIndex + (dx < 0 ? 1 : -1)); lightbox.dataset.swiped = '1'; setTimeout(() => delete lightbox.dataset.swiped, 0); }
+    if (Math.abs(dx) > 50) { showLightboxItem(lbIndex + (dx < 0 ? 1 : -1)); swiped = true; setTimeout(() => { swiped = false; }, 0); }
   });
+  // the click that ends a swipe is not a backdrop click (capture runs before the shared close handler)
+  lightbox.addEventListener('click', e => { if (swiped) e.stopImmediatePropagation(); }, true);
   lightbox.addEventListener('close', () => { lbImg.src = 'data:,'; });
 
   // Shared dialog behaviour: close buttons + click outside the content
   $$('dialog').forEach(d => {
     $$('[data-close]', d).forEach(b => b.addEventListener('click', () => d.close()));
     d.addEventListener('click', e => {
-      if (d.dataset.swiped) { delete d.dataset.swiped; return; } // the click that ends a swipe is not a backdrop click
       const t = e.target;
       if (t === d || t.classList.contains('lightbox-inner') || t.classList.contains('lightbox-figure')) d.close();
     });
