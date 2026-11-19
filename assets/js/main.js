@@ -379,7 +379,7 @@
     if (swipeX === null || lbItems.length < 2) return;
     const dx = e.clientX - swipeX;
     swipeX = null;
-    if (Math.abs(dx) > 50) showLightboxItem(lbIndex + (dx < 0 ? 1 : -1));
+    if (Math.abs(dx) > 50) { showLightboxItem(lbIndex + (dx < 0 ? 1 : -1)); lightbox.dataset.swiped = '1'; setTimeout(() => delete lightbox.dataset.swiped, 0); }
   });
   lightbox.addEventListener('close', () => { lbImg.src = 'data:,'; });
 
@@ -387,6 +387,7 @@
   $$('dialog').forEach(d => {
     $$('[data-close]', d).forEach(b => b.addEventListener('click', () => d.close()));
     d.addEventListener('click', e => {
+      if (d.dataset.swiped) { delete d.dataset.swiped; return; } // the click that ends a swipe is not a backdrop click
       const t = e.target;
       if (t === d || t.classList.contains('lightbox-inner') || t.classList.contains('lightbox-figure')) d.close();
     });

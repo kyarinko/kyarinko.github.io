@@ -50,7 +50,7 @@ html[lang="ja"] body [lang="en"], html[lang="en"] body [lang="ja"] { display: no
 .d-back:hover { background: #fff; color: #000; }
 .d-lang { display: inline-flex; gap: 6px; padding: 6px 10px; border: 1px solid rgba(255, 255, 255, 0.5); background: rgba(0, 0, 0, 0.7); font-family: var(--mono); font-size: 0.8rem; }
 .d-lang:hover { border-color: #fff; }
-.d-lang-opt { opacity: 0.45; transition: opacity 0.2s, color 0.2s; }
+.d-lang-opt { opacity: 0.5; transition: opacity 0.2s, color 0.2s; }
 html[lang="ja"] .d-lang-opt[data-l="ja"], html[lang="en"] .d-lang-opt[data-l="en"] { opacity: 1; color: var(--pink); }
 .d-lang-sep { opacity: 0.4; }
 
@@ -60,7 +60,7 @@ html[lang="ja"] .d-lang-opt[data-l="ja"], html[lang="en"] .d-lang-opt[data-l="en
 .d-hero { min-height: calc(100svh - 70px); display: grid; place-content: center; justify-items: center; gap: 22px; text-align: center; padding: 40px 0; }
 .d-kicker { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.14em; color: var(--ice); text-shadow: 0 0 8px rgba(143, 211, 200, 0.6); }
 .d-sub { max-width: 34em; padding: 14px 18px; background: rgba(0, 0, 0, 0.78); border: 1px solid rgba(255, 255, 255, 0.3); font-size: 1rem; }
-.d-scroll { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.12em; text-decoration: none; animation: bob 2s ease-in-out infinite; }
+.d-scroll { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.12em; text-decoration: none; padding-block: 4px; animation: bob 2s ease-in-out infinite; }
 @keyframes bob { 50% { transform: translateY(6px); } }
 
 /* Glitch title: two coloured copies flicker and slice */
