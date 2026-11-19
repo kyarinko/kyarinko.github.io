@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>STORE | KYARIN・きゃりー</title>
+<meta name="description" content="KYARIN・きゃりーのストアとコミッション。楽譜・音源・メンバーシップ、作曲・編曲のご依頼。">
+<meta name="theme-color" content="#0008ff">
+<link rel="canonical" href="https://kyarinko.online/store.html">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://kyarinko.online/store.html">
+<meta property="og:title" content="KYARIN STORE — Shop &amp; Commissions">
+<meta property="og:description" content="楽譜・音源・メンバーシップ、作曲・編曲のご依頼。Scores, audio, memberships and music commissions.">
+<meta property="og:image" content="https://kyarinko.online/assets/img/og.jpg">
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+<!-- Same language rule as the main page (shares the visitor's choice). -->
+<script>
+  (function () {
+    var root = document.documentElement, q = new URLSearchParams(location.search).get('lang'), s = null;
+    root.classList.add('js');
+    if (q === 'jp') q = 'ja';
+    try { s = localStorage.getItem('lang'); } catch (e) {}
+    var nav = (navigator.languages && navigator.languages[0]) || navigator.language || '';
+    root.lang = (q === 'ja' || q === 'en') ? q : (s === 'ja' || s === 'en') ? s : (/^ja\b/i.test(nav) ? 'ja' : 'en');
+  })();
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;500;700&family=Manrope:wght@400;500;700&family=Space+Grotesk:wght@300;500;700&family=Syne:wght@600;800&display=swap">
+<link rel="stylesheet" href="assets/css/style.css?v=11">
+<link rel="stylesheet" href="assets/css/store.css?v=1">
+<script src="assets/js/store.js?v=1" defer></script>
+</head>
+<body class="store-page">
+<!--
+  HOW TO EDIT THIS PAGE (template)
+  • Every text is written twice: <span lang="ja">日本語</span><span lang="en">English</span>. Edit both.
+  • Prices: search for "¥0,000" and replace with real prices.
+  • Products: each <article class="product"> is one item. data-cat = scores / audio / tools / membership
+    (used by the filter buttons). Change the link (href) to the real product page.
+    To use a real cover image, replace <div class="cover">…</div> with
+      <img class="cover-img" src="assets/img/your-cover.webp" alt="説明" data-alt-en="Description">
+  • Remove the "SAMPLE" ribbons (<span class="ribbon">SAMPLE</span>) once a product is real.
+  • Commission status: change data-status="open" to "closed" on .status-pill, and the slot numbers.
+-->
+<a class="skip-link" href="#storefronts"><span lang="ja">本文へスキップ</span><span lang="en">Skip to main content</span></a>
+
+<div id="ascii-container" aria-hidden="true"><pre id="ascii-bg"></pre></div>
+<div class="lang-wipe" aria-hidden="true"></div>
+
+<header class="topbar is-shown">
+  <div class="container topbar-inner">
+    <a class="brand" href="index.html">
+      <img class="brand-icon" src="assets/img/kyarin.webp" width="34" height="34" alt="">
+      <b>KYARIN</b>
+    </a>
+    <nav class="store-nav" aria-label="Store">
+      <a href="#storefronts"><span lang="ja">ストア</span><span lang="en">Shops</span></a>
+      <a href="#products"><span lang="ja">商品</span><span lang="en">Products</span></a>
+      <a href="#commissions"><span lang="ja">依頼</span><span lang="en">Commissions</span></a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <button type="button" class="switch lang-switch" aria-label="Switch to English">
+      <span class="switch-thumb" aria-hidden="true"></span>
+      <span class="switch-opt" aria-hidden="true">日本語</span>
+      <span class="switch-opt" aria-hidden="true">EN</span>
+    </button>
+  </div>
+</header>
+
+<main class="store-main">
+
+  <!-- ============ STORE HERO ============ -->
+  <section class="section store-hero">
+    <div class="container">
+      <a class="back-link" href="index.html">← <span lang="ja">ポートフォリオへ戻る</span><span lang="en">Back to portfolio</span></a>
+      <div class="window reveal">
+        <div class="window-bar"><span>KYARIN_STORE.exe</span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-body hero-body">
+          <div class="hero-copy">
+            <p class="mono-label"><span lang="ja">ストア ＆ コミッション</span><span lang="en">Shop &amp; commissions</span></p>
+            <h1 class="store-title wave">STORE</h1>
+            <p class="hero-lead">
+              <span lang="ja">楽譜・音源・メンバーシップ、そして作曲・編曲のご依頼。各プラットフォームの窓口をここにまとめました。</span>
+              <span lang="en">Scores, audio, memberships and custom music commissions — every storefront, gathered in one place.</span>
+            </p>
+            <div class="cta">
+              <a class="btn btn--solid" href="#products"><span lang="ja">商品を見る</span><span lang="en">Browse products</span></a>
+              <a class="btn" href="#commissions"><span lang="ja">依頼する</span><span lang="en">Request a commission</span></a>
+            </div>
+          </div>
+
+          <!-- receipt-style summary -->
+          <aside class="receipt" aria-label="Summary">
+            <p class="receipt-head">KYARIN STORE<br><small>kyarinko.online/store</small></p>
+            <dl class="receipt-lines">
+              <div><dt><span lang="ja">ストア</span><span lang="en">Storefronts</span></dt><dd>×4</dd></div>
+              <div><dt><span lang="ja">コミッション</span><span lang="en">Commissions</span></dt><dd><span class="status-pill" data-status="open"><span lang="ja">受付中</span><span lang="en">OPEN</span></span></dd></div>
+              <div><dt><span lang="ja">受付枠</span><span lang="en">Slots</span></dt><dd>02 / 03</dd></div>
+              <div><dt><span lang="ja">対応言語</span><span lang="en">Languages</span></dt><dd>日本語 · EN</dd></div>
+              <div><dt><span lang="ja">ジャンル</span><span lang="en">Genres</span></dt><dd><span lang="ja">ゲーム・管弦楽・吹奏楽</span><span lang="en">Game · Orch. · Band</span></dd></div>
+            </dl>
+            <p class="receipt-total"><span>TOTAL</span><span>♪♪♪</span></p>
+            <div class="barcode" aria-hidden="true"></div>
+            <p class="receipt-foot"><span lang="ja">ご来店ありがとうございます</span><span lang="en">Thank you for visiting</span></p>
+          </aside>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="marquee store-marquee" aria-hidden="true">
+    <span>SHOP/SCORES/AUDIO/COMMISSIONS/SHOP/SCORES/AUDIO/COMMISSIONS/</span>
+    <span>SHOP/SCORES/AUDIO/COMMISSIONS/SHOP/SCORES/AUDIO/COMMISSIONS/</span>
+  </div>
+
+  <!-- ============ 01 STOREFRONTS ============ -->
+  <section class="section" id="storefronts" aria-labelledby="sf-title">
+    <div class="container">
+      <div class="window window--light reveal">
+        <div class="window-bar"><span>01 // <span lang="ja">ストア一覧</span><span lang="en">storefronts</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-body">
+          <div class="section-head section-head--row">
+            <h2 class="title-music wave" id="sf-title">STOREFRONTS</h2>
+            <p class="section-lead">
+              <span lang="ja">目的に合わせて選んでください。購入・支援・依頼はすべて各プラットフォームで安全に行えます。</span>
+              <span lang="en">Pick the one that fits. Every purchase, membership and request is handled securely by each platform.</span>
+            </p>
+          </div>
+
+          <div class="shops">
+            <a class="shop" href="https://kyarinko.gumroad.com/" target="_blank" rel="noopener" style="--accent:#ff90e8">
+              <span class="shop-top"><span class="shop-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 8h14l-1.2 12H6.2z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 8V6a3 3 0 016 0v2" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="shop-kind"><span lang="ja">デジタル販売</span><span lang="en">Digital shop</span></span></span>
+              <strong class="shop-name">Gumroad</strong>
+              <span class="shop-url">kyarinko.gumroad.com</span>
+              <span class="shop-desc"><span lang="ja">楽譜PDF・音源・制作テンプレートなど、すぐにダウンロードできるデジタル商品。</span><span lang="en">Instant downloads — score PDFs, audio and production templates.</span></span>
+              <span class="chips"><span class="chip"><span lang="ja">楽譜</span><span lang="en">Scores</span></span><span class="chip"><span lang="ja">音源</span><span lang="en">Audio</span></span><span class="chip"><span lang="ja">テンプレート</span><span lang="en">Templates</span></span></span>
+              <span class="shop-go"><span lang="ja">ストアへ</span><span lang="en">Visit shop</span> ↗</span>
+            </a>
+            <a class="shop" href="https://www.patreon.com/cw/kyarinko" target="_blank" rel="noopener" style="--accent:#ff5a4f">
+              <span class="shop-top"><span class="shop-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 017-2.6A4 4 0 0119 10c0 5.6-7 10-7 10z" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="shop-kind"><span lang="ja">月額支援</span><span lang="en">Membership</span></span></span>
+              <strong class="shop-name">Patreon</strong>
+              <span class="shop-url">patreon.com/kyarinko</span>
+              <span class="shop-desc"><span lang="ja">海外向けの月額メンバーシップ。先行公開や制作の裏側をお届けします。</span><span lang="en">Monthly membership for international supporters — early access and behind-the-scenes.</span></span>
+              <span class="chips"><span class="chip"><span lang="ja">先行公開</span><span lang="en">Early access</span></span><span class="chip"><span lang="ja">制作過程</span><span lang="en">Process</span></span><span class="chip">EN</span></span>
+              <span class="shop-go"><span lang="ja">支援する</span><span lang="en">Become a member</span> ↗</span>
+            </a>
+            <a class="shop" href="https://kyarin.fanbox.cc/" target="_blank" rel="noopener" style="--accent:#46b4ff">
+              <span class="shop-top"><span class="shop-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 8l9-5 9 5v8l-9 5-9-5z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 8l9 5 9-5M12 13v8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="shop-kind"><span lang="ja">ファンクラブ</span><span lang="en">Fan club</span></span></span>
+              <strong class="shop-name">pixivFANBOX</strong>
+              <span class="shop-url">kyarin.fanbox.cc</span>
+              <span class="shop-desc"><span lang="ja">日本向けのファンクラブ。未公開デモや制作日記、限定配信など。</span><span lang="en">Japanese fan club — unreleased demos, production diaries and exclusive posts.</span></span>
+              <span class="chips"><span class="chip"><span lang="ja">未公開デモ</span><span lang="en">Demos</span></span><span class="chip"><span lang="ja">制作日記</span><span lang="en">Diary</span></span><span class="chip">JP</span></span>
+              <span class="shop-go"><span lang="ja">ファンになる</span><span lang="en">Join the fan club</span> ↗</span>
+            </a>
+            <a class="shop" href="https://coconala.com/users/6411269" target="_blank" rel="noopener" style="--accent:#ffc93c">
+              <span class="shop-top"><span class="shop-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 9h8M8 12h5" fill="none" stroke="currentColor" stroke-width="1.8"/></svg></span><span class="shop-kind"><span lang="ja">依頼窓口</span><span lang="en">Commissions</span></span></span>
+              <strong class="shop-name"><span lang="ja">ココナラ</span><span lang="en">coconala</span></strong>
+              <span class="shop-url">coconala.com/users/6411269</span>
+              <span class="shop-desc"><span lang="ja">作曲・編曲のご依頼はこちら。見積もりから納品まで安心して取引できます。</span><span lang="en">For composition and arrangement requests — from quote to delivery, with buyer protection.</span></span>
+              <span class="chips"><span class="chip"><span lang="ja">作曲</span><span lang="en">Composition</span></span><span class="chip"><span lang="ja">編曲</span><span lang="en">Arrangement</span></span><span class="chip">SE</span></span>
+              <span class="shop-go"><span lang="ja">依頼する</span><span lang="en">Request</span> ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 02 PRODUCTS ============ -->
+  <section class="section" id="products" aria-labelledby="pr-title">
+    <div class="container">
+      <div class="window reveal">
+        <div class="window-bar"><span>02 // <span lang="ja">商品</span><span lang="en">products</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-body">
+          <div class="section-head section-head--right">
+            <h2 class="title-gallery wave" id="pr-title">Products</h2>
+            <p class="section-lead">
+              <span lang="ja">注目の商品。ボタンから各ストアの商品ページへ移動します。</span>
+              <span lang="en">Featured items. Each button takes you to the product page on its store.</span>
+            </p>
+          </div>
+
+          <div class="filters" role="group" aria-label="Filter">
+            <button type="button" class="filter" aria-pressed="true" data-filter="all"><span lang="ja">すべて</span><span lang="en">All</span></button>
+            <button type="button" class="filter" aria-pressed="false" data-filter="scores"><span lang="ja">楽譜</span><span lang="en">Scores</span></button>
+            <button type="button" class="filter" aria-pressed="false" data-filter="audio"><span lang="ja">音源</span><span lang="en">Audio</span></button>
+            <button type="button" class="filter" aria-pressed="false" data-filter="tools"><span lang="ja">ツール</span><span lang="en">Tools</span></button>
+            <button type="button" class="filter" aria-pressed="false" data-filter="membership"><span lang="ja">メンバーシップ</span><span lang="en">Membership</span></button>
+            <span class="filter-count" id="filter-count" aria-live="polite"></span>
+          </div>
+
+          <div class="products" id="product-grid">
+            <article class="product" data-cat="scores">
+              <div class="cover cover--staff"><span class="ribbon">SAMPLE</span><span class="cover-label">SCORE<br>VOL.01</span></div>
+              <div class="product-info">
+                <p class="product-tag">PDF · <span lang="ja">楽譜</span><span lang="en">Score</span></p>
+                <h3 class="product-name"><span lang="ja">ゲーム音楽 アレンジ楽譜集 Vol.1</span><span lang="en">Game Music Arrangement Scores Vol.1</span></h3>
+                <p class="product-desc"><span lang="ja">演奏会で使用したアレンジのフルスコア＋パート譜。</span><span lang="en">Full scores and parts from my concert arrangements.</span></p>
+                <div class="product-foot"><span class="price">¥0,000</span><a class="buy" href="https://kyarinko.gumroad.com/" target="_blank" rel="noopener">Gumroad ↗</a></div>
+              </div>
+            </article>
+            <article class="product" data-cat="scores">
+              <div class="cover cover--band"><span class="ribbon">SAMPLE</span><span class="cover-label">WIND<br>BAND</span></div>
+              <div class="product-info">
+                <p class="product-tag">PDF · <span lang="ja">吹奏楽</span><span lang="en">Wind band</span></p>
+                <h3 class="product-name"><span lang="ja">吹奏楽オリジナル曲 スコア＋パート譜</span><span lang="en">Original Wind Band Piece — Score &amp; Parts</span></h3>
+                <p class="product-desc"><span lang="ja">中〜上級バンド向け。演奏時間 約5分。</span><span lang="en">For intermediate to advanced bands. About 5 minutes.</span></p>
+                <div class="product-foot"><span class="price">¥0,000</span><a class="buy" href="https://kyarinko.gumroad.com/" target="_blank" rel="noopener">Gumroad ↗</a></div>
+              </div>
+            </article>
+            <article class="product" data-cat="audio">
+              <div class="cover cover--wave"><span class="ribbon">SAMPLE</span><span class="cover-label">OST<br>DEMO</span></div>
+              <div class="product-info">
+                <p class="product-tag">WAV · MP3 · <span lang="ja">音源</span><span lang="en">Audio</span></p>
+                <h3 class="product-name"><span lang="ja">デモ・サウンドトラック（デジタルアルバム）</span><span lang="en">Demo Soundtrack — Digital Album</span></h3>
+                <p class="product-desc"><span lang="ja">「光導」「The Sky and Sea」などを高音質で収録。</span><span lang="en">“Kōdō”, “The Sky and Sea” and more in high quality.</span></p>
+                <div class="product-foot"><span class="price">¥0,000</span><a class="buy" href="https://kyarinko.gumroad.com/" target="_blank" rel="noopener">Gumroad ↗</a></div>
+              </div>
+            </article>
+            <article class="product" data-cat="tools">
+              <div class="cover cover--grid"><span class="ribbon">SAMPLE</span><span class="cover-label">DAW<br>TEMPLATE</span></div>
+              <div class="product-info">
+                <p class="product-tag">Cubase · MIDI · <span lang="ja">ツール</span><span lang="en">Tools</span></p>
+                <h3 class="product-name"><span lang="ja">オーケストラ制作テンプレート</span><span lang="en">Orchestral Production Template</span></h3>
+                <p class="product-desc"><span lang="ja">普段の作曲で使っている配置・ルーティングをそのまま。</span><span lang="en">The same layout and routing I use for my own scoring.</span></p>
+                <div class="product-foot"><span class="price">¥0,000</span><a class="buy" href="https://kyarinko.gumroad.com/" target="_blank" rel="noopener">Gumroad ↗</a></div>
+              </div>
+            </article>
+            <article class="product" data-cat="membership">
+              <div class="cover cover--heart"><span class="ribbon">SAMPLE</span><span class="cover-label">MONTHLY<br>PASS</span></div>
+              <div class="product-info">
+                <p class="product-tag"><span lang="ja">月額</span><span lang="en">Monthly</span> · Patreon</p>
+                <h3 class="product-name"><span lang="ja">サポーター・プラン</span><span lang="en">Supporter Tier</span></h3>
+                <p class="product-desc"><span lang="ja">新曲の先行試聴、毎月の制作レポート。</span><span lang="en">Early listens to new tracks and a monthly studio report.</span></p>
+                <div class="product-foot"><span class="price">$0 <small>/ mo</small></span><a class="buy" href="https://www.patreon.com/cw/kyarinko" target="_blank" rel="noopener">Patreon ↗</a></div>
+              </div>
+            </article>
+            <article class="product" data-cat="membership">
+              <div class="cover cover--box"><span class="ribbon">SAMPLE</span><span class="cover-label">FAN<br>BOX</span></div>
+              <div class="product-info">
+                <p class="product-tag"><span lang="ja">月額</span><span lang="en">Monthly</span> · FANBOX</p>
+                <h3 class="product-name"><span lang="ja">ファンプラン</span><span lang="en">Fan Plan</span></h3>
+                <p class="product-desc"><span lang="ja">未公開デモ、制作日記、Dreamscapeの開発メモ。</span><span lang="en">Unreleased demos, production diary and Dreamscape dev notes.</span></p>
+                <div class="product-foot"><span class="price">¥000 <small>/ <span lang="ja">月</span><span lang="en">mo</span></small></span><a class="buy" href="https://kyarin.fanbox.cc/" target="_blank" rel="noopener">FANBOX ↗</a></div>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 COMMISSIONS ============ -->
+  <section class="section" id="commissions" aria-labelledby="cm-title">
+    <div class="container">
+      <div class="window window--light reveal">
+        <div class="window-bar"><span>03 // <span lang="ja">依頼メニュー</span><span lang="en">commission menu</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-body">
+          <div class="section-head section-head--row">
+            <h2 class="title-music wave" id="cm-title">COMMISSIONS</h2>
+            <p class="commission-status">
+              <span class="status-pill" data-status="open"><span lang="ja">受付中</span><span lang="en">OPEN</span></span>
+              <span class="mono-label"><span lang="ja">残り枠</span><span lang="en">Slots left</span> 02 / 03</span>
+            </p>
+          </div>
+
+          <div class="tiers">
+            <article class="tier">
+              <p class="tier-code">PLAN_A</p>
+              <h3 class="tier-name"><span lang="ja">ジングル・短尺BGM</span><span lang="en">Jingle &amp; short cue</span></h3>
+              <p class="tier-price"><span class="price">¥0,000</span><small><span lang="ja">〜</span><span lang="en">from</span></small></p>
+              <ul class="tier-list">
+                <li><span lang="ja">〜60秒</span><span lang="en">Up to 60 seconds</span></li>
+                <li><span lang="ja">修正 1回</span><span lang="en">1 revision</span></li>
+                <li>WAV · MP3</li>
+                <li><span lang="ja">納期 約7日</span><span lang="en">About 7 days</span></li>
+              </ul>
+              <p class="tier-for"><span lang="ja">配信OP・CM・SNS動画に</span><span lang="en">For stream intros, ads and social video</span></p>
+            </article>
+            <article class="tier tier--featured">
+              <p class="tier-code">PLAN_B <span class="tier-badge"><span lang="ja">人気</span><span lang="en">Popular</span></span></p>
+              <h3 class="tier-name"><span lang="ja">ゲームBGM</span><span lang="en">Game BGM</span></h3>
+              <p class="tier-price"><span class="price">¥00,000</span><small><span lang="ja">〜</span><span lang="en">from</span></small></p>
+              <ul class="tier-list">
+                <li><span lang="ja">1〜3分・ループ対応</span><span lang="en">1–3 min, seamless loop</span></li>
+                <li><span lang="ja">修正 2回</span><span lang="en">2 revisions</span></li>
+                <li><span lang="ja">WAV · OGG · ループポイント</span><span lang="en">WAV · OGG · loop points</span></li>
+                <li><span lang="ja">納期 約14日</span><span lang="en">About 14 days</span></li>
+              </ul>
+              <p class="tier-for"><span lang="ja">インディーゲーム・ノベルゲームに</span><span lang="en">For indie and visual-novel games</span></p>
+            </article>
+            <article class="tier">
+              <p class="tier-code">PLAN_C</p>
+              <h3 class="tier-name"><span lang="ja">編曲（管弦楽・吹奏楽）</span><span lang="en">Arrangement (orch. / band)</span></h3>
+              <p class="tier-price"><span class="price">¥00,000</span><small><span lang="ja">〜</span><span lang="en">from</span></small></p>
+              <ul class="tier-list">
+                <li><span lang="ja">スコア＋パート譜（PDF）</span><span lang="en">Score + parts (PDF)</span></li>
+                <li><span lang="ja">編成・難易度に合わせて調整</span><span lang="en">Fitted to your ensemble and level</span></li>
+                <li><span lang="ja">MIDI参考音源つき</span><span lang="en">MIDI mock-up included</span></li>
+                <li><span lang="ja">納期 要相談</span><span lang="en">Timeline on request</span></li>
+              </ul>
+              <p class="tier-for"><span lang="ja">演奏会・サークル・学校に</span><span lang="en">For concerts, clubs and schools</span></p>
+            </article>
+          </div>
+
+          <div class="addons">
+            <p class="mono-label"><span lang="ja">オプション</span><span lang="en">Add-ons</span></p>
+            <ul>
+              <li><span><span lang="ja">パラデータ（ステム）納品</span><span lang="en">Stems delivery</span></span><span class="dots" aria-hidden="true"></span><span class="price">+¥0,000</span></li>
+              <li><span><span lang="ja">追加修正 1回</span><span lang="en">Extra revision</span></span><span class="dots" aria-hidden="true"></span><span class="price">+¥0,000</span></li>
+              <li><span><span lang="ja">特急納品</span><span lang="en">Express delivery</span></span><span class="dots" aria-hidden="true"></span><span class="price">+¥0,000</span></li>
+              <li><span><span lang="ja">効果音（SE）セット</span><span lang="en">Sound-effect set</span></span><span class="dots" aria-hidden="true"></span><span class="price">+¥0,000</span></li>
+              <li><span><span lang="ja">商用利用ライセンス</span><span lang="en">Commercial licence</span></span><span class="dots" aria-hidden="true"></span><span class="price"><span lang="ja">要相談</span><span lang="en">Ask</span></span></li>
+            </ul>
+          </div>
+
+          <!-- "install wizard" process -->
+          <div class="wizard">
+            <p class="wizard-head mono-label"><span lang="ja">ご依頼の流れ</span><span lang="en">How it works</span></p>
+            <ol class="steps">
+              <li><b>01</b><span><span lang="ja">相談</span><span lang="en">Inquiry</span></span><small><span lang="ja">内容・用途・納期を教えてください</span><span lang="en">Tell me the use, mood and deadline</span></small></li>
+              <li><b>02</b><span><span lang="ja">見積もり</span><span lang="en">Quote</span></span><small><span lang="ja">料金とスケジュールをご提案</span><span lang="en">Price and schedule proposal</span></small></li>
+              <li><b>03</b><span><span lang="ja">制作</span><span lang="en">Production</span></span><small><span lang="ja">デモを共有し、修正を反映</span><span lang="en">Demo, feedback, revisions</span></small></li>
+              <li><b>04</b><span><span lang="ja">納品</span><span lang="en">Delivery</span></span><small><span lang="ja">最終データをお渡し</span><span lang="en">Final files delivered</span></small></li>
+            </ol>
+            <div class="wizard-bar" aria-hidden="true"><i></i></div>
+          </div>
+
+          <div class="commission-cta">
+            <a class="btn btn--blue" href="https://coconala.com/users/6411269" target="_blank" rel="noopener"><span lang="ja">ココナラで依頼する</span><span lang="en">Order on coconala</span> <span class="arrow" aria-hidden="true">↗</span></a>
+            <a class="btn" href="mailto:contact@kyarinko.online"><span lang="ja">メールで相談する</span><span lang="en">Ask by email</span> <span class="arrow" aria-hidden="true">→</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 FAQ ============ -->
+  <section class="section" id="faq" aria-labelledby="faq-title">
+    <div class="container">
+      <div class="window reveal">
+        <div class="window-bar"><span>04 // <span lang="ja">よくある質問</span><span lang="en">help</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-body">
+          <div class="section-head section-head--center">
+            <h2 class="title-club" id="faq-title">FAQ</h2>
+          </div>
+          <div class="faq">
+            <details>
+              <summary><span lang="ja">支払い方法は？</span><span lang="en">How do I pay?</span></summary>
+              <p><span lang="ja">各プラットフォーム（Gumroad・Patreon・pixivFANBOX・ココナラ）の決済をご利用ください。メールでのご依頼は見積もり時にご案内します。</span><span lang="en">Payment is handled by each platform (Gumroad, Patreon, pixivFANBOX, coconala). For email requests, I'll explain the options with the quote.</span></p>
+            </details>
+            <details>
+              <summary><span lang="ja">商用利用はできますか？</span><span lang="en">Can I use the music commercially?</span></summary>
+              <p><span lang="ja">ご依頼内容によって異なります。用途（ゲーム販売、配信、広告など）をお知らせいただければ、最適なライセンスをご提案します。</span><span lang="en">It depends on the project. Tell me how it will be used (a game for sale, streaming, ads…) and I'll suggest the right licence.</span></p>
+            </details>
+            <details>
+              <summary><span lang="ja">英語でのやり取りは可能ですか？</span><span lang="en">Can we talk in English?</span></summary>
+              <p><span lang="ja">はい。日本語・英語どちらでも対応できます。</span><span lang="en">Yes — I work in both Japanese and English.</span></p>
+            </details>
+            <details>
+              <summary><span lang="ja">納期はどのくらいですか？</span><span lang="en">How long does it take?</span></summary>
+              <p><span lang="ja">内容によりますが、目安は各プランに記載しています。お急ぎの場合は特急オプションをご相談ください。</span><span lang="en">Each plan lists a typical timeline. If you're in a hurry, ask about express delivery.</span></p>
+            </details>
+            <details>
+              <summary><span lang="ja">デジタル商品の返金はできますか？</span><span lang="en">Can I get a refund on digital items?</span></summary>
+              <p><span lang="ja">デジタル商品の性質上、原則として返金はお受けしておりません。ファイルに問題がある場合はご連絡ください。</span><span lang="en">Because they're digital, purchases are generally non-refundable. If a file has a problem, please contact me.</span></p>
+            </details>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>© <span id="year">2026</span> KYARIN・きゃりー — STORE</p>
+    <a href="index.html"><span lang="ja">ポートフォリオへ戻る ←</span><span lang="en">Back to portfolio ←</span></a>
+  </div>
+</footer>
+</body>
+</html>

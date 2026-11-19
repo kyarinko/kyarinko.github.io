@@ -430,6 +430,19 @@ body.menu-open .topnav { opacity: 1; visibility: visible; transition-delay: 0s; 
 .social span { font-family: var(--font-ensemble); font-size: 0.72rem; }
 .social i { position: absolute; top: 10px; right: 12px; font-style: normal; }
 
+/* ---------- Store teaser (home) — full page is store.html ---------- */
+.store-teaser { display: grid; gap: 26px; }
+.store-teaser .section-lead { margin-top: 14px; }
+.teaser-shops { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.teaser-shop {
+  position: relative; display: grid; gap: 2px; padding: 16px 14px 14px; border: 2px solid var(--blue); text-decoration: none;
+  box-shadow: inset 0 5px 0 var(--accent); transition: background-color 0.2s, color 0.2s, transform 0.25s var(--ease), box-shadow 0.25s;
+}
+.teaser-shop:hover { background: var(--blue); color: #fff; transform: translate(-2px, -2px); box-shadow: inset 0 5px 0 var(--accent), 6px 6px 0 rgba(0, 8, 255, 0.2); }
+.teaser-shop small { font-family: var(--font-ensemble); font-size: 0.66rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.8; }
+.teaser-shop strong { font-family: var(--font-hero); font-size: 1.15rem; line-height: 1.25; }
+.teaser-shop i { position: absolute; top: 12px; right: 12px; font-style: normal; }
+
 /* ---------- Footer ---------- */
 .site-footer { padding: 28px 0 calc(28px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--white-20); font-family: var(--font-ensemble); font-size: 0.8rem; }
 .footer-inner { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px; }
@@ -547,6 +560,7 @@ dialog[open] .window, dialog[open] .lightbox-figure { animation: pop 0.25s var(-
   .event-title { font-size: 1.02rem; }
 
   .socials { grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .store-teaser { grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: center; column-gap: 56px; }
   .lightbox-prev { left: 12px; } .lightbox-next { right: 12px; }
 }
 
