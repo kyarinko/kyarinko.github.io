@@ -372,7 +372,8 @@ body.menu-open .topnav { opacity: 1; visibility: visible; transition-delay: 0s; 
 .dream .thumb { border-color: rgba(255, 255, 255, 0.45); }
 .dream .play-badge { background: #fff; color: #000; }
 .dream-trailer-title { text-align: center; font-family: var(--font-dream); font-weight: 700; font-size: clamp(1.15rem, 4.8vw, 1.8rem); letter-spacing: 0.06em; padding: 6px 0 4px; }
-.dither { height: 96px; background-repeat: repeat-x; background-size: 24px 96px; image-rendering: pixelated; }
+.dither { position: relative; height: 96px; }
+.dither-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; } /* drawn by main.js */
 
 /* ---------- Gallery ---------- */
 .gallery { display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-flow: dense; gap: 8px; }
@@ -383,7 +384,7 @@ body.menu-open .topnav { opacity: 1; visibility: visible; transition-delay: 0s; 
 .photo .cap { display: none; }
 
 .collapsible { position: relative; overflow: hidden; transition: max-height 0.7s var(--ease); }
-.collapse-fade { position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; height: 96px; pointer-events: none; background-repeat: repeat-x; background-position: bottom; background-size: 20px 96px; image-rendering: pixelated; transition: opacity 0.4s; }
+.collapse-fade { position: absolute; left: 0; right: 0; bottom: 0; z-index: 4; height: 96px; pointer-events: none; transition: opacity 0.4s; }
 .collapsible:not(.is-collapsed) .collapse-fade { opacity: 0; }
 .more { display: flex; justify-content: center; margin-top: 28px; }
 .more .when-expanded, .more [aria-expanded="true"] .when-collapsed { display: none; }

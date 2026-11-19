@@ -130,20 +130,39 @@
   /* ------------------------------------------------------------------
      7. Pixel dither strips, drawn once as a tiny image (original effect)
      ------------------------------------------------------------------ */
+  // Each strip gets a <canvas> sized to its exact device pixels, so every dot is
+  // a whole number of screen pixels: sharp at any pixel density or zoom.
   const BAYER = [[0, 8, 2, 10], [12, 4, 14, 6], [3, 11, 1, 9], [15, 7, 13, 5]];
+  const DITHER_CELL = 6; // CSS px per dot
   $$('[data-dither]').forEach(el => {
     const [from, to] = el.dataset.dither.split(',');
-    const rows = 16;
-    const c = document.createElement('canvas');
-    c.width = 4; c.height = rows;
-    const ctx = c.getContext('2d');
-    for (let y = 0; y < rows; y++) {
-      for (let x = 0; x < 4; x++) {
-        ctx.fillStyle = (y / (rows - 1)) >= (BAYER[y % 4][x] + 0.5) / 16 ? to : from;
-        ctx.fillRect(x, y, 1, 1);
+    const canvas = document.createElement('canvas');
+    canvas.className = 'dither-canvas';
+    el.appendChild(canvas);
+    const ctx = canvas.getContext('2d');
+    const draw = (w, h) => {
+      if (!w || !h) return;
+      canvas.width = w; canvas.height = h;
+      const cell = Math.max(1, Math.round(DITHER_CELL * (window.devicePixelRatio || 1)));
+      const rows = Math.max(2, Math.round(h / cell));
+      const cols = Math.ceil(w / cell);
+      for (let r = 0; r < rows; r++) {
+        const y = h - (rows - r) * cell; // rows end flush with the bottom edge
+        for (let c = 0; c < cols; c++) {
+          const color = r / (rows - 1) >= (BAYER[r % 4][c % 4] + 0.5) / 16 ? to : from;
+          if (color === 'transparent') continue;
+          ctx.fillStyle = color;
+          ctx.fillRect(c * cell, y, cell, cell);
+        }
       }
-    }
-    el.style.backgroundImage = `url(${c.toDataURL()})`;
+    };
+    new ResizeObserver(([entry]) => {
+      const dpr = window.devicePixelRatio || 1;
+      const w = entry.contentRect.width * dpr, h = entry.contentRect.height * dpr;
+      const dev = entry.devicePixelContentBoxSize && entry.devicePixelContentBoxSize[0];
+      const exact = dev && Math.abs(dev.inlineSize - w) < 2; // exact device size when the browser reports it
+      draw(exact ? dev.inlineSize : Math.round(w), exact ? dev.blockSize : Math.round(h));
+    }).observe(canvas, { box: 'device-pixel-content-box' });
   });
 
   /* ------------------------------------------------------------------
