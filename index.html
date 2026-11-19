@@ -39,7 +39,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;500;700&family=Manrope:wght@400;500;700&family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@700&family=Syne:wght@600;800&display=swap">
-<link rel="stylesheet" href="assets/css/style.css?v=11">
+<link rel="stylesheet" href="assets/css/style.css?v=12">
 <script src="assets/js/main.js?v=10" defer></script>
 </head>
 <body>
@@ -78,10 +78,10 @@
       <ul>
         <li><a href="#about"><span lang="ja">プロフィール</span><span lang="en">About</span></a></li>
         <li><a href="#works"><span lang="ja">楽曲</span><span lang="en">Music</span></a></li>
+        <li><a href="#store"><span lang="ja">ストア</span><span lang="en">Store</span></a></li>
         <li><a href="#dreamscape">Dreamscape</a></li>
         <li><a href="#gallery"><span lang="ja">写真</span><span lang="en">Photos</span></a></li>
         <li><a href="#club"><span lang="ja">活動</span><span lang="en">Activities</span></a></li>
-        <li><a href="#store"><span lang="ja">ストア</span><span lang="en">Store</span></a></li>
         <li><a href="#contact"><span lang="ja">連絡</span><span lang="en">Contact</span></a></li>
       </ul>
     </nav>
@@ -124,10 +124,10 @@
         <nav class="home-nav" aria-label="Sections">
           <a href="#about"><span lang="ja">プロフィール</span><span lang="en">About</span></a>
           <a href="#works"><span lang="ja">楽曲</span><span lang="en">Music</span></a>
+          <a href="#store"><span lang="ja">ストア</span><span lang="en">Store</span></a>
           <a href="#dreamscape">Dreamscape</a>
           <a href="#gallery"><span lang="ja">写真</span><span lang="en">Photos</span></a>
           <a href="#club"><span lang="ja">活動</span><span lang="en">Activities</span></a>
-          <a href="#store"><span lang="ja">ストア</span><span lang="en">Store</span></a>
           <a href="#contact"><span lang="ja">連絡</span><span lang="en">Contact</span></a>
         </nav>
 
@@ -340,11 +340,39 @@
     </div>
   </section>
 
-  <!-- ============ 02 THE DREAMSCAPE ============ -->
+  <!-- ============ 02 STORE (full page: store.html) ============ -->
+  <section class="section" id="store" aria-labelledby="store-title">
+    <div class="container">
+      <div class="window window--light reveal">
+        <div class="window-bar"><span>02 // <span lang="ja">ストア</span><span lang="en">store</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-body store-teaser">
+          <div>
+            <h2 class="title-music wave" id="store-title">STORE</h2>
+            <p class="section-lead">
+              <span lang="ja">楽譜・音源・メンバーシップの販売と、作曲・編曲のご依頼を受け付けています。</span>
+              <span lang="en">Scores, audio and memberships — plus commissions for composition and arrangement.</span>
+            </p>
+            <div class="cta">
+              <a class="btn btn--blue" href="store.html"><span lang="ja">ストアを見る</span><span lang="en">Visit the store</span> <span class="arrow" aria-hidden="true">→</span></a>
+              <a class="btn" href="store.html#commissions"><span lang="ja">依頼について</span><span lang="en">Commissions</span></a>
+            </div>
+          </div>
+          <div class="teaser-shops">
+            <a class="teaser-shop" href="https://kyarinko.gumroad.com/" target="_blank" rel="noopener" style="--accent:#ff90e8"><span class="social-icons"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0Zm-.007 5.12c4.48 0 5.995 3.025 6.064 4.744h-3.239c-.069-.962-.897-2.406-2.896-2.406-2.136 0-3.514 1.857-3.514 4.126 0 2.27 1.378 4.125 3.514 4.125 1.93 0 2.758-1.512 3.103-3.025h-3.103v-1.238h6.509v6.327h-2.855v-3.989c-.207 1.444-1.102 4.264-4.617 4.264-3.516 0-5.584-2.82-5.584-6.326 0-3.645 2.276-6.602 6.618-6.602z"/></svg></span><small><span lang="ja">デジタル販売</span><span lang="en">Digital shop</span></small><strong>Gumroad</strong><i aria-hidden="true">↗</i></a>
+            <a class="teaser-shop" href="https://www.patreon.com/cw/kyarinko" target="_blank" rel="noopener" style="--accent:#ff5a4f"><span class="social-icons"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M22.957 7.21c-.004-3.064-2.391-5.576-5.191-6.482-3.478-1.125-8.064-.962-11.384.604C2.357 3.231 1.093 7.391 1.046 11.54c-.039 3.411.302 12.396 5.369 12.46 3.765.047 4.326-4.804 6.068-7.141 1.24-1.662 2.836-2.132 4.801-2.618 3.376-.836 5.678-3.501 5.673-7.031Z"/></svg></span><small><span lang="ja">月額支援</span><span lang="en">Membership</span></small><strong>Patreon</strong><i aria-hidden="true">↗</i></a>
+            <a class="teaser-shop" href="https://kyarin.fanbox.cc/" target="_blank" rel="noopener" style="--accent:#46b4ff"><span class="social-icons"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4.935 0A4.924 4.924 0 0 0 0 4.935v14.13A4.924 4.924 0 0 0 4.935 24h14.13A4.924 4.924 0 0 0 24 19.065V4.935A4.924 4.924 0 0 0 19.065 0zm7.81 4.547c2.181 0 4.058.676 5.399 1.847a6.118 6.118 0 0 1 2.116 4.66c.005 1.854-.88 3.476-2.257 4.563-1.375 1.092-3.225 1.697-5.258 1.697-2.314 0-4.46-.842-4.46-.842v2.718c.397.116 1.048.365.635.779H5.79c-.41-.41.19-.65.644-.779V7.666c-1.053.81-1.593 1.51-1.868 2.031.32 1.02-.284.969-.284.969l-1.09-1.73s3.868-4.39 9.553-4.39zm-.19.971c-1.423-.003-3.184.473-4.27 1.244v8.646c.988.487 2.484.832 4.26.832h.01c1.596 0 2.98-.593 3.93-1.533.952-.948 1.486-2.183 1.492-3.683-.005-1.54-.504-2.864-1.42-3.86-.918-.992-2.274-1.645-4.002-1.646Z"/></svg></span><small><span lang="ja">ファンクラブ</span><span lang="en">Fan club</span></small><strong>pixivFANBOX</strong><i aria-hidden="true">↗</i></a>
+            <a class="teaser-shop" href="https://coconala.com/users/6411269" target="_blank" rel="noopener" style="--accent:#ffc93c"><span class="social-icons"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 00-7.8 13.5L3 21l4.6-1.2A9 9 0 1012 3z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M15 9.6a3.6 3.6 0 100 4.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span><small><span lang="ja">依頼窓口</span><span lang="en">Commissions</span></small><strong><span lang="ja">ココナラ</span><span lang="en">coconala</span></strong><i aria-hidden="true">↗</i></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 THE DREAMSCAPE ============ -->
   <section class="section" id="dreamscape" aria-labelledby="dream-title">
     <div class="container">
       <div class="window window--dark dream reveal">
-        <div class="window-bar"><span>02 // <span lang="ja">オリジナルゲーム</span><span lang="en">original game</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span>03 // <span lang="ja">オリジナルゲーム</span><span lang="en">original game</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body dream-body">
           <pre class="dream-ascii" id="dreamscape-ascii-bg" aria-hidden="true"></pre>
           <h2 class="dream-title wave" id="dream-title">THE DREAMSCAPE</h2>
@@ -392,11 +420,11 @@
     </div>
   </section>
 
-  <!-- ============ 03 GALLERY ============ -->
+  <!-- ============ 04 GALLERY ============ -->
   <section class="section" id="gallery" aria-labelledby="gallery-title">
     <div class="container">
       <div class="window reveal">
-        <div class="window-bar"><span>03 // <span lang="ja">写真</span><span lang="en">photos</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span>04 // <span lang="ja">写真</span><span lang="en">photos</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body">
           <div class="section-head section-head--right">
             <h2 class="title-gallery wave" id="gallery-title">Gallery</h2>
@@ -483,11 +511,11 @@
     </div>
   </section>
 
-  <!-- ============ 04 ACTIVITIES (GOK) ============ -->
+  <!-- ============ 05 ACTIVITIES (GOK) ============ -->
   <section class="section" id="club" aria-labelledby="club-title">
     <div class="container">
       <div class="window reveal">
-        <div class="window-bar"><span>04 // <span lang="ja">活動</span><span lang="en">activities</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span>05 // <span lang="ja">活動</span><span lang="en">activities</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body">
           <div class="section-head section-head--center">
             <h2 class="title-club wave" id="club-title"><span lang="ja">大学活動・ゲーム音楽研究会 (GOK)</span><span lang="en">University activities · Game Music Research Society (GOK)</span></h2>
@@ -571,34 +599,6 @@
               <span class="when-collapsed"><span lang="ja">イベントをさらに表示</span><span lang="en">Show more events</span></span>
               <span class="when-expanded"><span lang="ja">イベントを閉じる</span><span lang="en">Close events</span></span>
             </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ============ 05 STORE (full page: store.html) ============ -->
-  <section class="section" id="store" aria-labelledby="store-title">
-    <div class="container">
-      <div class="window window--light reveal">
-        <div class="window-bar"><span>05 // <span lang="ja">ストア</span><span lang="en">store</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
-        <div class="window-body store-teaser">
-          <div>
-            <h2 class="title-music wave" id="store-title">STORE</h2>
-            <p class="section-lead">
-              <span lang="ja">楽譜・音源・メンバーシップの販売と、作曲・編曲のご依頼を受け付けています。</span>
-              <span lang="en">Scores, audio and memberships — plus commissions for composition and arrangement.</span>
-            </p>
-            <div class="cta">
-              <a class="btn btn--blue" href="store.html"><span lang="ja">ストアを見る</span><span lang="en">Visit the store</span> <span class="arrow" aria-hidden="true">→</span></a>
-              <a class="btn" href="store.html#commissions"><span lang="ja">依頼について</span><span lang="en">Commissions</span></a>
-            </div>
-          </div>
-          <div class="teaser-shops">
-            <a class="teaser-shop" href="https://kyarinko.gumroad.com/" target="_blank" rel="noopener" style="--accent:#ff90e8"><small><span lang="ja">デジタル販売</span><span lang="en">Digital shop</span></small><strong>Gumroad</strong><i aria-hidden="true">↗</i></a>
-            <a class="teaser-shop" href="https://www.patreon.com/cw/kyarinko" target="_blank" rel="noopener" style="--accent:#ff5a4f"><small><span lang="ja">月額支援</span><span lang="en">Membership</span></small><strong>Patreon</strong><i aria-hidden="true">↗</i></a>
-            <a class="teaser-shop" href="https://kyarin.fanbox.cc/" target="_blank" rel="noopener" style="--accent:#46b4ff"><small><span lang="ja">ファンクラブ</span><span lang="en">Fan club</span></small><strong>pixivFANBOX</strong><i aria-hidden="true">↗</i></a>
-            <a class="teaser-shop" href="https://coconala.com/users/6411269" target="_blank" rel="noopener" style="--accent:#ffc93c"><small><span lang="ja">依頼窓口</span><span lang="en">Commissions</span></small><strong><span lang="ja">ココナラ</span><span lang="en">coconala</span></strong><i aria-hidden="true">↗</i></a>
           </div>
         </div>
       </div>
