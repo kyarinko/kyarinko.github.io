@@ -1,4 +1,4 @@
-/* THE DREAMSCAPE page — language switch, reveal, and the wavy glitch background. */
+/* THE DREAMSCAPE page — language switch, reveal, VHS overlay and the aero-sky background. */
 (() => {
   'use strict';
   const $ = (s, r = document) => r.querySelector(s);
@@ -34,67 +34,131 @@
   $$('.d-panel').forEach(p => io.observe(p));
   $('#year').textContent = new Date().getFullYear();
 
-  /* ---------- Wavy texture with glitch bands (drawn small, scaled up pixelated) ---------- */
+  /* ---------- VHS on-screen timestamp (analog-horror touch) ---------- */
+  const ts = $('#vhs-ts');
+  const MONTHS = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+  const pad = n => String(n).padStart(2, '0');
+  function tick() {
+    const d = new Date();
+    let h = d.getHours(); const ampm = h < 12 ? 'AM' : 'PM'; h = h % 12 || 12;
+    ts.innerHTML = `${ampm} ${pad(h)}:${pad(d.getMinutes())}:${pad(d.getSeconds())}<br>${MONTHS[d.getMonth()]}. ${pad(d.getDate())} ${d.getFullYear()}`;
+  }
+  if (ts) { tick(); setInterval(tick, 1000); }
+
+  /* Rare whole-page tracking hiccup */
+  function hiccup() {
+    if (!reduced.matches && !document.hidden) {
+      document.body.classList.add('is-tracking');
+      setTimeout(() => document.body.classList.remove('is-tracking'), 260);
+    }
+    setTimeout(hiccup, 9000 + Math.random() * 14000);
+  }
+  setTimeout(hiccup, 6000);
+
+  /* ---------- Background: twilight sky, Vista aurora ribbons, aero bubbles, VHS tracking ---------- */
   const canvas = $('#dream-bg');
   const ctx = canvas.getContext('2d');
-  // pastel bands: deep violet → purple → mauve → pink → teal → ice
-  const PALETTE = [[34, 26, 70], [92, 58, 128], [150, 92, 168], [214, 150, 206], [140, 206, 196], [205, 240, 236]].map(([r, g, b]) => (255 << 24) | (b << 16) | (g << 8) | r);
-  // slightly different tint per vertical strip (like the reference's stripes)
-  const STRIPS = [1, 0.86, 1.08, 0.92, 1.12, 0.9, 1.04, 0.82, 1.1];
-  let W = 0, H = 0, img, buf, t = 0, glitch = null, nextGlitch = 0;
+  const RIBBONS = [
+    { y: 0.38, amp: 0.10, freq: 1.3, speed: 0.22, width: 0.20, hue: [95, 212, 255] },
+    { y: 0.50, amp: 0.08, freq: 1.8, speed: -0.17, width: 0.14, hue: [143, 240, 200] },
+    { y: 0.60, amp: 0.12, freq: 1.0, speed: 0.13, width: 0.24, hue: [255, 179, 225] },
+    { y: 0.30, amp: 0.06, freq: 2.4, speed: -0.28, width: 0.08, hue: [200, 240, 255] },
+  ];
+  let W = 0, H = 0, scale = 1, t = 0, sky, bubbles = [], clouds = [], glitch = null, nextGlitch = 2500;
 
-  function resize() {
-    const scale = innerWidth < 700 ? 4 : 6; // one canvas pixel = 4–6 screen pixels
-    W = Math.max(60, Math.ceil(innerWidth / scale));
-    H = Math.max(60, Math.ceil(innerHeight / scale));
-    canvas.width = W; canvas.height = H;
-    img = ctx.createImageData(W, H);
-    buf = new Uint32Array(img.data.buffer);
+  function makeBubble(randomY) {
+    const r = 4 + Math.random() * Math.random() * 28;
+    return { x: Math.random() * W, y: randomY ? Math.random() * H : H + r * 2, r, vy: 0.15 + Math.random() * 0.35 + r * 0.01, sway: Math.random() * 6.28, a: 0.35 + Math.random() * 0.45 };
   }
 
-  function shade(color, k) {
-    const r = Math.min(255, (color & 255) * k), g = Math.min(255, ((color >> 8) & 255) * k), b = Math.min(255, ((color >> 16) & 255) * k);
-    return (255 << 24) | (b << 16) | (g << 8) | r;
+  function resize() {
+    scale = innerWidth < 700 ? 2 : 2.5; // draw at reduced resolution, CSS scales it smoothly
+    W = Math.ceil(innerWidth / scale); H = Math.ceil(innerHeight / scale);
+    canvas.width = W; canvas.height = H;
+    sky = ctx.createLinearGradient(0, 0, 0, H);
+    sky.addColorStop(0, '#040a1e');
+    sky.addColorStop(0.35, '#0b2a5c');
+    sky.addColorStop(0.68, '#1f6aa6');
+    sky.addColorStop(0.88, '#6fb9de');
+    sky.addColorStop(1, '#e3b6dc');
+    const count = Math.round(Math.min(46, (W * H) / 2600));
+    bubbles = Array.from({ length: count }, () => makeBubble(true));
+    clouds = Array.from({ length: 7 }, (_, i) => ({ x: Math.random() * W, y: H * (0.72 + Math.random() * 0.25), r: W * (0.12 + Math.random() * 0.14), v: 0.04 + Math.random() * 0.08, i }));
+  }
+
+  function drawRibbon(rb) {
+    const [r, g, b] = rb.hue;
+    const mid = [];
+    for (let x = -10; x <= W + 10; x += 8) {
+      const u = x / W;
+      mid.push([x, H * (rb.y + rb.amp * Math.sin(u * 6.28 * rb.freq + t * rb.speed * 3) + rb.amp * 0.4 * Math.sin(u * 13 - t * 0.5))]);
+    }
+    const half = H * rb.width / 2;
+    for (let layer = 0; layer < 3; layer++) {
+      const w = half * (1 - layer * 0.35);
+      ctx.beginPath();
+      mid.forEach(([x, y], i) => i ? ctx.lineTo(x, y - w * (0.6 + 0.4 * Math.sin(x * 0.02 + t))) : ctx.moveTo(x, y - w));
+      for (let i = mid.length - 1; i >= 0; i--) ctx.lineTo(mid[i][0], mid[i][1] + w * 0.3);
+      ctx.closePath();
+      ctx.fillStyle = `rgba(${r},${g},${b},${0.05 + layer * 0.05})`;
+      ctx.fill();
+    }
   }
 
   function draw(now) {
-    const n = PALETTE.length;
-    for (let y = 0; y < H; y++) {
-      const v = (y / H) * 3.2;
-      for (let x = 0; x < W; x++) {
-        const u = (x / W) * 4.2;
-        const wx = u + 0.55 * Math.sin(v * 1.7 + t * 0.6) + 0.25 * Math.sin(v * 3.3 - t * 0.4);
-        const wy = v + 0.5 * Math.sin(u * 1.3 - t * 0.5);
-        const f = Math.sin(wx * 2.6 + Math.sin(wy * 2.1 + t * 0.35) * 2.6 + Math.cos(wy * 0.9 - t * 0.2));
-        const band = Math.min(n - 1, ((f * 0.5 + 0.5) * n) | 0);
-        const strip = STRIPS[((x / W) * STRIPS.length) | 0];
-        buf[y * W + x] = shade(PALETTE[band], strip);
-      }
+    ctx.globalCompositeOperation = 'source-over';
+    ctx.fillStyle = sky; ctx.fillRect(0, 0, W, H);
+
+    // faint stars at the top
+    ctx.fillStyle = 'rgba(220,240,255,0.5)';
+    for (let i = 0; i < 40; i++) {
+      const sx = (i * 97.3) % W, sy = ((i * 53.7) % (H * 0.35));
+      if (Math.sin(t * 2 + i) > 0.2) ctx.fillRect(sx, sy, 1, 1);
     }
 
-    // Glitch: a horizontal band is shifted sideways and sprinkled with coloured blocks
+    // aurora ribbons, additive
+    ctx.globalCompositeOperation = 'lighter';
+    RIBBONS.forEach(drawRibbon);
+
+    // dreamy low clouds
+    ctx.globalCompositeOperation = 'source-over';
+    clouds.forEach(c => {
+      c.x += c.v; if (c.x - c.r > W) c.x = -c.r;
+      const g = ctx.createRadialGradient(c.x, c.y, 0, c.x, c.y, c.r);
+      g.addColorStop(0, 'rgba(255,240,250,0.35)'); g.addColorStop(1, 'rgba(255,240,250,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.ellipse(c.x, c.y, c.r, c.r * 0.45, 0, 0, 6.29); ctx.fill();
+    });
+
+    // Frutiger-aero bubbles
+    bubbles.forEach((b, i) => {
+      b.y -= b.vy; b.x += Math.sin(t * 1.5 + b.sway) * 0.15;
+      if (b.y < -b.r * 2) bubbles[i] = makeBubble(false);
+      const g = ctx.createRadialGradient(b.x - b.r * 0.3, b.y - b.r * 0.35, b.r * 0.05, b.x, b.y, b.r);
+      g.addColorStop(0, `rgba(255,255,255,${b.a})`);
+      g.addColorStop(0.35, `rgba(180,235,255,${b.a * 0.18})`);
+      g.addColorStop(0.85, `rgba(120,210,255,${b.a * 0.25})`);
+      g.addColorStop(1, `rgba(200,245,255,${b.a * 0.7})`);
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, 6.29); ctx.fill();
+    });
+
+    // VHS tracking: a horizontal band slides sideways with static
     if (now > nextGlitch && !glitch) {
-      glitch = { y0: (Math.random() * H * 0.85) | 0, h: (4 + Math.random() * H * 0.18) | 0, shift: ((Math.random() - 0.5) * W * 0.25) | 0, until: now + 120 + Math.random() * 260 };
+      glitch = { y: Math.random() * H * 0.9, h: 3 + Math.random() * H * 0.12, shift: (Math.random() - 0.5) * W * 0.12, until: now + 140 + Math.random() * 260 };
     }
     if (glitch) {
-      const { y0, h, shift } = glitch;
-      for (let y = y0; y < Math.min(H, y0 + h); y++) {
-        const row = buf.slice(y * W, y * W + W);
-        for (let x = 0; x < W; x++) buf[y * W + x] = row[(x - shift + W) % W];
-      }
-      const BLOCKS = [0xff3c8a3c, 0xff2a2a8a, 0xff8a3c9a, 0xff5ab0a0, 0xff1e1e1e];
-      for (let i = 0; i < 40; i++) {
-        const bx = (Math.random() * W) | 0, by = y0 + ((Math.random() * h) | 0), bw = 2 + ((Math.random() * 8) | 0), c = BLOCKS[(Math.random() * BLOCKS.length) | 0];
-        for (let x = bx; x < Math.min(W, bx + bw); x++) if (by < H) buf[by * W + x] = c;
-      }
-      if (now > glitch.until) { glitch = null; nextGlitch = now + 900 + Math.random() * 2400; }
+      const { y, h, shift } = glitch;
+      ctx.drawImage(canvas, 0, y, W, h, shift, y, W, h);
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      for (let i = 0; i < 60; i++) ctx.fillRect(Math.random() * W, y + Math.random() * h, 1 + Math.random() * 6, 1);
+      ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.fillRect(0, y + h - 1, W, 1);
+      if (now > glitch.until) { glitch = null; nextGlitch = now + 1800 + Math.random() * 4200; }
     }
-    ctx.putImageData(img, 0, 0);
   }
 
   function loop(now) {
-    if (!document.hidden) { draw(now); t += reduced.matches ? 0.008 : 0.02; }
-    setTimeout(() => requestAnimationFrame(loop), reduced.matches ? 140 : 60);
+    if (!document.hidden) { draw(now); t += reduced.matches ? 0.003 : 0.012; }
+    if (reduced.matches) setTimeout(() => requestAnimationFrame(loop), 200);
+    else requestAnimationFrame(loop);
   }
   resize();
   window.addEventListener('resize', resize);
