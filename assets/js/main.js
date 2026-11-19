@@ -1,11 +1,8 @@
-/* KYARIN portfolio — site script. No dependencies. */
+/* KYARIN portfolio — home page script. Shared parts live in common.js (window.KY). */
 (() => {
   'use strict';
 
-  const $ = (sel, root = document) => root.querySelector(sel);
-  const $$ = (sel, root = document) => Array.from(root.querySelectorAll(sel));
-  const root = document.documentElement;
-  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const { $, $$, root, reducedMotion } = window.KY;
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
 
   /* ------------------------------------------------------------------
@@ -40,62 +37,13 @@
   }
 
   /* ------------------------------------------------------------------
-     1. Language (ja / en)
-     Text is swapped by CSS via <html lang>. JS handles attributes, the
-     page title, the one-click switches, the wipe and the ?lang= URL.
+     1. Language (ja / en) — see common.js
      ------------------------------------------------------------------ */
   const META = {
     ja: { title: 'KYARIN・きゃりー | 作曲家・編曲家', desc: '作曲家・編曲家 KYARIN・きゃりーのポートフォリオ。ゲーム音楽、オーケストラ、吹奏楽などの作品。' },
     en: { title: 'KYARIN | Composer & Arranger', desc: 'Portfolio of composer and arranger KYARIN. Works including game music, orchestra, wind band and more.' }
   };
-  // Translatable attributes: the HTML holds Japanese; data-*-en holds English.
-  const I18N_ATTRS = [['alt', 'altEn', 'altJa'], ['aria-label', 'labelEn', 'labelJa']];
-  I18N_ATTRS.forEach(([attr, , ja]) => {
-    $$(`[data-${attr === 'alt' ? 'alt' : 'label'}-en]`).forEach(el => { el.dataset[ja] = el.getAttribute(attr) || ''; });
-  });
-
-  const langSwitches = $$('.lang-switch');
-  const langWipe = $('.lang-wipe');
-
-  function setLang(lang, save) {
-    lang = lang === 'en' ? 'en' : 'ja';
-    root.lang = lang;
-    document.title = META[lang].title;
-    const desc = $('meta[name="description"]');
-    if (desc) desc.content = META[lang].desc;
-    I18N_ATTRS.forEach(([attr, en, ja]) => {
-      $$(`[data-${attr === 'alt' ? 'alt' : 'label'}-en]`).forEach(el => el.setAttribute(attr, el.dataset[lang === 'en' ? en : ja]));
-    });
-    langSwitches.forEach(sw => {
-      sw.classList.toggle('is-flipped', lang === 'en');
-      sw.setAttribute('aria-label', lang === 'en' ? '日本語に切り替え' : 'Switch to English');
-    });
-    if (save) {
-      try { localStorage.setItem('lang', lang); } catch (e) { /* private mode */ }
-      const url = new URL(location.href);
-      url.searchParams.set('lang', lang);
-      history.replaceState(history.state, '', url);
-      requestAnimationFrame(refreshCollapsibles);
-    }
-  }
-  setLang(root.lang, false);
-
-  // Click anywhere on a switch to flip. A blue wipe covers the swap.
-  langSwitches.forEach(sw => sw.addEventListener('click', () => {
-    const next = root.lang === 'en' ? 'ja' : 'en';
-    langSwitches.forEach(s => s.classList.toggle('is-flipped', next === 'en')); // thumb moves right away
-    if (reducedMotion.matches || !langWipe) {
-      setLang(next, true);
-      $('main').animate([{ opacity: 0.15 }, { opacity: 1 }], { duration: 320, easing: 'ease-out' });
-      return;
-    }
-    langWipe.textContent = next === 'en' ? 'LANG // ENGLISH' : 'LANG // 日本語';
-    langWipe.classList.remove('is-run');
-    void langWipe.offsetWidth; // restart the animation
-    langWipe.classList.add('is-run');
-    setTimeout(() => setLang(next, true), 330);
-  }));
-  if (langWipe) langWipe.addEventListener('animationend', () => langWipe.classList.remove('is-run'));
+  KY.initLang(META, (lang, save) => { if (save) requestAnimationFrame(refreshCollapsibles); });
 
   /* ------------------------------------------------------------------
      2. Top bar: slides in after the home screen; phone menu; active link
@@ -127,60 +75,14 @@
   $$('main > section[id]').forEach(s => sectionObserver.observe(s));
 
   /* ------------------------------------------------------------------
-     3. Windows pop in as you scroll
+     3-5. Window reveal, wavy titles, ASCII background (common.js) +
+        the taller Dreamscape copy of the ASCII field
      ------------------------------------------------------------------ */
-  const revealObserver = new IntersectionObserver(entries => {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add('is-in');
-      revealObserver.unobserve(entry.target);
-    });
-  }, { rootMargin: '0px 0px -6% 0px' });
-  $$('.reveal').forEach(el => revealObserver.observe(el));
-
-  /* ------------------------------------------------------------------
-     4. Wavy text (original effect). Each language version is split
-        separately; screen readers get the plain text.
-     ------------------------------------------------------------------ */
-  const isWide = c => /[　-鿿＀-￯]/.test(c);
-  function waveify(el) {
-    const text = el.textContent.trim();
-    let i = 0;
-    const html = text.split(/(\s+)/).map(token => {
-      if (/^\s+$/.test(token)) return ' ';
-      const chars = Array.from(token).map(c => `<span class="wave-char" style="--i:${i++}">${c}</span>`).join('');
-      return Array.from(token).some(isWide) ? chars : `<span class="wave-word">${chars}</span>`; // Japanese may wrap anywhere
-    }).join('');
-    el.innerHTML = `<span class="visually-hidden">${text}</span><span aria-hidden="true">${html}</span>`;
-  }
-  $$('.wave').forEach(el => {
-    const parts = $$(':scope > [lang]', el);
-    (parts.length ? parts : [el]).forEach(waveify);
-  });
-
-  /* ------------------------------------------------------------------
-     5. Original fluid ASCII background (whole page) + the taller
-        Dreamscape copy. Follows the mouse.
-     ------------------------------------------------------------------ */
-  const asciiBg = $('#ascii-bg');
+  KY.initReveal();
+  KY.initWave();
   const dreamAscii = $('#dreamscape-ascii-bg');
-  const ASCII_CHARS = ' ..::++--==__ ';
-  // Grid size follows the screen so the pattern reaches every edge.
-  let COLS = 120, ROWS = 45;
-  function sizeAscii() {
-    const fs = parseFloat(getComputedStyle(asciiBg).fontSize) || 14;
-    COLS = Math.min(260, Math.ceil(innerWidth / (fs * 0.6)) + 2);
-    ROWS = Math.min(110, Math.ceil(innerHeight / (fs * 1.1)) + 1);
-  }
-  sizeAscii();
-  window.addEventListener('resize', sizeAscii);
-  let asciiTime = 0;
-  let mouseX = innerWidth / 2, mouseY = innerHeight / 2, targetX = mouseX, targetY = mouseY;
   let dreamRows = 95;
   let dreamVisible = false;
-
-  window.addEventListener('mousemove', e => { targetX = e.clientX; targetY = e.clientY; }, { passive: true });
-
   function updateDreamRows() {
     if (!dreamAscii) return;
     const lineH = parseFloat(getComputedStyle(dreamAscii).lineHeight) || 20;
@@ -189,37 +91,12 @@
   window.addEventListener('resize', updateDreamRows);
   window.addEventListener('load', updateDreamRows);
   if (dreamAscii) new IntersectionObserver(([e]) => { dreamVisible = e.isIntersecting; }).observe(dreamAscii);
+  KY.initAscii($('#ascii-bg'), {
+    extraRows: () => (dreamVisible ? dreamRows : 0),
+    onFrame: lines => { if (dreamVisible) dreamAscii.textContent = lines.slice(0, dreamRows).join('\n'); }
+  });
 
-  function drawAscii() {
-    if (!document.hidden) {
-      mouseX += (targetX - mouseX) * 0.05;
-      mouseY += (targetY - mouseY) * 0.05;
-      const W = innerWidth, H = innerHeight;
-      const totalRows = dreamVisible ? Math.max(ROWS, dreamRows) : ROWS;
-      const lines = [];
-      for (let y = 0; y < totalRows; y++) {
-        let row = '';
-        for (let x = 0; x < COLS; x++) {
-          const sx = (x / COLS) * W, sy = ((y % ROWS) / ROWS) * H;
-          const dx = sx - mouseX, dy = sy - mouseY;
-          const mouseDist = Math.max(0, 300 - Math.sqrt(dx * dx + dy * dy)) / 300;
-          const centerDist = Math.sqrt((sx - W / 2) ** 2 + (sy - H / 2) ** 2);
-          const ambientRipple = Math.sin(centerDist * 0.005 - asciiTime * 1.5 + y * 0.04) * 0.5;
-          const planarWave = Math.cos(x * 0.1 + asciiTime) * Math.sin(y * 0.1 - asciiTime);
-          const val = Math.max(0, Math.min(0.99, 0.5 + ambientRipple * 0.5 + planarWave * 0.3 + mouseDist * 0.5));
-          row += ASCII_CHARS[Math.floor(val * ASCII_CHARS.length)];
-        }
-        lines.push(row);
-      }
-      asciiBg.textContent = lines.slice(0, ROWS).join('\n');
-      if (dreamAscii && dreamVisible) dreamAscii.textContent = lines.slice(0, dreamRows).join('\n');
-      asciiTime += 0.015;
-    }
-    setTimeout(() => requestAnimationFrame(drawAscii), 75);
-  }
-  drawAscii();
-
-  // Dreamscape title font (1.8 MB) loads only when the section gets close.
+  // Dreamscape title font is applied only when the section gets close.
   const dream = $('.dream');
   if (dream) {
     new IntersectionObserver((entries, obs) => {
@@ -620,8 +497,5 @@
     if (vizVisible && !audio.paused) startViz();
   }).observe(canvas);
 
-  /* ------------------------------------------------------------------
-     12. Footer year
-     ------------------------------------------------------------------ */
-  $('#year').textContent = new Date().getFullYear();
+  KY.initYear();
 })();

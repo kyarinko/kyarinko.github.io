@@ -8,7 +8,7 @@
 
 .store-page .topbar-inner { flex-wrap: wrap; height: auto; min-height: var(--bar-h); }
 .store-nav { order: 3; flex-basis: 100%; display: flex; gap: 6px; overflow-x: auto; padding: 0 0 8px; scrollbar-width: none; }
-.store-nav a { flex: none; padding: 6px 10px; border: 2px solid #fff; font-family: var(--font-ensemble); font-size: 0.75rem; font-weight: 700; text-decoration: none; }
+.store-nav a { flex: none; padding: 6px 10px; border: 2px solid #fff; font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; text-decoration: none; }
 .back-link { display: inline-block; margin-bottom: 16px; padding: 6px 10px; border: 2px solid #fff; background: rgba(0, 8, 255, 0.6); font-family: var(--font-ensemble); font-size: 0.78rem; font-weight: 700; text-decoration: none; transition: background-color 0.2s, color 0.2s; }
 .back-link:hover { background: #fff; color: var(--blue); }
 
@@ -27,16 +27,16 @@
   mask: conic-gradient(from -45deg at bottom, #0000, #000 1deg 89deg, #0000 90deg) 50% / calc(2 * var(--zig)) 100%;
 }
 .receipt-head { text-align: center; font-weight: 700; font-size: 1rem; letter-spacing: 0.12em; padding-bottom: 10px; border-bottom: 1px dashed #999; }
-.receipt-head small { font-weight: 300; font-size: 0.75rem; letter-spacing: 0.04em; }
+.receipt-head small { font-weight: 300; font-size: var(--fs-label); letter-spacing: 0.04em; }
 .receipt-lines { margin: 10px 0 0; display: grid; gap: 6px; }
 .receipt-lines div { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
 .receipt-lines dt { color: #555; }
 .receipt-lines dd { margin: 0; font-weight: 700; text-align: right; }
 .receipt-total { display: flex; justify-content: space-between; margin-top: 12px; padding: 8px 0; border-block: 2px solid #111; font-weight: 700; font-size: 1rem; letter-spacing: 0.1em; }
 .barcode { height: 44px; margin-top: 12px; background: repeating-linear-gradient(90deg, #111 0 2px, transparent 2px 4px, #111 4px 5px, transparent 5px 8px, #111 8px 11px, transparent 11px 12px, #111 12px 13px, transparent 13px 16px); }
-.receipt-foot { margin-top: 8px; text-align: center; font-size: 0.75rem; color: #555; }
+.receipt-foot { margin-top: 8px; text-align: center; font-size: var(--fs-label); color: #555; }
 
-.status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 1px 8px; border: 2px solid currentColor; font-family: var(--font-ensemble); font-weight: 700; font-size: 0.75rem; letter-spacing: 0.08em; }
+.status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 1px 8px; border: 2px solid currentColor; font-family: var(--font-ensemble); font-weight: 700; font-size: var(--fs-label); letter-spacing: 0.08em; }
 .status-pill::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: #18c964; box-shadow: 0 0 0 2px rgba(24, 201, 100, 0.25); animation: pulse 1.6s ease-in-out infinite; }
 .status-pill[data-status="closed"]::before { background: #ff4d4d; box-shadow: 0 0 0 2px rgba(255, 77, 77, 0.25); animation: none; }
 @keyframes pulse { 50% { opacity: 0.35; } }
@@ -56,12 +56,12 @@
 .shop-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-top: 6px; }
 .shop-icon { display: grid; place-items: center; width: 44px; height: 44px; border: 2px solid currentColor; }
 .shop-icon svg { width: 26px; height: 26px; }
-.shop-kind { font-family: var(--font-ensemble); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; background: var(--accent); color: #111; }
+.shop-kind { font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 2px 8px; background: var(--accent); color: #111; }
 .shop-name { margin-top: 8px; font-family: var(--font-hero); font-size: 1.6rem; font-weight: 700; line-height: 1.1; }
-.shop-url { font-family: var(--font-ensemble); font-size: 0.75rem; opacity: 0.75; overflow-wrap: anywhere; }
+.shop-url { font-family: var(--font-ensemble); font-size: var(--fs-label); opacity: 0.75; overflow-wrap: anywhere; }
 .shop-desc { margin-top: 6px; font-size: 0.95rem; line-height: 1.7; }
 .shop .chips { margin-top: 6px; }
-.shop .chip { border-color: currentColor; background: transparent; font-size: 0.75rem; }
+.shop .chip { border-color: currentColor; background: transparent; font-size: var(--fs-label); }
 .shop-go { margin-top: auto; padding-top: 12px; border-top: 1px dashed currentColor; font-family: var(--font-hero); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; font-size: 0.85rem; display: block; }
 
 /* ---------- Products ---------- */
@@ -69,7 +69,7 @@
 .filter { padding: 6px 14px; border: 2px solid #fff; font-family: var(--font-ensemble); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.04em; transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s var(--ease); }
 .filter:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0 var(--white-50); }
 .filter[aria-pressed="true"] { background: #fff; color: var(--blue); }
-.filter-count { margin-left: auto; font-family: var(--font-ensemble); font-size: 0.75rem; opacity: 0.8; }
+.filter-count { margin-left: auto; font-family: var(--font-ensemble); font-size: var(--fs-label); opacity: 0.8; }
 
 .products { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); gap: 18px; }
 .product { display: flex; flex-direction: column; border: 2px solid #fff; background: rgba(255, 255, 255, 0.06); transition: transform 0.3s var(--ease), box-shadow 0.3s; }
@@ -80,7 +80,7 @@
 .cover, .cover-img { position: relative; aspect-ratio: 4 / 3; overflow: hidden; border-bottom: 2px solid #fff; background: #0006d0; }
 .cover-img { width: 100%; object-fit: cover; }
 .cover-label { position: absolute; left: 14px; bottom: 12px; font-family: var(--font-music); font-size: 2.6rem; line-height: 0.9; letter-spacing: 0.02em; text-shadow: 3px 3px 0 rgba(0, 0, 0, 0.25); }
-.ribbon { position: absolute; top: 12px; right: -34px; z-index: 1; width: 130px; padding: 2px 0; rotate: 45deg; background: #fff; color: var(--blue); text-align: center; font-family: var(--font-ensemble); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.16em; }
+.ribbon { position: absolute; top: 12px; right: -34px; z-index: 1; width: 130px; padding: 2px 0; rotate: 45deg; background: #fff; color: var(--blue); text-align: center; font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.16em; }
 /* generated cover art */
 .cover--staff { background: repeating-linear-gradient(to bottom, transparent 0 22px, rgba(255, 255, 255, 0.55) 22px 24px, transparent 24px 34px) 0 30px / 100% 140px no-repeat, linear-gradient(160deg, #0b14ff, #02057a); }
 .cover--staff::after { content: "𝄞"; position: absolute; left: 12px; top: 4px; font-size: 6.4rem; line-height: 1; color: rgba(255, 255, 255, 0.85); }
@@ -97,13 +97,13 @@
 .cover--box::after { content: ""; position: absolute; right: 20%; top: 18%; width: 38%; aspect-ratio: 1; border: 4px solid #fff; rotate: 12deg; box-shadow: 10px 10px 0 rgba(255, 255, 255, 0.35); }
 
 .product-info { display: flex; flex: 1; flex-direction: column; gap: 6px; padding: 14px; }
-.product-tag { font-family: var(--font-ensemble); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; opacity: 0.8; }
+.product-tag { font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.06em; opacity: 0.8; }
 .product-name { font-family: var(--font-hero); font-size: 1.08rem; font-weight: 700; line-height: 1.35; }
 .product-desc { font-size: 0.9rem; line-height: 1.6; color: var(--white-75); }
 .product-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 12px; border-top: 1px dashed var(--white-50); }
 .price { font-family: var(--font-hero); font-size: 1.3rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
-.price small { font-size: 0.75rem; font-weight: 500; opacity: 0.8; }
-.buy { padding: 6px 12px; background: #fff; color: var(--blue); border: 2px solid #fff; font-family: var(--font-ensemble); font-size: 0.75rem; font-weight: 700; text-decoration: none; white-space: nowrap; transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s var(--ease); }
+.price small { font-size: var(--fs-label); font-weight: 500; opacity: 0.8; }
+.buy { padding: 6px 12px; background: #fff; color: var(--blue); border: 2px solid #fff; font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; text-decoration: none; white-space: nowrap; transition: background-color 0.2s, color 0.2s, box-shadow 0.2s, transform 0.2s var(--ease); }
 .buy:hover { background: var(--blue); color: #fff; transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--white-50); }
 
 /* ---------- Commissions ---------- */
@@ -111,16 +111,16 @@
 .tiers { display: grid; gap: 16px; }
 .tier { position: relative; display: flex; flex-direction: column; gap: 8px; padding: 18px; border: 2px solid var(--blue); background: rgba(0, 8, 255, 0.03); }
 .tier--featured { background: var(--blue); color: #fff; box-shadow: 10px 10px 0 rgba(0, 8, 255, 0.2); }
-.tier-code { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-ensemble); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.12em; }
+.tier-code { display: flex; justify-content: space-between; align-items: center; font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.12em; }
 .tier-badge { padding: 1px 8px; background: #fff; color: var(--blue); letter-spacing: 0.06em; }
 .tier-name { font-family: var(--font-hero); font-size: 1.35rem; font-weight: 700; line-height: 1.25; }
 .tier-price { display: flex; align-items: baseline; gap: 6px; padding-bottom: 10px; border-bottom: 2px dashed currentColor; }
 .tier-price .price { font-size: 2rem; }
-.tier-price small { font-family: var(--font-ensemble); font-size: 0.75rem; }
+.tier-price small { font-family: var(--font-ensemble); font-size: var(--fs-label); }
 .tier-list { display: grid; gap: 6px; font-size: 0.92rem; }
 .tier-list li { position: relative; padding-left: 22px; }
 .tier-list li::before { content: "✓"; position: absolute; left: 0; font-weight: 700; }
-.tier-for { margin-top: auto; padding-top: 10px; font-family: var(--font-ensemble); font-size: 0.75rem; opacity: 0.8; }
+.tier-for { margin-top: auto; padding-top: 10px; font-family: var(--font-ensemble); font-size: var(--fs-label); opacity: 0.8; }
 
 .addons { margin-top: 28px; padding: 16px 18px; border: 2px solid var(--blue); }
 .addons ul { display: grid; gap: 8px; margin-top: 10px; }
