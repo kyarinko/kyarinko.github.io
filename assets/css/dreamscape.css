@@ -116,6 +116,13 @@ html[lang="ja"] .d-lang-opt[data-l="ja"], html[lang="en"] .d-lang-opt[data-l="en
 .d-card .slot { aspect-ratio: 3 / 4; }
 .d-card h3 { font-family: var(--mono); font-size: 0.95rem; color: var(--ice); }
 
+/* Under construction */
+.d-wip { text-align: center; padding-block: 48px; }
+.d-wip-title { position: relative; display: inline-block; margin-bottom: 14px; font-family: var(--mono); font-size: clamp(1.3rem, 5.5vw, 2.4rem); letter-spacing: 0.12em; color: var(--ice); }
+.d-wip-title::after { content: "_"; animation: caret 1s steps(1) infinite; }
+@keyframes caret { 50% { opacity: 0; } }
+.d-wip p { color: rgba(255, 255, 255, 0.75); }
+
 .d-end { display: flex; justify-content: center; margin-top: 64px; }
 .d-btn {
   padding: 14px 26px; border: 1px solid #fff; background: rgba(0, 0, 0, 0.8); font-family: var(--mono); font-size: 0.9rem; text-decoration: none;
@@ -142,6 +149,6 @@ html[lang="ja"] .d-lang-opt[data-l="ja"], html[lang="en"] .d-lang-opt[data-l="en
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .d-title::before, .d-title::after, .d-scroll { animation: none; }
+  .d-title::before, .d-title::after, .d-scroll, .d-wip-title::after { animation: none; }
   .js .d-panel { opacity: 1; translate: none; }
 }

@@ -353,7 +353,7 @@ body.menu-open .topnav { opacity: 1; visibility: visible; transition-delay: 0s; 
   position: absolute; left: 0; right: 0; top: 140px; bottom: 0; z-index: 0; margin: 0; overflow: hidden; display: flex; justify-content: center;
   font-family: var(--font-ensemble); font-size: clamp(12px, 1.05vw, 20px); line-height: 1.15; color: #242424; white-space: pre; pointer-events: none;
 }
-.dream-title, .dream-intro, .dream-entries, .dream-trailer { position: relative; z-index: 1; }
+.dream-title, .dream-intro, .dream-trailer { position: relative; z-index: 1; }
 .dream-title { margin: 12px 0 28px; text-align: center; font-size: clamp(1.6rem, 8vw, 3.4rem); font-weight: 400; line-height: 1.15; letter-spacing: 0.04em; white-space: nowrap; }
 .dream.is-near .dream-title { font-family: var(--font-dream-title); }
 .dream-intro {
@@ -362,11 +362,6 @@ body.menu-open .topnav { opacity: 1; visibility: visible; transition-delay: 0s; 
   transition: transform 0.6s var(--ease);
 }
 .dream-intro p + p { margin-top: 1.2em; }
-.dream-entries { display: grid; gap: 28px; margin-top: 48px; }
-.dream-entry { display: grid; gap: 14px; }
-.dream-entry figure { border: 1px solid rgba(255, 255, 255, 0.35); background: #0d0d0d; }
-.dream-entry img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
-.dream-entry p { font-family: var(--font-dream); line-height: 1.85; }
 .dream-trailer { max-width: 900px; margin: 64px auto 0; transition: transform 0.6s var(--ease); }
 .dream-more { position: relative; z-index: 1; display: flex; justify-content: center; margin-top: 44px; }
 .btn--dream { min-height: 56px; padding: 0 34px; border-color: #fff; font-size: 1.05rem; }
@@ -537,8 +532,7 @@ dialog[open] .window, dialog[open] .lightbox-figure { animation: pop 0.25s var(-
   .dream-ascii { top: 200px; }
   .dream-title { font-size: clamp(3.6rem, 5.6vw, 5.8rem); margin-bottom: 44px; }
   .dream-intro { padding: 32px 42px; font-size: 1.12rem; }
-  .dream-entry { grid-template-columns: 7fr 5fr; align-items: center; gap: 36px; }
-  .dream-body { padding: 72px 64px 72px; }
+    .dream-body { padding: 72px 64px 72px; }
   .dream-trailer { margin-top: 110px; }
   .dream-more { margin-top: 56px; }
 
