@@ -1,0 +1,39 @@
+/* links.html + legal.html (small pages; base styles come from style.css) */
+.links-main, .legal-main { width: min(100% - 2 * var(--gutter), 480px); margin-inline: auto; padding: calc(16px + env(safe-area-inset-top, 0px)) 0 calc(24px + env(safe-area-inset-bottom, 0px)); }
+.legal-main { width: min(100% - 2 * var(--gutter), 820px); }
+.links-top { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-bottom: 16px; }
+.legal-main .links-top { justify-content: space-between; }
+.back-link { padding: 6px 10px; border: 2px solid #fff; background: rgba(0, 8, 255, 0.6); font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; text-decoration: none; }
+.back-link:hover { background: #fff; color: var(--blue); }
+
+.links-body { display: grid; justify-items: center; text-align: center; }
+.links-avatar { width: 112px; height: 112px; padding: 4px; border: 3px solid #fff; background: var(--white-10); object-fit: cover; }
+.links-name { margin-top: 12px; font-family: var(--font-hero); font-size: 2.4rem; font-weight: 700; line-height: 1; }
+.links-bio { margin-top: 8px; color: var(--white-75); line-height: 1.6; }
+.links-list { display: grid; gap: 10px; width: 100%; margin-top: 22px; text-align: left; }
+.link-btn {
+  display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; column-gap: 14px; align-items: center; min-height: 64px; padding: 10px 16px;
+  border: 2px solid #fff; background: rgba(255, 255, 255, 0.08); text-decoration: none;
+  transition: background-color 0.2s, color 0.2s, transform 0.25s var(--ease), box-shadow 0.25s;
+}
+.link-btn:hover { background: #fff; color: var(--blue); transform: translate(-2px, -2px); box-shadow: 5px 5px 0 var(--white-50); }
+.link-btn svg { width: 28px; height: 28px; }
+.link-text { display: grid; }
+.link-text b { font-family: var(--font-hero); font-size: 1.08rem; line-height: 1.3; }
+.link-text small { font-family: var(--font-ensemble); font-size: var(--fs-label); opacity: 0.85; overflow-wrap: anywhere; }
+.link-btn i { font-style: normal; }
+.links-home { margin-top: 20px; font-family: var(--font-ensemble); font-size: 0.85rem; }
+.links-home a { text-underline-offset: 3px; }
+.links-foot { margin-top: 18px; text-align: center; font-family: var(--font-ensemble); font-size: var(--fs-label); opacity: 0.8; }
+
+.legal-title { font-family: var(--font-hero); font-size: clamp(1.4rem, 5.5vw, 2rem); font-weight: 700; line-height: 1.3; }
+.legal-title small { display: block; font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 500; }
+.legal-table { margin: 20px 0 0; border-top: 2px solid var(--blue); }
+.legal-table div { display: grid; gap: 4px; padding: 12px 0; border-bottom: 1px dashed rgba(0, 8, 255, 0.4); }
+.legal-table dt { font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.04em; }
+.legal-table dd { margin: 0; line-height: 1.7; }
+.legal-table a { font-weight: 700; text-underline-offset: 3px; }
+
+@media (min-width: 640px) {
+  .legal-table div { grid-template-columns: 220px 1fr; gap: 16px; }
+}
