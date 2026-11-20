@@ -156,13 +156,15 @@
         }
       }
     };
-    new ResizeObserver(([entry]) => {
+    const ro = new ResizeObserver(([entry]) => {
       const dpr = window.devicePixelRatio || 1;
       const w = entry.contentRect.width * dpr, h = entry.contentRect.height * dpr;
       const dev = entry.devicePixelContentBoxSize && entry.devicePixelContentBoxSize[0];
       const exact = dev && Math.abs(dev.inlineSize - w) < 2; // exact device size when the browser reports it
       draw(exact ? dev.inlineSize : Math.round(w), exact ? dev.blockSize : Math.round(h));
-    }).observe(canvas, { box: 'device-pixel-content-box' });
+    });
+    // Safari doesn't support this box and throws, which used to stop the whole script
+    try { ro.observe(canvas, { box: 'device-pixel-content-box' }); } catch (e) { ro.observe(canvas); }
   });
 
   /* ------------------------------------------------------------------
