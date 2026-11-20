@@ -3,8 +3,6 @@
 .legal-main { width: min(100% - 2 * var(--gutter), 820px); }
 .links-top { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-bottom: 16px; }
 .legal-main .links-top { justify-content: space-between; }
-.back-link { padding: 6px 10px; border: 2px solid #fff; background: rgba(0, 8, 255, 0.6); font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; text-decoration: none; }
-.back-link:hover { background: #fff; color: var(--blue); }
 
 .links-body { display: grid; justify-items: center; text-align: center; }
 .links-avatar { width: 112px; height: 112px; padding: 4px; border: 3px solid #fff; background: var(--white-10); object-fit: cover; }

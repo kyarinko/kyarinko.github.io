@@ -63,7 +63,9 @@
   menuBtn.addEventListener('click', () => setMenu(menuBtn.getAttribute('aria-expanded') !== 'true'));
   topnav.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('menu-open')) { setMenu(false); menuBtn.focus(); } });
-  window.matchMedia('(min-width: 1025px) and (hover: hover) and (pointer: fine)').addEventListener('change', () => setMenu(false));
+  const desktopMq = window.matchMedia('(min-width: 1025px) and (hover: hover) and (pointer: fine)');
+  if (desktopMq.addEventListener) desktopMq.addEventListener('change', () => setMenu(false));
+  else desktopMq.addListener(() => setMenu(false)); // iOS 13 and older Safari
 
   const navLinks = $$('.topnav a');
   const sectionObserver = new IntersectionObserver(entries => {
@@ -273,6 +275,7 @@
   });
   let swipeX = null, swiped = false; // swipe left/right on touch screens
   lightbox.addEventListener('pointerdown', e => { swipeX = e.clientX; });
+  lightbox.addEventListener('pointercancel', () => { swipeX = null; });
   lightbox.addEventListener('pointerup', e => {
     if (swipeX === null || lbItems.length < 2) return;
     const dx = e.clientX - swipeX;

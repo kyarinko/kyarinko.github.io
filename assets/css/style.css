@@ -415,8 +415,6 @@ body.menu-open .topnav { opacity: 1; visibility: visible; transition-delay: 0s; 
 @keyframes marqueeLoop { to { transform: translateX(-50%); } }
 .contact-body { text-align: center; }
 .contact-title { font-family: var(--font-hero); font-size: clamp(1.6rem, 7vw, 2.6rem); font-weight: 700; }
-.email-link { display: inline-block; margin-top: 14px; font-family: var(--font-hero); font-size: clamp(0.95rem, 4.2vw, 1.5rem); font-weight: 500; letter-spacing: 1px; text-decoration: none; border-bottom: 2px solid var(--white-50); overflow-wrap: anywhere; transition: border-color 0.2s; }
-.email-link:hover { border-color: #fff; }
 .socials { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 28px; text-align: left; }
 .social {
   position: relative; display: flex; flex-direction: column; gap: 2px; padding: 14px; border: 2px solid #fff; text-decoration: none;
@@ -441,6 +439,10 @@ body.menu-open .topnav { opacity: 1; visibility: visible; transition-delay: 0s; 
 .teaser-shop small { font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; opacity: 0.8; }
 .teaser-shop strong { font-family: var(--font-hero); font-size: 1.15rem; line-height: 1.25; }
 .teaser-shop i { position: absolute; top: 12px; right: 12px; font-style: normal; }
+
+/* ---------- Back link (store, links, legal) ---------- */
+.back-link { display: inline-block; padding: 6px 10px; border: 2px solid #fff; background: rgba(0, 8, 255, 0.6); font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; text-decoration: none; transition: background-color 0.2s, color 0.2s; }
+.back-link:hover { background: #fff; color: var(--blue); }
 
 /* ---------- Footer ---------- */
 .site-footer { padding: 28px 0 calc(28px + env(safe-area-inset-bottom, 0px)); border-top: 1px solid var(--white-20); font-family: var(--font-ensemble); font-size: 0.8rem; }
@@ -468,7 +470,7 @@ dialog[open] .window, dialog[open] .lightbox-figure { animation: pop 0.25s var(-
 .lightbox-top { display: flex; align-items: center; justify-content: space-between; font-family: var(--font-ensemble); font-size: 0.8rem; }
 .lightbox-top .dialog-close { width: 40px; height: 40px; }
 .lightbox-top .dialog-close:hover { background: #fff; color: var(--blue); }
-.lightbox-figure { position: relative; display: grid; place-items: center; min-height: 0; }
+.lightbox-figure { position: relative; display: grid; place-items: center; min-height: 0; touch-action: pan-y; } /* horizontal swipes go to the photo switcher */
 .lightbox-figure img { max-width: 100%; max-height: calc(100dvh - 170px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px)); object-fit: contain; border: 4px solid #fff; box-shadow: 0 0 20px rgba(0, 0, 0, 0.5); }
 .lightbox-cap { max-width: 70ch; margin: 0 auto; text-align: center; font-size: 0.9rem; }
 .lightbox-nav { position: absolute; top: 50%; display: grid; place-items: center; width: 44px; height: 44px; margin-top: -22px; border: 2px solid #fff; background: var(--blue); }

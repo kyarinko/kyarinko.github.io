@@ -9,8 +9,7 @@
 .store-page .topbar-inner { flex-wrap: wrap; height: auto; min-height: var(--bar-h); }
 .store-nav { order: 3; flex-basis: 100%; display: flex; gap: 6px; overflow-x: auto; padding: 0 0 8px; scrollbar-width: none; }
 .store-nav a { flex: none; padding: 6px 10px; border: 2px solid #fff; font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; text-decoration: none; }
-.back-link { display: inline-block; margin-bottom: 16px; padding: 6px 10px; border: 2px solid #fff; background: rgba(0, 8, 255, 0.6); font-family: var(--font-ensemble); font-size: 0.78rem; font-weight: 700; text-decoration: none; transition: background-color 0.2s, color 0.2s; }
-.back-link:hover { background: #fff; color: var(--blue); }
+.store-hero .back-link { margin-bottom: 16px; }
 
 /* ---------- Hero ---------- */
 .hero-body { display: grid; gap: 28px; }

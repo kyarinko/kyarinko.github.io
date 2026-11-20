@@ -60,8 +60,6 @@ html[lang="ja"] .d-lang-opt[data-l="ja"], html[lang="en"] .d-lang-opt[data-l="en
 .d-hero { min-height: calc(100svh - 70px); display: grid; place-content: center; justify-items: center; gap: 22px; text-align: center; padding: 40px 0; }
 .d-kicker { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.14em; color: var(--ice); text-shadow: 0 0 8px rgba(143, 211, 200, 0.6); }
 .d-sub { max-width: 34em; padding: 14px 18px; background: rgba(0, 0, 0, 0.78); border: 1px solid rgba(255, 255, 255, 0.3); font-size: 1rem; }
-.d-scroll { font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.12em; text-decoration: none; padding-block: 4px; animation: bob 2s ease-in-out infinite; }
-@keyframes bob { 50% { transform: translateY(6px); } }
 
 /* Glitch title: two coloured copies flicker and slice */
 .d-title {
@@ -94,27 +92,6 @@ html[lang="ja"] .d-lang-opt[data-l="ja"], html[lang="en"] .d-lang-opt[data-l="en
   box-shadow: -3px 0 0 rgba(231, 163, 214, 0.45), 3px 0 0 rgba(143, 211, 200, 0.45), 0 18px 40px rgba(0, 0, 0, 0.6);
 }
 .d-panel p + p { margin-top: 1em; }
-.d-head {
-  display: flex; align-items: baseline; gap: 12px; margin-bottom: 18px; padding-bottom: 10px;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.3);
-  font-family: var(--mono); font-size: 1.05rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-}
-.d-num { color: var(--pink); }
-.placeholder { color: rgba(255, 255, 255, 0.55); }
-
-.d-video { aspect-ratio: 16 / 9; border: 1px solid rgba(255, 255, 255, 0.4); background: #000; }
-.d-video iframe { display: block; width: 100%; height: 100%; border: 0; }
-
-.slot {
-  display: grid; place-items: center; aspect-ratio: 16 / 9; border: 1px dashed rgba(255, 255, 255, 0.35);
-  background: repeating-linear-gradient(45deg, rgba(178, 111, 199, 0.12) 0 6px, transparent 6px 14px);
-  font-family: var(--mono); font-size: 0.75rem; letter-spacing: 0.14em; color: rgba(255, 255, 255, 0.5);
-}
-.d-split { display: grid; gap: 18px; align-items: center; }
-.d-cards { display: grid; gap: 16px; }
-.d-card { display: grid; gap: 10px; padding: 12px; border: 1px solid rgba(255, 255, 255, 0.25); background: rgba(255, 255, 255, 0.03); }
-.d-card .slot { aspect-ratio: 3 / 4; }
-.d-card h3 { font-family: var(--mono); font-size: 0.95rem; color: var(--ice); }
 
 /* Under construction */
 .d-wip { text-align: center; padding-block: 48px; }
@@ -140,15 +117,11 @@ html[lang="ja"] .d-lang-opt[data-l="ja"], html[lang="en"] .d-lang-opt[data-l="en
 @media (min-width: 1025px) and (hover: hover) and (pointer: fine) {
   .d-top { padding-inline: 32px; }
   .d-panel { margin-top: 88px; padding: 40px 48px 44px; }
-  .d-head { font-size: 1.25rem; }
   .d-panel p { font-size: 1.08rem; }
-  .d-split { grid-template-columns: 1.1fr 1fr; gap: 36px; }
-  .d-split--rev .slot { order: 2; }
-  .d-cards { grid-template-columns: repeat(3, 1fr); gap: 20px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .d-title::before, .d-title::after, .d-scroll, .d-wip-title::after { animation: none; }
+  .d-title::before, .d-title::after, .d-wip-title::after { animation: none; }
   .js .d-panel { opacity: 1; translate: none; }
 }
