@@ -14,7 +14,7 @@
 
 /* ---------- Hero ---------- */
 .hero-body { display: grid; gap: 28px; }
-.store-title { font-family: var(--font-music); font-size: clamp(5rem, 30vw, 11rem); font-weight: 400; line-height: 0.85; margin-top: 6px; }
+.store-title { font-family: var(--font-music); font-size: clamp(4.5rem, 26vw, 11rem); font-weight: 400; line-height: 0.85; margin-top: 6px; }
 .hero-lead { max-width: 46ch; margin-top: 14px; font-size: 1.05rem; line-height: 1.8; color: var(--white-75); }
 
 /* receipt */
@@ -43,6 +43,39 @@
 
 .store-marquee { margin: 8px 0 0; }
 .store-marquee span { font-family: var(--font-music); font-size: clamp(2.6rem, 9vw, 6rem); -webkit-text-stroke: 1.5px #fff; letter-spacing: 0.02em; }
+
+/* ---------- Listen first (preview buttons, assets/js/player.js) ---------- */
+.listen { display: grid; gap: 6px; margin-top: 14px; }
+.preview {
+  display: grid; grid-template-columns: 40px minmax(0, 1fr); column-gap: 12px; row-gap: 0; align-items: center; width: 100%; padding: 6px 12px 6px 6px;
+  border: 2px solid #fff; background: rgba(255, 255, 255, 0.08); text-align: left;
+  transition: background-color 0.2s, color 0.2s, transform 0.2s var(--ease), box-shadow 0.2s;
+}
+.preview:hover { transform: translate(-2px, -2px); box-shadow: 4px 4px 0 var(--white-50); }
+.preview svg { grid-row: 1 / 3; width: 40px; height: 40px; padding: 13px; background: #fff; color: var(--blue); }
+.preview .i-pause, .preview.is-playing .i-play { display: none; }
+.preview.is-playing .i-pause { display: block; }
+.preview.is-playing { background: #fff; color: var(--blue); }
+.preview.is-playing svg { background: var(--blue); color: #fff; }
+.preview-title { font-family: var(--font-hero); font-weight: 700; line-height: 1.3; }
+.preview small { font-family: var(--font-ensemble); font-size: var(--fs-label); opacity: 0.85; }
+
+/* ---------- Music packs (coming soon) ---------- */
+.packs { display: grid; gap: 18px; }
+.pack { display: flex; flex-direction: column; border: 2px solid #fff; background: rgba(255, 255, 255, 0.06); }
+.pack-cover { display: grid; place-items: end start; aspect-ratio: 16 / 9; padding: 14px; border-bottom: 2px dashed var(--white-50); background: rgba(255, 255, 255, 0.04); } /* placeholder until real covers */
+.pack-cover span { font-family: var(--font-music); font-size: 2.4rem; line-height: 0.9; opacity: 0.55; }
+.pack-info { display: flex; flex: 1; flex-direction: column; gap: 8px; padding: 14px; }
+.pack-soon { align-self: start; padding: 1px 8px; background: #fff; color: var(--blue); font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; letter-spacing: 0.08em; }
+.pack-name { font-family: var(--font-hero); font-size: 1.15rem; font-weight: 700; line-height: 1.3; }
+.pack-contents { font-size: 0.92rem; color: var(--white-75); }
+.pack-badges { display: flex; flex-wrap: wrap; gap: 6px; }
+.pack-badges li { padding: 2px 8px; border: 1px solid var(--white-50); font-family: var(--font-ensemble); font-size: var(--fs-label); font-weight: 700; }
+.pack-buy { display: flex; flex-wrap: wrap; gap: 8px; margin-top: auto; padding-top: 10px; border-top: 1px dashed var(--white-50); }
+.btn--sm { min-height: 36px; padding: 0 12px; font-family: var(--font-ensemble); font-size: var(--fs-label); letter-spacing: 0.04em; }
+.btn:disabled { opacity: 0.7; border-style: dashed; cursor: not-allowed; } /* still readable, clearly inactive */
+.btn:disabled:hover { color: inherit; box-shadow: none; transform: none; }
+.btn:disabled::before { transform: scaleX(0); }
 
 /* ---------- Storefronts ---------- */
 .shops { display: grid; gap: 16px; }
@@ -118,6 +151,9 @@
   .store-nav a:hover { background: #fff; color: var(--blue); }
   .hero-body { grid-template-columns: 1fr 340px; align-items: center; column-gap: 48px; }
   .shops { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+  .packs { grid-template-columns: repeat(3, 1fr); gap: 20px; }
+  .listen { grid-template-columns: 1fr 1fr; }
+  .listen .mono-label { grid-column: 1 / -1; }
   .menu { grid-template-columns: 1fr 1fr; align-items: start; gap: 20px; }
   .menu-group:nth-child(2) { grid-row: span 2; }
   .steps { grid-template-columns: repeat(4, 1fr); }
@@ -126,7 +162,7 @@
 }
 
 @media (min-width: 640px) and (max-width: 1024px), (min-width: 640px) and (hover: none) {
-  .shops { grid-template-columns: repeat(2, 1fr); }
+  .shops, .packs { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (prefers-reduced-motion: reduce) {
