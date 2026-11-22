@@ -29,7 +29,10 @@
     });
   });
 
-  audio.addEventListener('play', () => { if (current) mark(current, true); }); // state follows real playback (a src swap can fire a stale pause)
+  audio.addEventListener('play', () => {
+    if (current) mark(current, true);
+    document.querySelectorAll('audio, video').forEach(m => { if (m !== audio) m.pause(); }); // one sound at a time
+  }); // state follows real playback (a src swap can fire a stale pause)
   audio.addEventListener('pause', () => { if (current) mark(current, false); });
   audio.addEventListener('ended', () => { if (current) mark(current, false); });
   // any other <audio>/<video> on the page starting stops the preview

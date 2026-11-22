@@ -35,11 +35,14 @@
 <!-- fonts load without blocking the first paint (text shows in fallback fonts for a moment) -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;500;700&family=Manrope:wght@400;700&family=Space+Grotesk:wght@500;700&family=Syne:wght@800&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;500;700&family=Manrope:wght@400;700&family=Space+Grotesk:wght@500;700&family=Syne:wght@800&display=swap"></noscript>
-<link rel="stylesheet" href="assets/css/style.css?v=17">
-<link rel="stylesheet" href="assets/css/store.css?v=10">
-<script src="assets/js/common.js?v=1" defer></script>
+<!-- title fonts: each section title has its own face; text= downloads only the letters in those titles
+     (if you change a title, add any new letters here or they show in a fallback font) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bungee&amp;family=M+PLUS+Rounded+1c:wght@800&amp;family=Righteous&amp;family=Silkscreen:wght@700&amp;family=Unbounded:wght@800&amp;display=swap&amp;text=%20%26ACEFIKMNOPRSTYeinoqstu%E3%81%84%E3%81%8A%E3%81%8D%E3%81%94%E3%81%9B%E3%82%83%E3%82%8A%E3%82%8F%E3%83%BB%E3%83%BC%E4%BE%9D%E5%90%88%E5%95%8F%E9%A0%BC" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="assets/css/style.css?v=18">
+<link rel="stylesheet" href="assets/css/store.css?v=11">
+<script src="assets/js/common.js?v=2" defer></script>
 <script src="assets/js/store.js?v=4" defer></script>
-<script src="assets/js/player.js?v=2" defer></script>
+<script src="assets/js/player.js?v=3" defer></script>
 </head>
 <body class="store-page">
 <!--
@@ -85,7 +88,7 @@
         <div class="window-body hero-body">
           <div class="hero-copy">
             <p class="mono-label"><span lang="ja">ストア ＆ コミッション</span><span lang="en">Shop &amp; commissions</span></p>
-            <h1 class="store-title wave">STORE</h1>
+            <h1 class="store-title title-store wave">STORE</h1>
             <p class="hero-lead">
               <span lang="ja">楽譜・音源・メンバーシップ、そして作曲・編曲のご依頼。各プラットフォームの窓口をここにまとめました。</span>
               <span lang="en">Scores, audio, memberships and custom music commissions — every storefront, gathered in one place.</span>
@@ -130,10 +133,10 @@
   <section class="section" id="commissions" aria-labelledby="cm-title">
     <div class="container">
       <div class="window window--light reveal">
-        <div class="window-bar"><span>01 // <span lang="ja">依頼メニュー</span><span lang="en">commission menu</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span><span lang="ja">依頼メニュー</span><span lang="en">commission menu</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body">
           <div class="section-head section-head--row">
-            <h2 class="title-music wave" id="cm-title">COMMISSIONS</h2>
+            <h2 class="title-commissions wave" id="cm-title">COMMISSIONS</h2>
             <p class="commission-status">
               <span class="status-pill" data-status="open"><span lang="ja">受付中</span><span lang="en">OPEN</span></span>
               <span class="mono-label"><span lang="ja">残り枠</span><span lang="en">Slots left</span> 02 / 03</span>
@@ -192,10 +195,10 @@
   <section class="section" id="packs" aria-labelledby="pk-title">
     <div class="container">
       <div class="window reveal">
-        <div class="window-bar"><span>02 // <span lang="ja">音楽パック</span><span lang="en">music packs</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span><span lang="ja">音楽パック</span><span lang="en">music packs</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body">
           <div class="section-head section-head--row">
-            <h2 class="title-music wave" id="pk-title">PACKS</h2>
+            <h2 class="title-packs wave" id="pk-title">PACKS</h2>
             <p class="section-lead"><span lang="ja">配信・動画・ゲームで使えるBGMパックを準備中です。</span><span lang="en">BGM packs for streams, videos and games are on the way.</span></p>
           </div>
           <div class="packs">
@@ -265,10 +268,10 @@
   <section class="section" id="storefronts" aria-labelledby="sf-title">
     <div class="container">
       <div class="window window--light reveal">
-        <div class="window-bar"><span>03 // <span lang="ja">ストア一覧</span><span lang="en">storefronts</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span><span lang="ja">ストア一覧</span><span lang="en">storefronts</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body">
           <div class="section-head section-head--row">
-            <h2 class="title-music wave" id="sf-title">STOREFRONTS</h2>
+            <h2 class="title-storefronts wave" id="sf-title">STOREFRONTS</h2>
             <p class="section-lead">
               <span lang="ja">目的に合わせて選んでください。購入・支援・依頼はすべて各プラットフォームで安全に行えます。</span>
               <span lang="en">Pick the one that fits. Every purchase, membership and request is handled securely by each platform.</span>
@@ -336,7 +339,7 @@
   <section class="section" id="contact" aria-labelledby="ct-title">
     <div class="container">
       <div class="window reveal">
-        <div class="window-bar"><span>04 // <span lang="ja">連絡</span><span lang="en">contact</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span><span lang="ja">連絡</span><span lang="en">contact</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body contact-body">
           <h2 class="contact-title" id="ct-title"><span lang="ja">ご依頼・お問い合わせ</span><span lang="en">Requests &amp; questions</span></h2>
           <p class="contact-lead"><span lang="ja">ご依頼・ご相談はメールでお気軽にどうぞ。日本語・英語どちらでも大丈夫です。</span><span lang="en">For commissions or questions, just send an email — Japanese or English is fine.</span></p>
@@ -368,10 +371,10 @@
   <section class="section" id="faq" aria-labelledby="faq-title">
     <div class="container">
       <div class="window reveal">
-        <div class="window-bar"><span>05 // <span lang="ja">よくある質問</span><span lang="en">help</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span><span lang="ja">よくある質問</span><span lang="en">help</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body">
           <div class="section-head section-head--center">
-            <h2 class="title-club" id="faq-title">FAQ</h2>
+            <h2 class="title-faq" id="faq-title">FAQ</h2>
           </div>
           <div class="faq">
             <div class="faq-item">

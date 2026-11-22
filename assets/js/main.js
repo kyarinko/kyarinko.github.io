@@ -6,12 +6,12 @@
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
 
   /* ------------------------------------------------------------------
-     0. Loading screen (~3 s on the first visit of each browser session)
+     0. Loading screen (~1.3 s on the first visit of each browser session)
      ------------------------------------------------------------------ */
   const loader = $('.loader');
   if (loader && !root.classList.contains('loaded')) {
     const pctEl = $('.loader-pct', loader);
-    const DURATION = 3000;
+    const DURATION = 1050;
     const start = performance.now();
     let done = false;
     const finish = () => {
@@ -26,11 +26,11 @@
     const tick = now => {
       if (done) return;
       const t = Math.min(1, (now - start) / DURATION);
-      const eased = 1 - Math.pow(1 - t, 2.2); // fast start, gentle finish
+      const eased = 1 - Math.pow(1 - t, 1.8); // fast start, gentle finish
       const pct = Math.round(eased * 100);
       loader.style.setProperty('--fill', `${pct}%`);
       pctEl.textContent = `${String(pct).padStart(3, '0')}%`;
-      if (t < 1) requestAnimationFrame(tick); else setTimeout(finish, 150);
+      if (t < 1) requestAnimationFrame(tick); else setTimeout(finish, 80);
     };
     requestAnimationFrame(tick);
     loader.addEventListener('click', finish);
@@ -93,9 +93,11 @@
   window.addEventListener('resize', updateDreamRows);
   window.addEventListener('load', updateDreamRows);
   if (dreamAscii) new IntersectionObserver(([e]) => { dreamVisible = e.isIntersecting; }).observe(dreamAscii);
+  // with reduced motion the field is drawn once, so fill the Dreamscape copy on that single frame too
+  const stillAscii = () => reducedMotion.matches && dreamAscii;
   KY.initAscii($('#ascii-bg'), {
-    extraRows: () => (dreamVisible ? dreamRows : 0),
-    onFrame: lines => { if (dreamVisible) dreamAscii.textContent = lines.slice(0, dreamRows).join('\n'); }
+    extraRows: () => (dreamVisible || stillAscii() ? dreamRows : 0),
+    onFrame: lines => { if (dreamVisible || stillAscii()) dreamAscii.textContent = lines.slice(0, dreamRows).join('\n'); }
   });
 
   // Dreamscape title font is applied only when the section gets close.

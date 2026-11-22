@@ -125,3 +125,8 @@ html[lang="ja"] .d-lang-opt[data-l="ja"], html[lang="en"] .d-lang-opt[data-l="en
   .d-title::before, .d-title::after, .d-wip-title::after { animation: none; }
   .js .d-panel { opacity: 1; translate: none; }
 }
+
+/* touch screens: 44px tall tap areas */
+@media (pointer: coarse) {
+  .d-back, .d-lang { min-height: 44px; display: inline-flex; align-items: center; }
+}

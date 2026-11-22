@@ -41,9 +41,13 @@
 <!-- fonts load without blocking the first paint (text shows in fallback fonts for a moment) -->
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;500;700&family=Manrope:ital,wght@0,400;0,700;1,700&family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@700&family=Syne:wght@800&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=JetBrains+Mono:wght@300;500;700&family=Manrope:ital,wght@0,400;0,700;1,700&family=Space+Grotesk:wght@300;500;700&family=Syncopate:wght@700&family=Syne:wght@800&display=swap"></noscript>
-<link rel="stylesheet" href="assets/css/style.css?v=17">
-<script src="assets/js/common.js?v=1" defer></script>
-<script src="assets/js/main.js?v=16" defer></script>
+<!-- title fonts: each section title has its own face; text= downloads only the letters in those titles
+     (if you change a title, add any new letters here or they show in a fallback font) -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&amp;family=DotGothic16&amp;family=M+PLUS+Rounded+1c:wght@800&amp;family=Unbounded:wght@800&amp;display=swap&amp;text=%20%26%28%29AEGIKMNORSTUYacehimnoqrstuvy%C2%B7%E3%81%8D%E3%81%A8%E3%82%83%E3%82%8A%E3%82%B2%E3%83%A0%E3%83%BB%E3%83%BC%E4%BC%9A%E4%BE%9D%E5%85%88%E5%8B%95%E5%A4%A7%E5%AD%A6%E6%A5%BD%E6%B4%BB%E7%A0%94%E7%A9%B6%E7%B5%A1%E9%80%A3%E9%9F%B3%E9%A0%BC" media="print" onload="this.media='all'">
+<link rel="stylesheet" href="assets/css/style.css?v=18">
+<script src="assets/js/common.js?v=2" defer></script>
+<script src="assets/js/player.js?v=3" defer></script>
+<script src="assets/js/main.js?v=17" defer></script>
 </head>
 <body>
 <!--
@@ -56,9 +60,12 @@
 -->
 <a class="skip-link" href="#about"><span lang="ja">本文へスキップ</span><span lang="en">Skip to main content</span></a>
 
-<!-- Loading screen (~3 s, first visit per browser session; click to skip) -->
+<!-- Loading screen (~1.3 s, first visit per browser session; click to skip): three 3D rings orbit the name -->
 <div class="loader" aria-hidden="true">
-  <div class="loader-logo"><span class="loader-oval"></span><span class="loader-word">KYARIN</span></div>
+  <div class="loader-logo">
+    <span class="loader-ring loader-ring--1"></span><span class="loader-ring loader-ring--2"></span><span class="loader-ring loader-ring--3"></span>
+    <span class="loader-word">KYARIN</span>
+  </div>
   <div class="loader-meta"><span>LOADING</span><span class="loader-pct">000%</span></div>
   <div class="loader-bar"><i></i></div>
   <p class="loader-sys">kyarin.online // ver. 2026.11</p>
@@ -134,6 +141,8 @@
           <a href="#contact"><span lang="ja">連絡</span><span lang="en">Contact</span></a>
         </nav>
 
+        <!-- Listen right away: 30 s preview (assets/js/player.js) -->
+        <button type="button" class="preview preview--hero" data-src="assets/music/preview/skyandsea-preview.mp3" data-title="The Sky and Sea" aria-label="プレビュー再生：The Sky and Sea" data-label-en="Play preview: The Sky and Sea"><svg class="i-play" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 2l10 6-10 6z" fill="currentColor"/></svg><svg class="i-pause" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 2h3.5v12H3zM9.5 2H13v12H9.5z" fill="currentColor"/></svg><span class="preview-title"><span lang="ja">試聴する</span><span lang="en">Listen</span></span><small>The Sky and Sea · 0:30</small></button>
         <div class="home-links">
           <div class="icon-links">
             <a href="https://www.youtube.com/@kyarinnko" target="_blank" rel="noopener" aria-label="YouTube">
@@ -164,7 +173,7 @@
             <small>2026-03-16 // <span lang="ja">洗足ゲーム音楽研究会</span><span lang="en">Senzoku Game Music Research Society</span></small>
           </a></li>
           <li><a class="update" href="#dreamscape">
-            <b>Dreamscape CONCEPT TRAILER</b>
+            <b>DREAMSCAPE CONCEPT TRAILER</b>
             <small>Music Design Fes. 2026 // <span lang="ja">自作ゲームのコンセプト映像</span><span lang="en">concept video for my own game</span></small>
           </a></li>
           <li><a class="update" href="#works">
@@ -187,14 +196,14 @@
   <section class="section" id="about" aria-labelledby="about-title">
     <div class="container">
       <div class="window reveal">
-        <div class="window-bar"><span>00 // profile</span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span>profile</span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body about">
           <figure class="about-photo">
             <img src="assets/img/kyarin.webp" width="480" height="480" loading="lazy" alt="KYARIN・きゃりーのプロフィール写真" data-alt-en="Profile photo of KYARIN">
           </figure>
           <div class="about-text">
             <p class="mono-label"><span lang="ja">作曲・編曲・演奏</span><span lang="en">Composition · Arrangement · Performance</span></p>
-            <h2 class="about-title" id="about-title"><span class="wave">KYARIN</span> <span class="wave">きゃりー</span></h2>
+            <h2 class="about-title title-about" id="about-title"><span class="wave">KYARIN</span> <span class="wave">きゃりー</span></h2>
             <p class="about-role">
               <span lang="ja">洗足学園音楽大学、音楽・音響デザインコースの作編曲4年生</span>
               <span lang="en">4th-year Composition &amp; Arrangement student, Music &amp; Sound Design Course, Senzoku Gakuen College of Music</span>
@@ -249,7 +258,7 @@
   <section class="section" id="works" aria-labelledby="works-title">
     <div class="container">
       <div class="window window--light reveal">
-        <div class="window-bar"><span>01 // <span lang="ja">楽曲・映像</span><span lang="en">music &amp; video</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span><span lang="ja">楽曲・映像</span><span lang="en">music &amp; video</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body">
           <div class="section-head section-head--row">
             <h2 class="title-music wave" id="works-title">MEDIA</h2>
@@ -347,10 +356,10 @@
   <section class="section" id="store" aria-labelledby="store-title">
     <div class="container">
       <div class="window window--light reveal">
-        <div class="window-bar"><span>02 // <span lang="ja">ストア</span><span lang="en">store</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span><span lang="ja">ストア</span><span lang="en">store</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body store-teaser">
           <div>
-            <h2 class="title-music wave" id="store-title">STORE</h2>
+            <h2 class="title-store wave" id="store-title">STORE</h2>
             <p class="section-lead">
               <span lang="ja">楽譜・音源・メンバーシップの販売と、作曲・編曲のご依頼を受け付けています。</span>
               <span lang="en">Scores, audio and memberships — plus commissions for composition and arrangement.</span>
@@ -375,7 +384,7 @@
   <section class="section" id="dreamscape" aria-labelledby="dream-title">
     <div class="container">
       <div class="window window--dark dream reveal">
-        <div class="window-bar"><span>03 // <span lang="ja">オリジナルゲーム</span><span lang="en">original game</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span><span lang="ja">オリジナルゲーム</span><span lang="en">original game</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body dream-body">
           <pre class="dream-ascii" id="dreamscape-ascii-bg" aria-hidden="true"></pre>
           <h2 class="dream-title wave" id="dream-title">THE DREAMSCAPE</h2>
@@ -392,7 +401,7 @@
                 <img src="https://i.ytimg.com/vi/bztzJvlkSeY/hqdefault.jpg" width="480" height="360" loading="lazy" decoding="async" alt="">
                 <span class="play-badge">▶ PLAY</span>
               </div>
-              <h3 class="card-title dream-trailer-title">Dreamscape CONCEPT TRAILER</h3>
+              <h3 class="card-title dream-trailer-title">DREAMSCAPE CONCEPT TRAILER</h3>
             </a>
           </div>
 
@@ -411,7 +420,7 @@
   <section class="section" id="gallery" aria-labelledby="gallery-title">
     <div class="container">
       <div class="window reveal">
-        <div class="window-bar"><span>04 // <span lang="ja">写真</span><span lang="en">photos</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span><span lang="ja">写真</span><span lang="en">photos</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body">
           <div class="section-head section-head--right">
             <h2 class="title-gallery wave" id="gallery-title">Gallery</h2>
@@ -502,7 +511,7 @@
   <section class="section" id="club" aria-labelledby="club-title">
     <div class="container">
       <div class="window reveal">
-        <div class="window-bar"><span>05 // <span lang="ja">活動</span><span lang="en">activities</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span><span lang="ja">活動</span><span lang="en">activities</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body">
           <div class="section-head section-head--center">
             <h2 class="title-club wave" id="club-title"><span lang="ja">大学活動・ゲーム音楽研究会 (GOK)</span><span lang="en">University activities · Game Music Research Society (GOK)</span></h2>
@@ -600,7 +609,7 @@
     </div>
     <div class="container">
       <div class="window reveal">
-        <div class="window-bar"><span>06 // <span lang="ja">連絡</span><span lang="en">contact</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
+        <div class="window-bar"><span><span lang="ja">連絡</span><span lang="en">contact</span></span><span class="window-ctrl" aria-hidden="true"><i></i><i></i><i></i></span></div>
         <div class="window-body contact-body">
           <h2 class="contact-title" id="contact-title"><span lang="ja">依頼と連絡先</span><span lang="en">Requests &amp; contact</span></h2>
           <a class="email-btn" href="mailto:contact@kyarinko.online">

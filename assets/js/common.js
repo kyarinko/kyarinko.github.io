@@ -108,7 +108,7 @@ window.KY = (() => {
       centerDist = rowY.map(sy => colX.map(sx => Math.hypot(sx - W / 2, sy - H / 2)));
     }
     size();
-    window.addEventListener('resize', size);
+    window.addEventListener('resize', () => { size(); if (reducedMotion.matches) draw(); });
     window.addEventListener('mousemove', e => { tx = e.clientX; ty = e.clientY; }, { passive: true });
     function draw() {
       if (!document.hidden) {
@@ -131,8 +131,9 @@ window.KY = (() => {
         }
         pre.textContent = lines.slice(0, ROWS).join('\n');
         if (onFrame) onFrame(lines);
-        t += reducedMotion.matches ? 0.005 : 0.015; // reduced motion: keeps drifting, gently
+        t += 0.015;
       }
+      if (reducedMotion.matches) return; // reduced motion: one still frame (redrawn on resize)
       setTimeout(() => requestAnimationFrame(draw), 75);
     }
     draw();
