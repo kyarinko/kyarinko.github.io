@@ -105,17 +105,19 @@ html[lang="ja"] body [lang="en"], html[lang="en"] body [lang="ja"] { display: no
   transition: scale 0.45s cubic-bezier(0.7, 0, 0.3, 1), opacity 0.45s;
 }
 .loader-ring::after { content: ""; position: absolute; top: -7px; left: 50%; width: 11px; height: 11px; margin-left: -5.5px; border-radius: 50%; background: #fff; box-shadow: 0 0 12px #fff; }
-.loader-ring--1 { --s: 4.4em; border-color: #fff #fff rgba(255, 255, 255, 0.25) rgba(255, 255, 255, 0.25); animation: ring1 0.9s linear infinite, ringIn 0.5s var(--ease) both; }
-.loader-ring--2 { --s: 3.5em; border-width: 2px; border-style: dashed; animation: ring2 1.3s linear infinite, ringIn 0.5s 0.08s var(--ease) both; }
-.loader-ring--3 { --s: 5.6em; border-width: 1.5px; border-color: rgba(255, 255, 255, 0.8); animation: ring3 1.7s linear infinite, ringIn 0.5s 0.16s var(--ease) both; }
+.loader-ring--1 { --s: 4.4em; border-color: #fff #fff rgba(255, 255, 255, 0.25) rgba(255, 255, 255, 0.25); animation: ring1 0.8s cubic-bezier(0.6, 0, 0.4, 1) infinite, ringIn 0.5s var(--ease) both; }
+.loader-ring--2 { --s: 3.5em; border-width: 2px; border-style: dashed; animation: ring2 1.1s cubic-bezier(0.6, 0, 0.4, 1) infinite, ringIn 0.5s 0.08s var(--ease) both; }
+.loader-ring--3 { --s: 5.6em; border-width: 1.5px; border-color: rgba(255, 255, 255, 0.8); animation: ring3 1.4s cubic-bezier(0.6, 0, 0.4, 1) infinite, ringIn 0.5s 0.16s var(--ease) both; }
 .loader-ring--2::after { width: 8px; height: 8px; margin-left: -4px; top: -5px; }
-@keyframes ring1 { from { transform: rotateX(72deg) rotateY(-12deg) rotateZ(0deg); } to { transform: rotateX(72deg) rotateY(-12deg) rotateZ(360deg); } }
-@keyframes ring2 { from { transform: rotateX(62deg) rotateY(38deg) rotateZ(360deg); } to { transform: rotateX(62deg) rotateY(38deg) rotateZ(0deg); } }
-@keyframes ring3 { from { transform: rotateY(0deg) rotateX(78deg) rotateZ(0deg); } to { transform: rotateY(360deg) rotateX(78deg) rotateZ(720deg); } }
+/* flips, not spins: each ring turns over around a line through its middle, like a tossed coin */
+@keyframes ring1 { from { transform: rotateY(0deg); } to { transform: rotateY(360deg); } } /* left-right flip */
+@keyframes ring2 { from { transform: rotateX(360deg); } to { transform: rotateX(0deg); } } /* top-bottom flip, opposite way */
+@keyframes ring3 { from { transform: rotate3d(1, 1, 0, 0deg); } to { transform: rotate3d(1, 1, 0, 360deg); } } /* diagonal flip */
+@keyframes wordFlip { from { transform: rotateY(-270deg) scale(0.5); opacity: 0; } 40% { opacity: 1; } } /* the name flips in around its center */
 @keyframes ringIn { from { scale: 0.2; opacity: 0; } }
 .loader.is-done .loader-ring { scale: 3; opacity: 0; } /* rings burst outward as the screen wipes away */
 .loader-word {
-  position: relative; transform: translateZ(0);
+  position: relative; transform: translateZ(0); animation: wordFlip 0.75s cubic-bezier(0.2, 0.9, 0.25, 1.15) both;
   font-family: var(--font-hero); font-weight: 700; line-height: 1; letter-spacing: 0.02em; color: transparent;
   -webkit-text-stroke: 1.5px #fff;
   background: linear-gradient(#fff, #fff) left / var(--fill, 0%) 100% no-repeat;
@@ -607,7 +609,8 @@ dialog[open] .window, dialog[open] .lightbox-figure { animation: pop 0.25s var(-
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .home-ghost, .marquee, .scroll-cue, dialog[open] .window, dialog[open] .lightbox-figure { animation: none !important; }
-  .loader-ring--1 { animation-duration: 2.7s, 0.5s; } .loader-ring--2 { animation-duration: 3.9s, 0.5s; } .loader-ring--3 { animation-duration: 5.1s, 0.5s; } /* rings still spin, 3x slower */
+  .loader-ring--1 { animation-duration: 2.4s, 0.5s; } .loader-ring--2 { animation-duration: 3.3s, 0.5s; } .loader-ring--3 { animation-duration: 4.2s, 0.5s; } /* rings still flip, 3x slower */
+  .loader-word { animation-duration: 1.2s; }
   .wave-char { animation-duration: 7s; }
   .js .reveal { opacity: 1; translate: none; }
 }
