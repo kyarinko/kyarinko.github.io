@@ -93,9 +93,8 @@
   }
 
   function loop(now) {
-    if (!document.hidden) { draw(now); t += 0.02; }
-    if (reduced.matches) return; // reduced motion: one still frame
-    setTimeout(() => requestAnimationFrame(loop), 60);
+    if (!document.hidden) { draw(now); t += reduced.matches ? 0.008 : 0.02; } // Reduce Motion: slower
+    setTimeout(() => requestAnimationFrame(loop), reduced.matches ? 140 : 60);
   }
   resize();
   window.addEventListener('resize', resize);

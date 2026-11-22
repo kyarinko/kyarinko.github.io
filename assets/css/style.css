@@ -603,12 +603,12 @@ dialog[open] .window, dialog[open] .lightbox-figure { animation: pop 0.25s var(-
   .lightbox-prev { left: 12px; } .lightbox-next { right: 12px; }
 }
 
-/* ---------- Less motion when the OS asks for it: nothing loops (ASCII is drawn once) ---------- */
+/* ---------- Less motion when the OS asks for it: everything keeps moving, but slower and calmer ---------- */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .home-ghost, .marquee, .scroll-cue, dialog[open] .window, dialog[open] .lightbox-figure, .loader-ring { animation: none !important; }
-  .loader-ring--1 { transform: rotateX(72deg) rotateY(-12deg); } .loader-ring--2 { transform: rotateX(62deg) rotateY(38deg); } .loader-ring--3 { transform: rotateX(78deg); }
-  .wave-char { animation: none; }
+  .home-ghost, .marquee, .scroll-cue, dialog[open] .window, dialog[open] .lightbox-figure { animation: none !important; }
+  .loader-ring--1 { animation-duration: 2.7s, 0.5s; } .loader-ring--2 { animation-duration: 3.9s, 0.5s; } .loader-ring--3 { animation-duration: 5.1s, 0.5s; } /* rings still spin, 3x slower */
+  .wave-char { animation-duration: 7s; }
   .js .reveal { opacity: 1; translate: none; }
 }
 

@@ -93,11 +93,9 @@
   window.addEventListener('resize', updateDreamRows);
   window.addEventListener('load', updateDreamRows);
   if (dreamAscii) new IntersectionObserver(([e]) => { dreamVisible = e.isIntersecting; }).observe(dreamAscii);
-  // with reduced motion the field is drawn once, so fill the Dreamscape copy on that single frame too
-  const stillAscii = () => reducedMotion.matches && dreamAscii;
   KY.initAscii($('#ascii-bg'), {
-    extraRows: () => (dreamVisible || stillAscii() ? dreamRows : 0),
-    onFrame: lines => { if (dreamVisible || stillAscii()) dreamAscii.textContent = lines.slice(0, dreamRows).join('\n'); }
+    extraRows: () => (dreamVisible ? dreamRows : 0),
+    onFrame: lines => { if (dreamVisible) dreamAscii.textContent = lines.slice(0, dreamRows).join('\n'); }
   });
 
   // Dreamscape title font is applied only when the section gets close.
